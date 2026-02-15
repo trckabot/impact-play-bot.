@@ -1,75 +1,50 @@
-// Configuración inicial
+// Configuración de Idiomas (Diccionario Global)
+const translations = {
+    es: { start: "INICIAR", validate: "Validar Código", donate: "Donar al Rescate", coins: "Monedas", level: "Nivel", alertDone: "¡Video completado!", terms: "Acepto que los pagos dependen de la monetización de YouTube (Estonia EU Law)" },
+    en: { start: "START", validate: "Validate Code", donate: "Donate to Rescue", coins: "Coins", level: "Level", alertDone: "Video completed!", terms: "I accept that payments depend on YouTube monetization (Estonia EU Law)" },
+    fr: { start: "COMMENCER", validate: "Valider le Code", donate: "Faire un don", coins: "Pièces", level: "Niveau", alertDone: "Vidéo terminée !", terms: "J'accepte que los paiements dépendent de la monétisation YouTube" },
+    pt: { start: "INICIAR", validate: "Validar Código", donate: "Doar para Resgate", coins: "Moedas", level: "Nível", alertDone: "Vídeo concluído!", terms: "Aceito que os pagamentos dependem da monetização do YouTube" },
+    ar: { start: "ابدأ", validate: "تحقق من الرمز", donate: "تبرع للإنقاذ", coins: "عملات", level: "مستوى", alertDone: "اكتمل الفيديو!", terms: "أوافق على أن المدفوعات تعتمد على تحقيق الربح من YouTube" }
+};
+
+// Detectar idioma (por defecto inglés si no existe el detectado)
+const userLang = navigator.language.split('-')[0] || 'en';
+const lang = translations[userLang] || translations['en'];
+
+// Aplicar traducciones a la UI al cargar
+document.addEventListener('DOMContentLoaded', () => {
+    if(userLang === 'ar') document.body.style.direction = 'rtl';
+    
+    document.getElementById('startButton').textContent = lang.start;
+    document.getElementById('validateCode').textContent = lang.validate;
+    document.getElementById('donate').textContent = lang.donate;
+    document.querySelector('label').innerText = lang.terms;
+    // Actualizar etiquetas de texto
+    document.body.innerHTML = document.body.innerHTML.replace("Monedas", lang.coins).replace("Nivel", lang.level);
+});
+
 let player;
 let videoEnded = false;
 let coins = 0;
-let level = 1;
 
-// 1. Cargar la API de YouTube
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
-        height: '360',
-        width: '640',
-        videoId: 'ID_DE_TU_VIDEO', // <--- CAMBIA ESTO por el ID de tu video de YouTube
-        playerVars: {
-            'controls': 0,      // Desactiva controles visuales
-            'disablekb': 1,    // Desactiva atajos de teclado
-            'rel': 0,           // No muestra videos relacionados al final
-            'modestbranding': 1 // Quita el logo grande de YouTube
-        },
-        events: {
-            'onStateChange': onPlayerStateChange
-        }
+        height: '360', width: '640',
+        videoId: 'TU_ID_DE_VIDEO', 
+        playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
     });
 }
 
-// 2. Detectar cuando el video termina
 function onPlayerStateChange(event) {
-    // YT.PlayerState.ENDED es igual a 0
     if (event.data === YT.PlayerState.ENDED) {
         videoEnded = true;
-        document.getElementById('validateCode').style.display = 'block';
-        document.getElementById('validateCode').disabled = false;
-        alert("¡Video completado! Ya puedes validar tu código.");
+        const btn = document.getElementById('validateCode');
+        btn.style.display = 'block';
+        btn.disabled = false;
+        alert(lang.alertDone);
     }
 }
 
-// 3. Lógica de los botones
-document.addEventListener('DOMContentLoaded', () => {
-    const startButton = document.getElementById('startButton');
-    const readTerms = document.getElementById('readTerms');
-    const validateCodeBtn = document.getElementById('validateCode');
-    const donateBtn = document.getElementById('donate');
-
-    // Habilitar botón de inicio al aceptar términos
-    readTerms.addEventListener('change', () => {
-        startButton.disabled = !readTerms.checked;
-    });
-
-    // Iniciar la experiencia
-    startButton.addEventListener('click', () => {
-        document.getElementById('registration').style.display = 'none';
-        document.getElementById('miniapppanel').style.display = 'block';
-    });
-
-    // Validar código y sumar monedas
-    validateCodeBtn.addEventListener('click', () => {
-        if (videoEnded) {
-            coins += 10; // Suma 10 monedas
-            document.getElementById('coins').textContent = coins;
-            validateCodeBtn.disabled = true;
-            validateCodeBtn.textContent = "¡Validado!";
-            alert("Has ganado 10 monedas para el proyecto Impact Play.");
-        }
-    });
-
-    // Donar monedas
-    donateBtn.addEventListener('click', () => {
-        if (coins > 0) {
-            alert(`¡Gracias! Has donado ${coins} monedas al próximo rescate.`);
-            coins = 0;
-            document.getElementById('coins').textContent = coins;
-        } else {
-            alert("No tienes monedas para donar todavía. ¡Mira un video!");
-        }
-    });
-});
+// Lógica de botones (Suma de monedas y donación)
+// [Aquí sigue el resto de tu lógica de coins...]
