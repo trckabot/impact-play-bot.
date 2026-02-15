@@ -1,0 +1,82 @@
+:root {
+  --bg: #0b0f14;
+  --card: #141a20;
+  --text: #e8eefc;
+  --primary: #4caf50; /* Verde para impacto y dinero */
+  --warning: #f39c12; /* Naranja para donaciones */
+  --accent: #3498db;  /* Azul para temas legales/Estonia */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.panel {
+  width: 90%;
+  max-width: 500px;
+  background: var(--card);
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  text-align: center;
+}
+
+h2 { color: var(--primary); }
+
+.btn {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary { background-color: var(--primary); color: white; }
+.btn-success { background-color: #27ae60; color: white; }
+.btn-warning { background-color: var(--warning); color: white; }
+
+.btn:disabled {
+  background-color: #34495e;
+  cursor: not-allowed;
+}
+
+#player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+  font-size: 1.1em;
+}
+
+.stats span {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+/* Checkbox de términos */
+label {
+  display: block;
+  font-size: 0.9em;
+  margin-bottom: 15px;
+  color: #bdc3c7;
+}
