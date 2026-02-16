@@ -16,18 +16,30 @@
         <label>
             <input type="checkbox" id="readTerms"> Acepto que los pagos dependen de la monetización.
         </label>
-        <button id="startButton" class="btn btn-primary" disabled style="margin-top:20px;">INICIAR ENTRENAMIENTO</button>
+        <button id="startButton" class="btn btn-primary" disabled style="margin-top:20px;">ENTRAR AL PANEL</button>
+    </div>
+
+    <div id="missionList" class="panel" style="display:none;">
+        <h3>MISIONES DISPONIBLES 📋</h3>
+        <p>Selecciona un video para ganar monedas:</p>
+        <div id="taskList">
+            <button onclick="iniciarMision('dQw4w9WgXcQ', 'Misión 1: Rescate')" class="btn" style="background:#2c3e50; margin-bottom:10px;">📹 Ver Video 1 (+10 Monedas)</button>
+            <button onclick="iniciarMision('ID_VIDEO_2', 'Misión 2: Ayuda')" class="btn" style="background:#2c3e50; margin-bottom:10px;">📹 Ver Video 2 (+10 Monedas)</button>
+        </div>
+        <button id="donateButton" class="btn btn-danger" style="margin-top:20px;">❤️ DONAR MONEDAS ACUMULADAS</button>
+        <div class="stats" style="margin-top: 15px;">
+            <div>Monedas: <span id="coins">0</span> 🦴</div>
+        </div>
     </div>
 
     <div id="miniapppanel" class="panel" style="display:none;">
+        <h4 id="activeMissionTitle">Entrenamiento en curso...</h4>
         <div id="player"></div>
         <div class="actions">
             <button id="validateCode" class="btn btn-success" style="display:none;" disabled>✅ VALIDAR VICTORIA</button>
-            <button id="donateButton" class="btn btn-danger">❤️ DONAR AL RESCATE</button>
+            <button onclick="cancelarMision()" class="btn" style="background:#555; margin-top:10px;">⬅️ VOLVER A MISIONES</button>
         </div>
-        <div class="stats" style="margin-top: 15px;">
-            <div>Monedas Acumuladas: <span id="coins">0</span> 🦴</div>
-        </div>
+        
         <div id="walletSection" style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px;">
             <h3>Mis Datos de Cobro</h3>
             <input type="text" id="btcAddress" placeholder="Dirección Bitcoin (BTC)">
@@ -44,37 +56,44 @@
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         let player, lastTime = 0, videoEnded = false, coins = 0;
+        let currentVideoId = '';
 
-        // FUNCIÓN PARA EL BOTÓN DE INICIO (LA QUE FALLABA)
+        // NAVEGACIÓN Y LOGICA INICIAL
         document.getElementById('readTerms').onchange = function() {
             document.getElementById('startButton').disabled = !this.checked;
         };
 
         document.getElementById('startButton').onclick = function() {
             document.getElementById('registration').style.display = 'none';
-            document.getElementById('miniapppanel').style.display = 'block';
-            if (window.Telegram?.WebApp) {
-                window.Telegram.WebApp.expand();
-            }
+            document.getElementById('missionList').style.display = 'block';
+            if (window.Telegram?.WebApp) window.Telegram.WebApp.expand();
         };
 
-        // YOUTUBE Y ANTI-TRAMPAS
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '240', width: '100%', videoId: 'dQw4w9WgXcQ',
-                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'playsinline': 1 },
-                events: { 'onStateChange': onPlayerStateChange, 'onReady': startAntiCheat }
-            });
+        function iniciarMision(videoId, titulo) {
+            currentVideoId = videoId;
+            document.getElementById('missionList').style.display = 'none';
+            document.getElementById('miniapppanel').style.display = 'block';
+            document.getElementById('activeMissionTitle').innerText = titulo;
+            
+            if (player) {
+                player.loadVideoById(videoId);
+            }
         }
 
-        function startAntiCheat() {
-            setInterval(() => {
-                if (player && player.getCurrentTime) {
-                    let curr = player.getCurrentTime();
-                    if (curr > lastTime + 2) player.seekTo(lastTime);
-                    else lastTime = curr;
-                }
-            }, 1000);
+        function cancelarMision() {
+            if (player) player.stopVideo();
+            document.getElementById('miniapppanel').style.display = 'none';
+            document.getElementById('missionList').style.display = 'block';
+        }
+
+        // YOUTUBE API
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '240', width: '100%',
+                videoId: 'dQw4w9WgXcQ', 
+                playerVars: { 'controls': 1, 'playsinline': 1, 'rel': 0 },
+                events: { 'onStateChange': onPlayerStateChange }
+            });
         }
 
         function onPlayerStateChange(e) {
@@ -86,7 +105,7 @@
             }
         }
 
-        // GUARDAR DATOS Y DONACIONES
+        // SUPABASE: GUARDAR WALLET
         async function guardarWallet(tipo) {
             const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
             if (!user) return alert("Abre desde Telegram");
@@ -97,6 +116,7 @@
             else alert("¡Wallet de " + tipo + " guardada!");
         }
 
+        // VALIDAR PUNTOS
         document.getElementById('validateCode').onclick = async () => {
             if (videoEnded) {
                 coins += 10;
@@ -105,9 +125,17 @@
                 document.getElementById('validateCode').disabled = true;
                 const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
                 if(user) await supabase.rpc('incrementar_puntos', { user_id: user.id, cantidad: 10 });
+                
+                setTimeout(() => {
+                    alert("¡Misión cumplida! +10 monedas.");
+                    cancelarMision();
+                    document.getElementById('validateCode').style.display = 'none';
+                    videoEnded = false;
+                }, 1000);
             }
         };
 
+        // DONAR
         document.getElementById('donateButton').onclick = async () => {
             const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
             if (coins > 0 && user) {
@@ -115,6 +143,8 @@
                 alert("¡Gracias por ayudar a personas y animales!");
                 coins = 0;
                 document.getElementById('coins').innerText = "0";
+            } else {
+                alert("No tienes monedas acumuladas para donar.");
             }
         };
     </script>
