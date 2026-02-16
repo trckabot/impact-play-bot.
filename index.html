@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AXON IMPACT</title>
+    <title>AXON IMPACT GLOBAL</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --primary: #238636; --bg: #0d1117; --panel: #161b22; --text: #e6edf3; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .panel { background: var(--panel); padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; border: 1px solid #30363d; text-align: center; }
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; font-size: 16px; transition: 0.3s; }
+        :root { --primary: #238636; --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --accent: #1f6feb; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding-bottom: 50px; }
+        .panel { background: var(--panel); padding: 20px; border-radius: 20px; width: 90%; max-width: 400px; border: 1px solid #30363d; margin: 20px auto; text-align: center; }
+        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
         .btn-green { background: var(--primary); }
-        .btn-social { background: #30363d; width: 48%; display: inline-block; font-size: 13px; }
-        textarea { width: 100%; height: 60px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 8px; padding: 10px; margin-top: 10px; box-sizing: border-box; resize: none; }
-        #player { width: 100%; border-radius: 10px; margin-top: 15px; height: 210px; background: #000; }
+        .btn-blue { background: var(--accent); }
+        .btn-music { background: #8a2be2; } /* Color púrpura para música */
+        .btn-social { background: #30363d; width: 48%; display: inline-block; font-size: 12px; }
+        input, textarea { width: 100%; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 8px; padding: 10px; margin-top: 10px; box-sizing: border-box; }
+        .section-title { color: var(--primary); border-bottom: 1px solid #333; padding-bottom: 5px; margin-top: 20px; }
+        
+        /* Modal */
         #customModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #21262d; padding: 25px; border-radius: 20px; border: 2px solid var(--primary); z-index: 10000; width: 80%; text-align: center; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; }
     </style>
@@ -21,120 +26,149 @@
 
     <div id="overlay" class="overlay"></div>
     <div id="customModal">
-        <h3 id="modalTitle">🌟</h3>
-        <p id="modalMsg"></p>
-        <button class="btn btn-green" id="btnModalClose">CONTINUAR</button>
+        <h3 id="mTitle">🌟</h3>
+        <p id="mMsg"></p>
+        <button class="btn btn-green" onclick="closeModal()">OK</button>
     </div>
 
     <div id="screen1" class="panel">
-        <h2 style="color: var(--primary);">AXON IMPACT 🛡️</h2>
-        <p>Uniendo esfuerzos por las <b>personas necesitadas</b> y los <b>animales indefensos de la calle</b>.</p>
+        <h2 style="color: var(--primary);">AXON IMPACT</h2>
+        <p>Ayudando a personas necesitadas y animales de la calle.</p>
         <button id="startButton" class="btn btn-green">ENTRAR A MISIONES</button>
     </div>
 
     <div id="screen2" class="panel" style="display:none;">
-        <h3>MISIONES DISPONIBLES</h3>
-        <button onclick="verMision('dQw4w9WgXcQ', 'Misión Esperanza')" class="btn" style="background:#1f6feb;">📹 Tarea 1 (+10 pts)</button>
-        <p style="font-size: 18px; margin-top: 20px;">Monedas: <span id="coinCount" style="color:var(--primary); font-weight:bold;">0</span> 🦴</p>
+        <h3 class="section-title">TAREAS ESPECIALES</h3>
+        <button id="subBtn" onclick="subscribe()" class="btn btn-blue">🔔 SUSCRIBIRSE AL CANAL (+50)</button>
+
+        <h3 class="section-title">MISIONES DE VIDEO</h3>
+        <button onclick="verContenido('dQw4w9WgXcQ', 'Video Impacto', 'video')" class="btn btn-green">📹 Tarea 1 (+10)</button>
+
+        <h3 class="section-title">GANA ESCUCHANDO MÚSICA 🎵</h3>
+        <button onclick="verContenido('jNQXAC9IVRw', 'Canción Solidaria', 'music')" class="btn btn-music">🎧 Escuchar Canción (+15)</button>
+
+        <p style="font-size: 20px;">Monedas: <span id="coinCount" style="color:var(--primary)">0</span> 🦴</p>
+        <hr>
+        <button onclick="showScreen('screenSupport')" class="btn" style="background:#444">📩 MEJORAS Y AYUDAS</button>
     </div>
 
     <div id="screen3" class="panel" style="display:none;">
-        <h4 id="activeTitle">Cargando...</h4>
+        <h4 id="activeTitle">Reproduciendo...</h4>
         <div id="player"></div>
-        
-        <div style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
-            <button class="btn btn-social" onclick="alert('¡Gracias por tu Like!')">👍 Like</button>
-            <button class="btn btn-social" onclick="compartirMision()">🔗 Compartir</button>
-            <textarea id="commentBox" placeholder="Escribe un mensaje de apoyo..."></textarea>
+        <div style="margin-top:10px;">
+            <button class="btn btn-social" onclick="alert('Like enviado a YouTube')">👍 Like</button>
+            <button class="btn btn-social" onclick="compartir()">🔗 Compartir</button>
         </div>
+        <button id="btnVerify" class="btn btn-green" style="display:none;">✅ VALIDAR RECOMPENSA</button>
+        <button onclick="showScreen('screen2')" class="btn" style="background:#333">⬅️ VOLVER</button>
+    </div>
 
-        <button id="btnVerify" class="btn btn-green" style="display:none;">✅ VALIDAR IMPACTO</button>
-        <button onclick="location.reload()" class="btn" style="background:#333; margin-top: 10px;">⬅️ SALIR</button>
+    <div id="screenSupport" class="panel" style="display:none;">
+        <h3>BUZÓN DE AYUDA 📩</h3>
+        <p style="font-size:12px;">¿Cómo mejorar la app? ¿Conoces a alguien que necesite ayuda urgente?</p>
+        <textarea id="supportMsg" placeholder="Escribe aquí tu mensaje detallado..."></textarea>
+        <button class="btn btn-green" onclick="enviarSoporte()">ENVIAR MENSAJE</button>
+        <button onclick="showScreen('screen2')" class="btn" style="background:#333">VOLVER</button>
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player, isPlaying = false, lastLegitTime = 0;
-        let totalCoins = 0; // Variable para los puntos
+        const supabaseUrl = 'https://ywkcnxhlptqagwxjnygx.supabase.co'; 
+        const supabaseKey = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
+        const supabase = (typeof supabase !== 'undefined') ? supabase.createClient(supabaseUrl, supabaseKey) : null;
 
-        // --- COMPARTIR REAL ---
-        function compartirMision() {
+        let player, lastTime = 0, isPlaying = false, coins = 0;
+        let currentReward = 0;
+
+        // --- SISTEMA DE SUSCRIPCIÓN ÚNICA ---
+        function subscribe() {
+            window.open("https://youtube.com/@TU_CANAL", "_blank");
+            coins += 50;
+            document.getElementById('coinCount').innerText = coins;
+            localStorage.setItem('isSubscribed', 'true');
+            document.getElementById('subBtn').style.display = 'none';
+            showModal("¡Suscrito!", "Has ganado 50 monedas por unirte a la comunidad.");
+        }
+
+        // --- COMPARTIR ---
+        function compartir() {
             if (navigator.share) {
-                navigator.share({
-                    title: 'AXON IMPACT',
-                    text: 'Ayúdame a apoyar a personas necesitadas y animales de la calle viendo este video.',
-                    url: window.location.href
-                }).catch((error) => console.log('Error compartiendo', error));
-            } else {
-                alert("Copia este link: " + window.location.href);
+                navigator.share({ title: 'Axon Impact', url: window.location.href });
             }
         }
 
-        // --- NAVEGACIÓN ---
-        document.getElementById('startButton').onclick = () => {
-            document.getElementById('screen1').style.display = 'none';
-            document.getElementById('screen2').style.display = 'block';
-        };
-
-        function verMision(id, titulo) {
-            isPlaying = true;
-            lastLegitTime = 0;
-            document.getElementById('screen2').style.display = 'none';
-            document.getElementById('screen3').style.display = 'block';
-            document.getElementById('activeTitle').innerText = titulo;
-            if (player) player.loadVideoById(id);
+        // --- GESTIÓN DE PANTALLAS ---
+        function showScreen(id) {
+            document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
         }
 
-        // --- YOUTUBE API + ANTI-TRAMPA ---
+        document.getElementById('startButton').onclick = () => {
+            showScreen('screen2');
+            if(localStorage.getItem('isSubscribed')) document.getElementById('subBtn').style.display = 'none';
+        };
+
+        function verContenido(id, titulo, tipo) {
+            currentReward = (tipo === 'music') ? 15 : 10;
+            lastTime = 0;
+            showScreen('screen3');
+            document.getElementById('activeTitle').innerText = titulo;
+            if(player) player.loadVideoById(id);
+        }
+
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: 'dQw4w9WgXcQ',
+                height: '200', width: '100%', videoId: 'dQw4w9WgXcQ',
                 events: {
                     'onStateChange': (e) => {
-                        if (e.data == YT.PlayerState.PLAYING) {
-                            isPlaying = true;
-                            startChecker();
-                        } else { isPlaying = false; }
-                        if (e.data == YT.PlayerState.ENDED) {
-                            document.getElementById('btnVerify').style.display = 'block';
-                        }
+                        if(e.data == YT.PlayerState.PLAYING) { isPlaying = true; startCheatCheck(); }
+                        else isPlaying = false;
+                        if(e.data == YT.PlayerState.ENDED) document.getElementById('btnVerify').style.display = 'block';
                     }
                 }
             });
         }
 
-        function startChecker() {
+        function startCheatCheck() {
             const check = setInterval(() => {
-                if (player && isPlaying) {
+                if(player && isPlaying) {
                     let curr = player.getCurrentTime();
-                    if (curr > lastLegitTime + 2.5) player.seekTo(lastLegitTime);
-                    else lastLegitTime = curr;
-                } else { clearInterval(check); }
+                    if(curr > lastTime + 2.5) player.seekTo(lastTime);
+                    else lastTime = curr;
+                } else clearInterval(check);
             }, 1000);
         }
 
-        // --- VALIDACIÓN Y SUMA DE PUNTOS ---
         document.getElementById('btnVerify').onclick = () => {
-            totalCoins += 10; // Sumamos 10 puntos
-            document.getElementById('coinCount').innerText = totalCoins; // Actualizamos pantalla
-            
-            showModal("¡Misión Cumplida!", "Has ganado 10 monedas. Tu ayuda es vital para personas y animales.");
-            
-            // Al cerrar el modal, volvemos a la lista de misiones
-            document.getElementById('btnModalClose').onclick = () => {
-                document.getElementById('customModal').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                document.getElementById('screen3').style.display = 'none';
-                document.getElementById('screen2').style.display = 'block';
-                document.getElementById('btnVerify').style.display = 'none'; // Ocultamos para la próxima
-            };
+            coins += currentReward;
+            document.getElementById('coinCount').innerText = coins;
+            showModal("¡Excelente!", "Recompensa sumada. ¡Gracias por apoyar la causa!");
+            document.getElementById('btnVerify').style.display = 'none';
+            showScreen('screen2');
         };
 
+        // --- BUZÓN DE SOPORTE ---
+        async function enviarSoporte() {
+            const msg = document.getElementById('supportMsg').value;
+            if(!msg) return;
+            // Aquí enviarías a tu tabla de Supabase llamada 'soporte'
+            if(supabase) await supabase.from('soporte').insert([{ mensaje: msg }]);
+            
+            showModal("¡Enviado!", "Gracias por tu comentario, pronto te responderemos.");
+            document.getElementById('supportMsg').value = '';
+            showScreen('screen2');
+        }
+
         function showModal(t, m) {
-            document.getElementById('modalTitle').innerText = t;
-            document.getElementById('modalMsg').innerText = m;
+            document.getElementById('mTitle').innerText = t;
+            document.getElementById('mMsg').innerText = m;
             document.getElementById('customModal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
     </script>
 </body>
