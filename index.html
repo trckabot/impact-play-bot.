@@ -6,25 +6,19 @@
     <title>AXON IMPACT GLOBAL</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; --music: #8a2be2; --video: #1f6feb; --gold: #f1c40f; --orange: #e67e22; --game: #e74c3c; --task: #3498db; --social: #95a5a6; }
+        :root { --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; --music: #8a2be2; --video: #1f6feb; --gold: #f1c40f; --orange: #e67e22; --game: #e74c3c; --task: #3498db; }
         body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1; }
         .container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .app-logo { width: 70%; max-width: 220px; filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.5)); margin-bottom: 10px; border-radius: 20px; }
         .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 380px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 85vh; overflow-y: auto; }
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 13px; text-transform: uppercase; box-sizing: border-box; }
+        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 13px; text-transform: uppercase; text-decoration: none; box-sizing: border-box; }
         .btn-green { background: var(--primary); }
         .btn-video { background: var(--video); }
         .btn-music { background: var(--music); }
-        .btn-game { background: var(--game); }
-        .btn-task { background: var(--task); }
-        .btn-gold { background: var(--gold); color: #000; box-shadow: 0 0 10px rgba(241, 196, 15, 0.4); }
+        .btn-gold { background: var(--gold); color: #000; }
         .btn-orange { background: var(--orange); }
         .btn-back { background: #333; font-size: 11px; }
-        input { width: 100%; background: rgba(13, 17, 23, 0.8); color: white; border: 1px solid #30363d; border-radius: 10px; padding: 12px; margin: 8px 0; box-sizing: border-box; }
-        .screen { display: none; width: 100%; flex-direction: column; align-items: center; }
-        #screenStart { display: flex; }
-        .welcome-text { font-size: 17px; line-height: 1.4; margin: 15px 0; color: #fff; }
         .balance-card { background: rgba(46, 204, 113, 0.1); border-radius: 15px; padding: 15px; margin-top: 15px; border: 1px dashed var(--primary); }
     </style>
 </head>
@@ -32,109 +26,66 @@
     <div class="overlay-bg"></div>
     <div class="container">
         
-        <div id="screenStart" class="screen">
+        <div id="screenStart" class="screen" style="display: flex; flex-direction: column; align-items: center;">
             <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="app-logo">
             <div class="panel">
                 <h2 style="color: var(--primary); margin-top: 0;">AXON IMPACT</h2>
-                <p class="welcome-text">
-                    Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.
-                </p>
-                <button onclick="nav('screenMenu')" class="btn btn-green">COMENZAR A ACUMULAR</button>
+                <p>Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.</p>
+                <button onclick="nav('screenMenu')" class="btn btn-green">ENTRAR A MISIONES</button>
             </div>
         </div>
 
-        <div id="screenMenu" class="screen">
+        <div id="screenMenu" class="screen" style="display: none; flex-direction: column; align-items: center;">
             <div class="panel">
-                <h3 style="margin:0 0 10px 0;">MISIONES ACTIVAS 🦴</h3>
-                <button onclick="nav('folderVideo')" class="btn btn-video">📹 VIDEOS</button>
-                <button onclick="nav('folderMusic')" class="btn btn-music">🎵 MÚSICA</button>
-                <button onclick="nav('folderGames')" class="btn btn-game">🎮 JUEGOS</button>
-                <button onclick="nav('folderTasks')" class="btn btn-task">📋 TAREAS</button>
-                <button onclick="nav('folderSocial')" class="btn" style="background: #95a5a6;">🌐 REDES SOCIALES</button>
+                <h3>MISIONES ACTIVAS 🦴</h3>
+                <button onclick="misionVideo('https://www.youtube.com/watch?v=9_p_9UqG7p4')" class="btn btn-video">📹 VIDEO: BEELE</button>
+                <button onclick="misionVideo('https://www.youtube.com/watch?v=9_p_9UqG7p4')" class="btn btn-music">🎵 MÚSICA: BEELE</button>
                 
                 <hr style="border: 0.5px solid #333; margin: 15px 0;">
                 
-                <button onclick="checkWalletNav()" class="btn btn-gold">💎 VINCULAR WALLET (AIRDROP)</button>
-                <button onclick="nav('screenDonar')" class="btn btn-orange">🎁 DONAR A LA CAUSA</button>
-                <button onclick="mostrarMiLink()" class="btn" style="background:#34495e;">🔗 INVITAR AMIGOS</button>
+                <button onclick="vincularWalletPrompt()" class="btn btn-gold">💎 AIRDROP (VINCULAR WALLET)</button>
+                <button onclick="generarLinkReferido()" class="btn" style="background:#34495e;">🔗 MI LINK DE REFERIDO</button>
                 
                 <div class="balance-card">
-                    <span style="font-size: 12px; opacity: 0.8;">TU SALDO TOTAL</span>
+                    <span style="font-size: 12px;">SALDO</span>
                     <div style="font-size: 26px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
                 </div>
             </div>
         </div>
-
-        <div id="screenWallet" class="screen">
-            <div class="panel">
-                <h2 style="color: var(--gold);">AIRDROP CONFIG</h2>
-                <p style="font-size: 12px; margin-bottom: 15px;">Vincula tus direcciones para recibir el token de AXON IMPACT.</p>
-                <input type="text" id="regName" placeholder="Crea un nombre de usuario">
-                <input type="text" id="regBTC" placeholder="Dirección BTC">
-                <input type="text" id="regUSDT" placeholder="Dirección USDT (TRC20)">
-                <button onclick="vincularWallet()" class="btn btn-green">CONFIRMAR VINCULACIÓN</button>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
-            </div>
-        </div>
-
-        <div id="folderVideo" class="screen"><div class="panel"><h3>Videos</h3><button onclick="sumarPuntos(10)" class="btn btn-video">VER (+10 🦴)</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="folderSocial" class="screen"><div class="panel"><h3>Social</h3><button onclick="window.open('https://t.me/TuCanal')" class="btn" style="background:#0088cc">TELEGRAM</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="screenDonar" class="screen"><div class="panel"><h3>Donaciones</h3><button onclick="donarSaldo()" class="btn btn-orange">DONAR SALDO</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://ywkcnxhlptqagwxjnygx.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+        // Configuración inicial
         let coins = 0;
-        let walletLinked = false;
-        let userName = "";
-        const urlParams = new URLSearchParams(window.location.search);
-        const refPor = urlParams.get('ref');
-
+        let telegramUser = "User_" + Math.floor(Math.random() * 9999); // Simulación de detección de usuario
+        
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
         }
 
+        // Función para videos y música de Beele
+        function misionVideo(url) {
+            window.open(url, '_blank');
+            sumarPuntos(10);
+        }
+
         function sumarPuntos(pts) {
             coins += pts;
             document.getElementById('coinCount').innerText = coins;
-            alert("¡Puntos acumulados!");
-            nav('screenMenu');
+            alert("¡Has sumado " + pts + " puntos!");
         }
 
-        function checkWalletNav() {
-            if (!walletLinked) nav('screenWallet');
-            else alert("Wallet vinculada correctamente. ¡Espera al próximo Airdrop!");
-        }
-
-        async function vincularWallet() {
-            const n = document.getElementById('regName').value;
-            const btc = document.getElementById('regBTC').value;
-            const usdt = document.getElementById('regUSDT').value;
-            if (n && btc && usdt) {
-                const { error } = await _supabase.from('usuarios_registrados').insert([{ nombre_usuario: n, documento_id: btc, pais: usdt, monedas: coins, referido_por: refPor }]);
-                if (error) alert("Este nombre ya está en uso.");
-                else { walletLinked = true; userName = n; alert("¡Éxito! Wallet vinculada para el Airdrop."); nav('screenMenu'); }
-            } else alert("Por favor, llena todos los campos.");
-        }
-
-        function mostrarMiLink() {
-            if (!walletLinked) { alert("Vincula tu wallet primero para obtener tu link de invitación."); return; }
-            const link = window.location.origin + window.location.pathname + "?ref=" + userName;
+        // Nueva lógica de referidos: NO pide wallet
+        function generarLinkReferido() {
+            const link = window.location.origin + window.location.pathname + "?ref=" + telegramUser;
             navigator.clipboard.writeText(link);
-            alert("Link de invitado copiado.");
+            alert("¡Link de referido generado y copiado!\nUsuario detectado: " + telegramUser);
         }
 
-        async function donarSaldo() {
-            if (coins <= 0) return;
-            await _supabase.from('historial_donaciones').insert([{ nombre_usuario: walletLinked ? userName : "Anónimo", monto: coins }]);
-            coins = 0;
-            document.getElementById('coinCount').innerText = "0";
-            alert("¡Gracias por tu gran corazón! Has donado tus puntos a la causa.");
+        function vincularWalletPrompt() {
+            let wallet = prompt("Ingresa tu Wallet de USDT (TRC20) para el Airdrop:");
+            if(wallet) alert("Wallet guardada para el próximo Airdrop.");
         }
     </script>
 </body>
