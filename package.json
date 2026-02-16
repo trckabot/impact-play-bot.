@@ -1,0 +1,12 @@
+{
+  "name": "axon-bot",
+  "version": "1.0.0",
+  "description": "Bot para ayudar a personas y animales",
+  "main": "aplicación.js",
+  "scripts": {
+    "start": "node aplicación.js"
+  },
+  "dependencies": {
+    "telegraf": "^4.12.2"
+  }
+}
