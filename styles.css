@@ -5,6 +5,7 @@
   --primary: #4caf50; /* Verde para impacto y dinero */
   --warning: #f39c12; /* Naranja para donaciones */
   --accent: #3498db;  /* Azul para temas legales/Estonia */
+  --danger: #e74c3c;  /* Rojo para el botón de donar */
 }
 
 body {
@@ -16,6 +17,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
 }
 
 .panel {
@@ -29,7 +31,7 @@ body {
   text-align: center;
 }
 
-h2 { color: var(--primary); }
+h2 { color: var(--primary); margin-bottom: 10px; }
 
 .btn {
   width: 100%;
@@ -38,8 +40,9 @@ h2 { color: var(--primary); }
   border: none;
   border-radius: 8px;
   font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s, background-color 0.3s;
 }
 
 .btn:active { transform: scale(0.98); }
@@ -48,9 +51,23 @@ h2 { color: var(--primary); }
 .btn-success { background-color: #27ae60; color: white; }
 .btn-warning { background-color: var(--warning); color: white; }
 
+/* Botón especial de Donación con animación */
+.btn-donate { 
+  background-color: var(--danger); 
+  color: white; 
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+
 .btn:disabled {
   background-color: #34495e;
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 #player {
@@ -59,6 +76,7 @@ h2 { color: var(--primary); }
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 15px;
+  border: 2px solid var(--accent);
 }
 
 .stats {
@@ -66,6 +84,9 @@ h2 { color: var(--primary); }
   justify-content: space-around;
   margin-top: 15px;
   font-size: 1.1em;
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .stats span {
@@ -73,10 +94,10 @@ h2 { color: var(--primary); }
   color: var(--primary);
 }
 
-/* Checkbox de términos */
 label {
   display: block;
-  font-size: 0.9em;
+  font-size: 0.85em;
   margin-bottom: 15px;
   color: #bdc3c7;
+  cursor: pointer;
 }
