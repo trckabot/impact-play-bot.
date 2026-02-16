@@ -2,149 +2,121 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AXON - Impact Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AXON Impact</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
+
     <div id="registration" class="panel">
         <h2 style="color: #4CAF50;">AXON: RED DE IMPACTO 🛡️</h2>
-        <p>Entrenando para ayudar a personas sin hogar y animales rescatados.</p>
-        <label>
-            <input type="checkbox" id="readTerms"> Acepto que los pagos dependen de la monetización.
+        <p>Misión: Ayuda a personas sin hogar y animales rescatados.</p>
+        <hr style="border: 0.5px solid #333; margin: 20px 0;">
+        <label style="display: block; margin-bottom: 20px; cursor: pointer;">
+            <input type="checkbox" id="readTerms"> Acepto términos de monetización.
         </label>
-        <button id="startButton" class="btn btn-primary" disabled style="margin-top:20px;">ENTRAR AL PANEL</button>
+        <button id="startButton" class="btn btn-primary" disabled>ENTRAR A MISIONES</button>
     </div>
 
     <div id="missionList" class="panel" style="display:none;">
         <h3>MISIONES DISPONIBLES 📋</h3>
-        <p>Selecciona un video para ganar monedas:</p>
+        <p>Elige una tarea para sumar impacto:</p>
         <div id="taskList">
-            <button onclick="iniciarMision('dQw4w9WgXcQ', 'Misión 1: Rescate')" class="btn" style="background:#2c3e50; margin-bottom:10px;">📹 Ver Video 1 (+10 Monedas)</button>
-            <button onclick="iniciarMision('ID_VIDEO_2', 'Misión 2: Ayuda')" class="btn" style="background:#2c3e50; margin-bottom:10px;">📹 Ver Video 2 (+10 Monedas)</button>
+            <button onclick="prepararMision('dQw4w9WgXcQ', 'Misión 1: Rescate')" class="btn" style="background:#2c3e50; margin-bottom:10px;">📹 Tarea 1 (+10 pts)</button>
+            <button onclick="prepararMision('7wtfhZwyrcc', 'Misión 2: Alimento')" class="btn" style="background:#2c3e50; margin-bottom:10px;">📹 Tarea 2 (+10 pts)</button>
         </div>
-        <button id="donateButton" class="btn btn-danger" style="margin-top:20px;">❤️ DONAR MONEDAS ACUMULADAS</button>
-        <div class="stats" style="margin-top: 15px;">
-            <div>Monedas: <span id="coins">0</span> 🦴</div>
+        <div class="stats" style="margin-top: 20px; border-top: 1px solid #444; padding-top: 10px;">
+            <strong>Monedas: <span id="coins">0</span> 🦴</strong>
         </div>
+        <button id="donateButton" class="btn btn-danger" style="margin-top:15px;">❤️ DONAR A LA CAUSA</button>
     </div>
 
     <div id="miniapppanel" class="panel" style="display:none;">
-        <h4 id="activeMissionTitle">Entrenamiento en curso...</h4>
+        <h4 id="activeTitle">Cargando...</h4>
         <div id="player"></div>
-        <div class="actions">
-            <button id="validateCode" class="btn btn-success" style="display:none;" disabled>✅ VALIDAR VICTORIA</button>
-            <button onclick="cancelarMision()" class="btn" style="background:#555; margin-top:10px;">⬅️ VOLVER A MISIONES</button>
-        </div>
-        
-        <div id="walletSection" style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px;">
-            <h3>Mis Datos de Cobro</h3>
-            <input type="text" id="btcAddress" placeholder="Dirección Bitcoin (BTC)">
-            <button onclick="guardarWallet('BTC')" class="btn" style="background:#333; font-size:12px;">Guardar BTC</button>
-            <input type="text" id="usdtAddress" placeholder="Dirección USDT (TRC20)">
-            <button onclick="guardarWallet('USDT')" class="btn" style="background:#333; font-size:12px;">Guardar USDT</button>
+        <div id="controls" style="margin-top:15px;">
+            <button id="validateCode" class="btn btn-success" style="display:none;" disabled>✅ VALIDAR TAREA</button>
+            <button onclick="volverALista()" class="btn" style="background:#444; margin-top:10px;">⬅️ VOLVER</button>
         </div>
     </div>
 
     <script>
-        // CONFIGURACIÓN SUPABASE
+        // 1. Configuración Inmediata
         const supabaseUrl = 'https://ywkcnxhlptqagwxjnygx.supabase.co'; 
         const supabaseKey = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        let player, lastTime = 0, videoEnded = false, coins = 0;
-        let currentVideoId = '';
+        let player, videoEnded = false, coins = 0;
 
-        // NAVEGACIÓN Y LOGICA INICIAL
-        document.getElementById('readTerms').onchange = function() {
-            document.getElementById('startButton').disabled = !this.checked;
-        };
+        // 2. Lógica de Botones (Separada para evitar bloqueos)
+        const check = document.getElementById('readTerms');
+        const sBtn = document.getElementById('startButton');
 
-        document.getElementById('startButton').onclick = function() {
+        check.addEventListener('change', () => {
+            sBtn.disabled = !check.checked;
+        });
+
+        sBtn.onclick = () => {
             document.getElementById('registration').style.display = 'none';
             document.getElementById('missionList').style.display = 'block';
             if (window.Telegram?.WebApp) window.Telegram.WebApp.expand();
         };
 
-        function iniciarMision(videoId, titulo) {
-            currentVideoId = videoId;
+        // 3. Gestión de Misiones
+        function prepararMision(id, titulo) {
             document.getElementById('missionList').style.display = 'none';
             document.getElementById('miniapppanel').style.display = 'block';
-            document.getElementById('activeMissionTitle').innerText = titulo;
+            document.getElementById('activeTitle').innerText = titulo;
             
-            if (player) {
-                player.loadVideoById(videoId);
+            if (player && player.loadVideoById) {
+                player.loadVideoById(id);
+            } else {
+                window.nextVideoId = id;
             }
         }
 
-        function cancelarMision() {
-            if (player) player.stopVideo();
+        function volverALista() {
+            if(player) player.stopVideo();
             document.getElementById('miniapppanel').style.display = 'none';
             document.getElementById('missionList').style.display = 'block';
         }
 
-        // YOUTUBE API
+        // 4. YouTube API
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '240', width: '100%',
-                videoId: 'dQw4w9WgXcQ', 
-                playerVars: { 'controls': 1, 'playsinline': 1, 'rel': 0 },
-                events: { 'onStateChange': onPlayerStateChange }
+                height: '200', width: '100%',
+                videoId: 'dQw4w9WgXcQ',
+                playerVars: { 'autoplay': 1, 'controls': 1, 'modestbranding': 1, 'playsinline': 1 },
+                events: { 'onStateChange': (e) => {
+                    if (e.data === YT.PlayerState.ENDED) {
+                        videoEnded = true;
+                        document.getElementById('validateCode').style.display = 'block';
+                        document.getElementById('validateCode').disabled = false;
+                    }
+                }}
             });
         }
 
-        function onPlayerStateChange(e) {
-            if (e.data === YT.PlayerState.ENDED) {
-                videoEnded = true;
-                const vBtn = document.getElementById('validateCode');
-                vBtn.style.display = 'block';
-                vBtn.disabled = false;
-            }
-        }
-
-        // SUPABASE: GUARDAR WALLET
-        async function guardarWallet(tipo) {
-            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-            if (!user) return alert("Abre desde Telegram");
-            const direccion = tipo === 'BTC' ? document.getElementById('btcAddress').value : document.getElementById('usdtAddress').value;
-            const campo = tipo === 'BTC' ? { wallet_btc: direccion } : { wallet_usdt: direccion };
-            const { error } = await supabase.from('usuarios').update(campo).eq('id_telegram', user.id);
-            if (error) alert("Error: " + error.message);
-            else alert("¡Wallet de " + tipo + " guardada!");
-        }
-
-        // VALIDAR PUNTOS
+        // 5. Validar y Guardar
         document.getElementById('validateCode').onclick = async () => {
             if (videoEnded) {
                 coins += 10;
                 document.getElementById('coins').innerText = coins;
-                document.getElementById('validateCode').innerText = "✅ VALIDADO";
-                document.getElementById('validateCode').disabled = true;
-                const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-                if(user) await supabase.rpc('incrementar_puntos', { user_id: user.id, cantidad: 10 });
+                document.getElementById('validateCode').innerText = "✅ PROCESANDO...";
                 
-                setTimeout(() => {
-                    alert("¡Misión cumplida! +10 monedas.");
-                    cancelarMision();
-                    document.getElementById('validateCode').style.display = 'none';
-                    videoEnded = false;
-                }, 1000);
-            }
-        };
-
-        // DONAR
-        document.getElementById('donateButton').onclick = async () => {
-            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-            if (coins > 0 && user) {
-                await supabase.from('donaciones').insert([{ id_telegram: user.id, cantidad_puntos: coins }]);
-                alert("¡Gracias por ayudar a personas y animales!");
-                coins = 0;
-                document.getElementById('coins').innerText = "0";
-            } else {
-                alert("No tienes monedas acumuladas para donar.");
+                const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
+                if(user) {
+                    await supabase.rpc('incrementar_puntos', { user_id: user.id, cantidad: 10 });
+                }
+                
+                alert("¡Tarea completada! +10 monedas para la causa.");
+                volverALista();
+                document.getElementById('validateCode').style.display = 'none';
+                document.getElementById('validateCode').innerText = "✅ VALIDAR TAREA";
+                videoEnded = false;
             }
         };
     </script>
