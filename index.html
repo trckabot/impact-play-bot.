@@ -5,59 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXON - Impact Game</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div id="registration" class="panel">
         <h2 id="welcomeTitle">AXON: RED DE IMPACTO 🛡️</h2>
-        <p id="missionText">Entrenando para ayudar a personas sin hogar y animales rescatados [cite: 2026-02-14]</p>
+        <p id="missionText">Entrenando para ayudar a personas sin hogar y animales rescatados</p>
         
         <label id="termsLabel">
-            <input type="checkbox" id="readTerms"> Acepto que los pagos dependen de la monetización de YouTube (Estonia Law).
+            <input type="checkbox" id="readTerms"> Acepto que los pagos dependen de la monetización (Estonia Law).
         </label>
-        <button id="startButton" class="btn btn-primary" disabled>INICIAR ENTRENAMIENTO</button>
+        <button id="startButton" class="btn btn-primary" disabled style="padding: 10px; margin-top: 10px; cursor: pointer;">INICIAR ENTRENAMIENTO</button>
     </div>
 
-    <div id="miniapppanel" class="panel" style="display:none;">
+    <div id="miniapppanel" class="panel" style="display:none; padding: 15px;">
         <div id="player"></div>
-        <div class="actions">
-            <button id="validateCode" class="btn btn-success" style="display:none;" disabled>✅ VALIDAR VICTORIA</button>
-            <button id="donateButton" class="btn btn-danger">❤️ DONAR MONEDAS AL RESCATE</button>
+        <div class="actions" style="margin-top: 15px;">
+            <button id="validateCode" class="btn btn-success" style="display:none; background-color: #28a745; color: white; padding: 10px;" disabled>✅ VALIDAR VICTORIA</button>
+            <button id="donateButton" class="btn btn-danger" style="background-color: #dc3545; color: white; padding: 10px; margin-top: 10px;">❤️ DONAR AL RESCATE</button>
         </div>
-        <div class="stats">
-            <div><span id="txtCoins">Monedas</span>: <span id="coins">0</span></div>
-            <div><span id="txtLevel">Nivel</span>: <span id="level">1</span></div>
+        <div class="stats" style="margin-top: 15px; font-weight: bold;">
+            <div>Monedas: <span id="coins">0</span> 🦴</div>
+        </div>
+
+        <div id="walletSection" style="margin-top: 25px; border-top: 2px solid #444; padding-top: 20px;">
+            <h3>Mis Datos de Cobro (Premios)</h3>
+            <p style="font-size: 0.8em; color: #aaa;">Introduce tus direcciones para recibir BTC o USDT.</p>
+            <input type="text" id="btcAddress" placeholder="Dirección Bitcoin (BTC)" style="width:90%; padding:10px; margin-bottom: 5px;">
+            <button onclick="guardarWallet('BTC')" style="padding: 8px; cursor: pointer;">Guardar BTC</button>
+            <br><br>
+            <input type="text" id="usdtAddress" placeholder="Dirección USDT (TRC20)" style="width:90%; padding:10px; margin-bottom: 5px;">
+            <button onclick="guardarWallet('USDT')" style="padding: 8px; cursor: pointer;">Guardar USDT</button>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN DE IDIOMAS Y TEXTOS ---
-        const translations = {
-            es: { title: "AXON: RED DE IMPACTO 🛡️", mission: "Entrenando para ayudar a personas sin hogar y animales rescatados [cite: 2026-02-14]", start: "INICIAR ENTRENAMIENTO", done: "¡Video completado! Valida tu victoria.", donateMsg: "¡Gracias! Donación enviada para personas y animales [cite: 2026-02-14]" },
-            en: { title: "AXON: IMPACT NETWORK 🛡️", mission: "Training to help homeless people and rescued animals [cite: 2026-02-14]", start: "START TRAINING", done: "Video completed! Validate your victory.", donateMsg: "Thank you! Donation sent for people and animals [cite: 2026-02-14]" },
-            ru: { title: "AXON: СЕТЬ ВЛИЯНИЯ 🛡️", mission: "Помощь бездомным людям и спасенным животным [cite: 2026-02-14]", start: "НАЧАТЬ ТРЕНИРОВКУ", done: "Видео завершено! Подтвердите победу.", donateMsg: "Спасибо! Пожертвование отправлено [cite: 2026-02-14]" },
-            ar: { title: "شبكة AXON للتأثير 🛡️", mission: "التدريب لمساعدة المشردين والحيوانات التي تم إنقاذها [cite: 2026-02-14]", start: "ابدأ التدريب", done: "اكتمل الفيديو! تحقق من فوزك.", donateMsg: "شكراً! تم إرسال التبرع للمشردين والحيوانات [cite: 2026-02-14]" }
-        };
+        // --- CONEXIÓN SUPABASE CONFIGURADA ---
+        const supabaseUrl = 'https://ywkcnxhlptqagwxjnygx.supabase.co'; 
+        const supabaseKey = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+        // --- LÓGICA DE TRADUCCIÓN BÁSICA ---
         const userLang = navigator.language.split('-')[0] || 'en';
-        const t = translations[userLang] || translations.en;
+        const texts = {
+            es: { done: "¡Video completado! Ya puedes validar.", donate: "¡Gracias! Donación registrada para personas y animales." },
+            en: { done: "Video completed! You can now validate.", donate: "Thank you! Donation recorded for people and animals." }
+        };
+        const t = texts[userLang] || texts.en;
 
-        // Aplicar textos traducidos
-        document.getElementById('welcomeTitle').innerText = t.title;
-        document.getElementById('missionText').innerText = t.mission;
-        document.getElementById('startButton').innerText = t.start;
+        let player, lastTime = 0, videoEnded = false, coins = 0;
 
-        // --- LÓGICA DE VIDEO Y BLOQUEO DE ADELANTO ---
-        let player;
-        let lastTime = 0;
-        let videoEnded = false;
-        let coins = 0;
+        // --- GUARDAR WALLET EN BASE DE DATOS ---
+        async function guardarWallet(tipo) {
+            const user = window.Telegram.WebApp.initDataUnsafe.user;
+            if (!user) return alert("Por favor, abre la app desde Telegram.");
 
+            const direccion = tipo === 'BTC' ? 
+                document.getElementById('btcAddress').value : 
+                document.getElementById('usdtAddress').value;
+
+            if (!direccion) return alert("Escribe una dirección válida.");
+
+            const campo = tipo === 'BTC' ? { wallet_btc: direccion } : { wallet_usdt: direccion };
+
+            const { error } = await supabase.from('usuarios').update(campo).eq('id_telegram', user.id);
+
+            if (error) alert("Error al guardar: " + error.message);
+            else alert("¡Wallet de " + tipo + " guardada para tus premios!");
+        }
+
+        // --- LÓGICA DE YOUTUBE (ANTI-TRAMPAS) ---
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '360', width: '100%',
-                videoId: 'TU_ID_DE_VIDEO', // <--- CAMBIA ESTO POR EL ID DE TU VIDEO
-                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+                height: '240', width: '100%',
+                videoId: 'dQw4w9WgXcQ', // <--- CAMBIA ESTO POR TU ID DE VIDEO DE YOUTUBE
+                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'playsinline': 1 },
                 events: { 'onStateChange': onPlayerStateChange, 'onReady': startAntiCheat }
             });
         }
@@ -82,7 +106,7 @@
             }
         }
 
-        // --- FUNCIONES DE BOTONES ---
+        // --- FUNCIONES DE INTERFAZ ---
         document.getElementById('readTerms').onclick = (e) => {
             document.getElementById('startButton').disabled = !e.target.checked;
         };
@@ -90,22 +114,36 @@
         document.getElementById('startButton').onclick = () => {
             document.getElementById('registration').style.display = 'none';
             document.getElementById('miniapppanel').style.display = 'block';
+            window.Telegram.WebApp.expand(); // Expande la app en Telegram
         };
 
-        document.getElementById('validateCode').onclick = () => {
+        document.getElementById('validateCode').onclick = async () => {
             if (videoEnded) {
+                const user = window.Telegram.WebApp.initDataUnsafe.user;
                 coins += 10;
                 document.getElementById('coins').innerText = coins;
-                document.getElementById('validateCode').disabled = true;
                 document.getElementById('validateCode').innerText = "✅ VALIDADO";
+                document.getElementById('validateCode').disabled = true;
+
+                if(user) {
+                    // Suma puntos en la base de datos de Supabase
+                    await supabase.rpc('incrementar_puntos', { user_id: user.id, cantidad: 10 });
+                }
             }
         };
 
-        document.getElementById('donateButton').onclick = () => {
-            if (coins > 0) {
-                alert(t.donateMsg);
+        document.getElementById('donateButton').onclick = async () => {
+            const user = window.Telegram.WebApp.initDataUnsafe.user;
+            if (coins > 0 && user) {
+                // Registrar la donación en la tabla de donaciones
+                await supabase.from('donaciones').insert([
+                    { id_telegram: user.id, cantidad_puntos: coins }
+                ]);
+                alert(t.donate);
                 coins = 0;
                 document.getElementById('coins').innerText = "0";
+            } else {
+                alert("No tienes monedas para donar todavía.");
             }
         };
     </script>
