@@ -3,86 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AXON IMPACT GLOBAL</title>
+    <title>AXON IMPACT</title>
     <style>
         :root { --primary: #238636; --bg: #0d1117; --panel: #161b22; --text: #e6edf3; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
-        .panel { background: var(--panel); padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; border: 1px solid #30363d; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .panel { background: var(--panel); padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; border: 1px solid #30363d; text-align: center; }
         .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; font-size: 16px; transition: 0.3s; }
         .btn-green { background: var(--primary); }
-        .btn-blue { background: #1f6feb; }
-        .btn-social { background: #30363d; width: 48%; display: inline-block; font-size: 12px; }
+        .btn-social { background: #30363d; width: 48%; display: inline-block; font-size: 13px; }
         textarea { width: 100%; height: 60px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 8px; padding: 10px; margin-top: 10px; box-sizing: border-box; resize: none; }
-        #player { width: 100%; border-radius: 10px; margin-top: 15px; background: #000; height: 210px; }
-        
-        /* Modal y Overlay */
-        #customModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #21262d; padding: 25px; border-radius: 20px; border: 2px solid var(--primary); z-index: 10000; width: 80%; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        #player { width: 100%; border-radius: 10px; margin-top: 15px; height: 210px; background: #000; }
+        #customModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #21262d; padding: 25px; border-radius: 20px; border: 2px solid var(--primary); z-index: 10000; width: 80%; text-align: center; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; }
     </style>
 </head>
 <body>
 
     <div id="overlay" class="overlay"></div>
-    
     <div id="customModal">
         <h3 id="modalTitle">🌟</h3>
         <p id="modalMsg"></p>
-        <p style="font-size: 12px; color: #8b949e; margin-top: 15px;">Recuerda apoyarnos con <b>Like, Comentario y Compartiendo</b> para ayudar a más vidas.</p>
-        <button class="btn btn-green" onclick="closeModal()">CONTINUAR</button>
+        <button class="btn btn-green" id="btnModalClose">CONTINUAR</button>
     </div>
 
     <div id="screen1" class="panel">
-        <h2 style="color: var(--primary); margin-bottom: 10px;">AXON IMPACT 🛡️</h2>
-        <p id="txt-welcome">Uniendo esfuerzos por las <b>personas necesitadas</b> y los <b>animales indefensos de la calle</b>.</p>
-        <hr style="border: 0.5px solid #30363d; margin: 20px 0;">
+        <h2 style="color: var(--primary);">AXON IMPACT 🛡️</h2>
+        <p>Uniendo esfuerzos por las <b>personas necesitadas</b> y los <b>animales indefensos de la calle</b>.</p>
         <button id="startButton" class="btn btn-green">ENTRAR A MISIONES</button>
     </div>
 
     <div id="screen2" class="panel" style="display:none;">
-        <h3>MISIONES DISPONIBLES 📋</h3>
-        <div id="taskList">
-            <button onclick="verMision('dQw4w9WgXcQ', 'Misión Esperanza')" class="btn btn-blue">📹 Tarea 1 (+10 pts)</button>
-        </div>
-        <p style="margin-top: 20px;">Monedas: <span id="coinCount" style="color: var(--primary); font-weight: bold;">0</span> 🦴</p>
+        <h3>MISIONES DISPONIBLES</h3>
+        <button onclick="verMision('dQw4w9WgXcQ', 'Misión Esperanza')" class="btn" style="background:#1f6feb;">📹 Tarea 1 (+10 pts)</button>
+        <p style="font-size: 18px; margin-top: 20px;">Monedas: <span id="coinCount" style="color:var(--primary); font-weight:bold;">0</span> 🦴</p>
     </div>
 
     <div id="screen3" class="panel" style="display:none;">
-        <h4 id="activeMissionTitle" style="margin: 0;">Video</h4>
+        <h4 id="activeTitle">Cargando...</h4>
         <div id="player"></div>
         
         <div style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
             <button class="btn btn-social" onclick="alert('¡Gracias por tu Like!')">👍 Like</button>
-            <button class="btn btn-social" onclick="alert('Copia el link de este video y compártelo!')">🔗 Compartir</button>
-            <textarea id="commentBox" placeholder="Escribe un mensaje de apoyo para esta causa..."></textarea>
-            <button class="btn" style="background: #30363d; font-size: 11px; padding: 8px;" onclick="alert('Comentario enviado')">Publicar Comentario</button>
+            <button class="btn btn-social" onclick="compartirMision()">🔗 Compartir</button>
+            <textarea id="commentBox" placeholder="Escribe un mensaje de apoyo..."></textarea>
         </div>
 
-        <button id="btnVerify" class="btn btn-green" style="display:none; box-shadow: 0 0 15px var(--primary);">✅ VALIDAR IMPACTO</button>
+        <button id="btnVerify" class="btn btn-green" style="display:none;">✅ VALIDAR IMPACTO</button>
         <button onclick="location.reload()" class="btn" style="background:#333; margin-top: 10px;">⬅️ SALIR</button>
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player, isPlaying = false, inactivityTimer;
-        let lastLegitTime = 0; // Sistema Anti-Trampa
+        let player, isPlaying = false, lastLegitTime = 0;
+        let totalCoins = 0; // Variable para los puntos
 
-        // 1. GESTIÓN DE INACTIVIDAD (2 MINUTOS)
-        function resetInactivity() {
-            clearTimeout(inactivityTimer);
-            if (!isPlaying) {
-                inactivityTimer = setTimeout(() => {
-                    showModal("¡Te necesitamos!", "Tu presencia es vital para las personas necesitadas y animales indefensos de la calle.");
-                }, 120000); 
+        // --- COMPARTIR REAL ---
+        function compartirMision() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'AXON IMPACT',
+                    text: 'Ayúdame a apoyar a personas necesitadas y animales de la calle viendo este video.',
+                    url: window.location.href
+                }).catch((error) => console.log('Error compartiendo', error));
+            } else {
+                alert("Copia este link: " + window.location.href);
             }
         }
-        window.onclick = resetInactivity;
-        window.ontouchstart = resetInactivity;
 
-        // 2. NAVEGACIÓN
-        document.getElementById('startButton').onclick = function() {
+        // --- NAVEGACIÓN ---
+        document.getElementById('startButton').onclick = () => {
             document.getElementById('screen1').style.display = 'none';
             document.getElementById('screen2').style.display = 'block';
-            resetInactivity();
         };
 
         function verMision(id, titulo) {
@@ -90,23 +81,20 @@
             lastLegitTime = 0;
             document.getElementById('screen2').style.display = 'none';
             document.getElementById('screen3').style.display = 'block';
-            document.getElementById('activeMissionTitle').innerText = titulo;
+            document.getElementById('activeTitle').innerText = titulo;
             if (player) player.loadVideoById(id);
         }
 
-        // 3. YOUTUBE API + ANTI-TRAMPA
+        // --- YOUTUBE API + ANTI-TRAMPA ---
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 videoId: 'dQw4w9WgXcQ',
-                playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1, 'controls': 1 },
                 events: {
                     'onStateChange': (e) => {
                         if (e.data == YT.PlayerState.PLAYING) {
                             isPlaying = true;
-                            startAntiCheat();
-                        } else {
-                            isPlaying = false;
-                        }
+                            startChecker();
+                        } else { isPlaying = false; }
                         if (e.data == YT.PlayerState.ENDED) {
                             document.getElementById('btnVerify').style.display = 'block';
                         }
@@ -115,44 +103,39 @@
             });
         }
 
-        function startAntiCheat() {
-            const checker = setInterval(() => {
+        function startChecker() {
+            const check = setInterval(() => {
                 if (player && isPlaying) {
                     let curr = player.getCurrentTime();
-                    // Si intenta adelantar más de 2 segundos, rebota
-                    if (curr > lastLegitTime + 2.5) {
-                        player.seekTo(lastLegitTime);
-                    } else {
-                        lastLegitTime = curr;
-                    }
-                } else {
-                    clearInterval(checker);
-                }
+                    if (curr > lastLegitTime + 2.5) player.seekTo(lastLegitTime);
+                    else lastLegitTime = curr;
+                } else { clearInterval(check); }
             }, 1000);
         }
 
-        // 4. VENTANAS EMERGENTES (MODALES)
-        function showModal(titulo, mensaje) {
-            document.getElementById('modalTitle').innerText = titulo;
-            document.getElementById('modalMsg').innerText = mensaje;
+        // --- VALIDACIÓN Y SUMA DE PUNTOS ---
+        document.getElementById('btnVerify').onclick = () => {
+            totalCoins += 10; // Sumamos 10 puntos
+            document.getElementById('coinCount').innerText = totalCoins; // Actualizamos pantalla
+            
+            showModal("¡Misión Cumplida!", "Has ganado 10 monedas. Tu ayuda es vital para personas y animales.");
+            
+            // Al cerrar el modal, volvemos a la lista de misiones
+            document.getElementById('btnModalClose').onclick = () => {
+                document.getElementById('customModal').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('screen3').style.display = 'none';
+                document.getElementById('screen2').style.display = 'block';
+                document.getElementById('btnVerify').style.display = 'none'; // Ocultamos para la próxima
+            };
+        };
+
+        function showModal(t, m) {
+            document.getElementById('modalTitle').innerText = t;
+            document.getElementById('modalMsg').innerText = m;
             document.getElementById('customModal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
-
-        function closeModal() {
-            document.getElementById('customModal').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            resetInactivity();
-        }
-
-        document.getElementById('btnVerify').onclick = function() {
-            showModal("¡Misión Cumplida!", "Tu compasión ayuda a quienes no tienen voz. ¡Sigamos salvando vidas!");
-            // Al validar, el botón del modal ahora reinicia para cargar nuevas tareas
-            document.querySelector('#customModal button').onclick = () => location.reload();
-        };
-
-        // Iniciar primer timer
-        resetInactivity();
     </script>
 </body>
 </html>
