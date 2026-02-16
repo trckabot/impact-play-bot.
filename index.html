@@ -6,71 +6,75 @@
     <title>AXON IMPACT GLOBAL</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --primary: #2ecc71; --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --music: #8a2be2; }
+        :root { 
+            --primary: #2ecc71; 
+            --bg: #0d1117; 
+            --panel: #161b22; 
+            --text: #e6edf3; 
+            --music: #8a2be2; 
+            --video: #1f6feb;
+        }
         
         body, html { 
-            height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif;
-            display: flex; justify-content: center; align-items: flex-start; overflow-x: hidden; padding-top: 20px;
+            height: 100%; margin: 0; background: var(--bg); color: var(--text); 
+            font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: flex-start; 
+            overflow-x: hidden; padding-top: 10px;
         }
 
-        /* DISEÑO DE IMPACTO PARA EL LOGO */
+        .container { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+        /* LOGO IMPACTANTE (EL ESCUDO QUE ENVIASTE) */
         .app-logo {
-            width: 85%; /* Grande y llamativo */
-            max-width: 320px;
+            width: 95%; 
+            max-width: 350px;
             height: auto;
-            filter: drop-shadow(0 0 20px rgba(46, 204, 113, 0.6));
-            margin-bottom: -30px;
+            filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.4));
+            margin-bottom: -40px;
             z-index: 2;
-            transition: transform 0.3s ease;
-        }
-
-        .container {
-            display: flex; flex-direction: column; align-items: center; width: 100%;
         }
 
         .panel { 
-            background: linear-gradient(180deg, rgba(22,27,34,0.5) 0%, rgba(22,27,34,1) 30%);
-            padding: 40px 25px 30px 25px; border-radius: 30px; width: 85%; max-width: 380px; 
+            background: linear-gradient(180deg, rgba(22,27,34,0.6) 0%, rgba(22,27,34,1) 25%);
+            padding: 50px 25px 30px 25px; border-radius: 30px; width: 85%; max-width: 380px; 
             text-align: center; border: 1px solid rgba(48, 54, 61, 0.5);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
         }
 
-        .btn { display: block; width: 100%; padding: 18px; margin: 15px 0; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-green { background: var(--primary); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); }
-        .btn-green:active { transform: scale(0.98); }
+        .btn { display: block; width: 100%; padding: 16px; margin: 12px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 15px; text-transform: uppercase; }
+        .btn-green { background: var(--primary); }
+        .btn-video { background: var(--video); }
         
-        input { width: 100%; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 12px; padding: 14px; margin: 10px 0; box-sizing: border-box; }
+        input { width: 100%; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 10px; padding: 12px; margin: 10px 0; box-sizing: border-box; }
         
-        .song-list { max-height: 200px; overflow-y: auto; margin-top: 15px; border-radius: 12px; background: rgba(13, 17, 23, 0.8); }
-        .song-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        
-        #player { width: 100%; border-radius: 15px; height: 230px; background: #000; margin-top: 15px; border: 1px solid var(--primary); }
+        .song-list { max-height: 180px; overflow-y: auto; margin-top: 10px; border-radius: 10px; background: rgba(0,0,0,0.3); }
+        .song-item { padding: 14px; border-bottom: 1px solid #222; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
 
-        /* Pantallas */
+        #player { width: 100%; border-radius: 15px; height: 220px; background: #000; margin-top: 15px; border: 1px solid var(--primary); }
+
         .screen { display: none; width: 100%; flex-direction: column; align-items: center; }
         #screen1 { display: flex; }
 
-        /* Modales */
+        /* Modal Recompensas */
         #customModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1c2128; padding: 30px; border-radius: 25px; border: 2px solid var(--primary); z-index: 10000; width: 80%; text-align: center; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; }
     </style>
 </head>
 <body>
 
     <div id="overlay" class="overlay"></div>
     <div id="customModal">
-        <h2 id="mTitle">🌟</h2>
-        <p id="mMsg" style="font-size: 16px;"></p>
-        <button class="btn btn-green" onclick="closeModal()">CONTINUAR</button>
+        <h2 id="mTitle">✨</h2>
+        <p id="mMsg"></p>
+        <button class="btn btn-green" onclick="closeModal()">ENTENDIDO</button>
     </div>
 
     <div class="container">
         <div id="screen1" class="screen">
-            <img src="https://i.postimg.cc/mD8VfTnt/1000295654.jpg" alt="Logo AXON" class="app-logo">
+            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" alt="Logo AXON" class="app-logo">
             <div class="panel">
-                <h1 style="color: var(--primary); margin: 0; font-size: 26px;">AXON IMPACT GLOBAL</h1>
-                <p style="font-size: 15px; color: #8b949e; line-height: 1.6; margin: 15px 0;">
-                    Uniendo <b>Finanzas</b> y <b>Blockchain</b> para rescatar animales y ayudar a personas sin hogar [cite: 2026-02-14].
+                <h1 style="color: var(--primary); margin: 0; font-size: 24px;">AXON IMPACT GLOBAL</h1>
+                <p style="font-size: 14px; color: #8b949e; line-height: 1.5; margin: 15px 0;">
+                    AXÓN: TU LUZ. SU CAMINO.<br><b>JUNTOS, LO HACEMOS POSIBLE.</b> [cite: 2026-02-16]
                 </p>
                 <button onclick="nav('screen2')" class="btn btn-green">ENTRAR A MISIONES</button>
             </div>
@@ -78,23 +82,29 @@
 
         <div id="screen2" class="screen">
             <div class="panel">
-                <h3 style="margin:0 0 20px 0;">MISIONES ACTIVAS 🦴</h3>
+                <h3 style="margin-top:0;">MISIONES DISPONIBLES 🦴</h3>
                 
-                <div style="margin-bottom: 25px;">
-                    <h4 style="color: var(--music); margin-bottom: 10px;">🎵 MÚSICA & FINANZAS</h4>
-                    <input type="text" id="searchSong" placeholder="🔍 Buscar canción o activo..." onkeyup="filterSongs()">
+                <div style="margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px;">
+                    <h4 style="color: var(--video); margin: 0 0 10px 0;">📹 VIDEOS DE AYUDA</h4>
+                    <button onclick="verContenido('dQw4w9WgXcQ', 'Misión: Rescate Animal', 10)" class="btn btn-video">
+                        VER VIDEO (+10 pts)
+                    </button>
+                </div>
+
+                <div>
+                    <h4 style="color: var(--music); margin: 0 0 10px 0;">🎵 MÚSICA SOLIDARIA</h4>
+                    <input type="text" id="searchSong" placeholder="Buscar canción..." onkeyup="filterSongs()">
                     <div class="song-list" id="songList">
-                        <div class="song-item" onclick="verContenido('jNQXAC9IVRw', 'Bull Market Vibes: Reggaetón Mix', 15)">
-                            <span>🎧 Bull Market Mix</span> <span style="color:var(--primary)">+15🦴</span>
+                        <div class="song-item" onclick="verContenido('jNQXAC9IVRw', 'Reggaetón Mix 2026', 15)">
+                            <span>🎧 Reggaetón Mix</span> <span style="color:var(--primary)">+15🦴</span>
                         </div>
-                        <div class="song-item" onclick="verContenido('5qap5aO4i9A', 'BTC Halving Rock: Solidaridad', 15)">
-                            <span>🎧 BTC Rock</span> <span style="color:var(--primary)">+15🦴</span>
+                        <div class="song-item" onclick="verContenido('5qap5aO4i9A', 'Rock Alternativo', 15)">
+                            <span>🎧 Rock Mix</span> <span style="color:var(--primary)">+15🦴</span>
                         </div>
                     </div>
                 </div>
 
-                <p style="font-size: 20px; font-weight: bold;">MIS MONEDAS: <span id="coinCount" style="color:var(--primary)">0</span></p>
-                <button onclick="nav('screen1')" class="btn" style="background:#333; font-size: 12px;">SALIR</button>
+                <p style="font-size: 18px; margin-top: 20px;">MIS MONEDAS: <span id="coinCount" style="color:var(--primary)">0</span> 🦴</p>
             </div>
         </div>
 
@@ -102,7 +112,7 @@
             <div class="panel">
                 <h4 id="activeTitle" style="color: var(--primary); margin: 0;">Reproduciendo...</h4>
                 <div id="player"></div>
-                <button id="btnVerify" class="btn btn-green" style="display:none;">✅ COBRAR RECOMPENSA</button>
+                <button id="btnVerify" class="btn btn-green" style="display:none; margin-top:15px;">✅ RECLAMAR PUNTOS</button>
                 <button onclick="nav('screen2')" class="btn" style="background:#333;">VOLVER</button>
             </div>
         </div>
@@ -151,7 +161,7 @@
             const check = setInterval(() => {
                 if (player && isPlaying) {
                     let curr = player.getCurrentTime();
-                    if (curr > lastTime + 2) player.seekTo(lastTime);
+                    if (curr > lastTime + 2.1) player.seekTo(lastTime);
                     else lastTime = curr;
                 } else clearInterval(check);
             }, 1000);
@@ -160,7 +170,7 @@
         document.getElementById('btnVerify').onclick = () => {
             coins += currentPoints;
             document.getElementById('coinCount').innerText = coins;
-            showModal("¡IMPACTO LOGRADO!", `Has generado ${currentPoints} monedas para el proyecto AXON. Gracias por ayudar a personas y animales.`);
+            showModal("¡GRACIAS POR AYUDAR!", `Has ganado ${currentPoints} monedas para ayudar a personas y animales. [cite: 2026-02-14]`);
             document.getElementById('btnVerify').style.display = 'none';
         };
 
