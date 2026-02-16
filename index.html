@@ -4,43 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AXON IMPACT GLOBAL</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --primary: #238636; --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --accent: #1f6feb; }
+        :root { --primary: #238636; --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --accent: #1f6feb; --music: #8a2be2; }
         
-        /* CORRECCIÓN: Centrado absoluto en la pantalla */
+        /* CORRECCIÓN: Centrado Total */
         body, html { 
-            height: 100%; 
-            margin: 0; 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center; /* Esto centra el contenido verticalmente */
-            overflow: hidden; 
+            height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: sans-serif;
+            display: flex; justify-content: center; align-items: center; overflow-x: hidden;
         }
 
         .panel { 
-            background: var(--panel); 
-            padding: 25px; 
-            border-radius: 20px; 
-            width: 85%; 
-            max-width: 380px; 
-            border: 1px solid #30363d; 
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--panel); padding: 25px; border-radius: 20px; width: 85%; max-width: 380px; 
+            border: 1px solid #30363d; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 16px; }
+        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 15px; text-decoration: none;}
         .btn-green { background: var(--primary); }
         .btn-blue { background: var(--accent); }
-        .btn-social { background: #30363d; width: 48%; display: inline-block; font-size: 13px; }
+        .btn-music { background: var(--music); }
         
-        textarea { width: 100%; height: 60px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 8px; padding: 10px; margin-top: 10px; box-sizing: border-box; resize: none; }
-        #player { width: 100%; border-radius: 10px; margin-top: 15px; height: 210px; background: #000; }
+        input, textarea { width: 100%; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 8px; padding: 12px; margin-top: 10px; box-sizing: border-box; }
         
-        /* Modal */
+        .song-list { max-height: 150px; overflow-y: auto; margin-top: 10px; text-align: left; }
+        .song-item { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; font-size: 13px; }
+        .song-item:hover { background: #1f2937; }
+
         #customModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #21262d; padding: 25px; border-radius: 20px; border: 2px solid var(--primary); z-index: 10000; width: 80%; text-align: center; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; }
     </style>
@@ -55,63 +43,74 @@
     </div>
 
     <div id="screen1" class="panel">
-        <h2 style="color: var(--primary);">AXON IMPACT</h2>
+        <h2 style="color: var(--primary);">AXON IMPACT GLOBAL</h2>
         <p>Ayudando a <b>personas necesitadas</b> y <b>animales de la calle</b>.</p>
         <button onclick="nav('screen2')" class="btn btn-green">ENTRAR A MISIONES</button>
     </div>
 
     <div id="screen2" class="panel" style="display:none;">
-        <h3>MISIONES DISPONIBLES 📋</h3>
-        <p style="font-size: 14px; color: #8b949e;">Elige una tarea para sumar impacto:</p>
-        <button onclick="verMision('dQw4w9WgXcQ', 'Misión Esperanza')" class="btn btn-blue">📹 Tarea 1 (+10 pts)</button>
+        <h3 style="margin-top:0;">MISIONES DISPONIBLES 📋</h3>
+        
+        <button onclick="verContenido('dQw4w9WgXcQ', 'Video de Impacto', 10)" class="btn btn-blue">📹 Tarea de Video (+10 pts)</button>
+        
+        <div style="margin-top:20px; border-top: 1px solid #333; pt:15px;">
+            <h4 style="color: var(--music);">🎵 GANA ESCUCHANDO MÚSICA</h4>
+            <input type="text" id="searchSong" placeholder="🔍 Buscar canción..." onkeyup="filterSongs()">
+            <div class="song-list" id="songList">
+                <div class="song-item" onclick="verContenido('jNQXAC9IVRw', 'Canción de Esperanza', 15)">
+                    <span>🎧 Canción de Esperanza</span>
+                    <span style="color:var(--music)">+15 pts</span>
+                </div>
+                <div class="song-item" onclick="verContenido('5qap5aO4i9A', 'Lofi Solidario', 15)">
+                    <span>🎧 Lofi Solidario</span>
+                    <span style="color:var(--music)">+15 pts</span>
+                </div>
+            </div>
+        </div>
+
         <p style="margin-top: 20px; font-size: 18px;">Monedas: <span id="coinCount" style="color:var(--primary); font-weight:bold;">0</span> 🦴</p>
     </div>
 
     <div id="screen3" class="panel" style="display:none;">
         <h4 id="activeTitle" style="margin:0;">Reproduciendo...</h4>
         <div id="player"></div>
-        
-        <div style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
-            <button class="btn btn-social" onclick="alert('¡Like registrado!')">👍 Like</button>
-            <button class="btn btn-social" onclick="compartir()">🔗 Compartir</button>
-            <textarea id="commentBox" placeholder="Escribe un mensaje de apoyo..."></textarea>
-            <button class="btn" style="background: #30363d; font-size: 11px;" onclick="alert('Comentario enviado')">Publicar Comentario</button>
-        </div>
-
-        <button id="btnVerify" class="btn btn-green" style="display:none;">✅ VALIDAR IMPACTO</button>
-        <button onclick="nav('screen2')" class="btn" style="background:#333; margin-top: 10px;">⬅️ SALIR</button>
+        <button id="btnVerify" class="btn btn-green" style="display:none; margin-top:15px;">✅ VALIDAR RECOMPENSA</button>
+        <button onclick="nav('screen2')" class="btn" style="background:#333; margin-top: 10px;">⬅️ VOLVER</button>
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player, isPlaying = false, lastTime = 0, coins = 0;
+        let player, isPlaying = false, lastTime = 0, coins = 0, currentPoints = 0;
 
-        // Función de navegación robusta
-        function nav(screenId) {
+        function nav(id) {
             document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-            document.getElementById(screenId).style.display = 'block';
+            document.getElementById(id).style.display = 'block';
         }
 
-        function verMision(id, titulo) {
+        function verContenido(id, titulo, pts) {
+            currentPoints = pts;
             lastTime = 0;
             document.getElementById('activeTitle').innerText = titulo;
             nav('screen3');
-            if (player && player.loadVideoById) {
-                player.loadVideoById(id);
+            if (player) player.loadVideoById(id);
+        }
+
+        function filterSongs() {
+            let input = document.getElementById('searchSong').value.toLowerCase();
+            let items = document.getElementsByClassName('song-item');
+            for (let i = 0; i < items.length; i++) {
+                items[i].style.display = items[i].innerText.toLowerCase().includes(input) ? "flex" : "none";
             }
         }
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: 'dQw4w9WgXcQ',
-                playerVars: { 'modestbranding': 1, 'rel': 0, 'playsinline': 1 },
+                height: '210', width: '100%', videoId: 'dQw4w9WgXcQ',
                 events: {
                     'onStateChange': (e) => {
                         if (e.data == YT.PlayerState.PLAYING) { isPlaying = true; startSecurity(); }
-                        else { isPlaying = false; }
-                        if (e.data == YT.PlayerState.ENDED) {
-                            document.getElementById('btnVerify').style.display = 'block';
-                        }
+                        else isPlaying = false;
+                        if (e.data == YT.PlayerState.ENDED) document.getElementById('btnVerify').style.display = 'block';
                     }
                 }
             });
@@ -123,22 +122,16 @@
                     let curr = player.getCurrentTime();
                     if (curr > lastTime + 2.5) player.seekTo(lastTime);
                     else lastTime = curr;
-                } else { clearInterval(check); }
+                } else clearInterval(check);
             }, 1000);
         }
 
         document.getElementById('btnVerify').onclick = () => {
-            coins += 10;
+            coins += currentPoints;
             document.getElementById('coinCount').innerText = coins;
-            showModal("¡Misión Cumplida!", "Tu compasión ayuda a quienes no tienen voz. ¡Ganaste 10 puntos!");
+            showModal("¡Completado!", `Has ganado ${currentPoints} monedas por tu apoyo.`);
             document.getElementById('btnVerify').style.display = 'none';
         };
-
-        function compartir() {
-            if (navigator.share) {
-                navigator.share({ title: 'AXON IMPACT', url: window.location.href });
-            } else { alert("Link: " + window.location.href); }
-        }
 
         function showModal(t, m) {
             document.getElementById('mTitle').innerText = t;
@@ -150,7 +143,7 @@
         function closeModal() {
             document.getElementById('customModal').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
-            nav('screen2'); // Regresa a misiones después de cerrar el éxito
+            nav('screen2');
         }
     </script>
 </body>
