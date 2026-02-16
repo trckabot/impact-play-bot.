@@ -19,10 +19,9 @@
         .btn-orange { background: var(--orange); }
         .btn-back { background: #333; font-size: 11px; }
         input, select { width: 100%; background: rgba(13, 17, 23, 0.8); color: white; border: 1px solid #30363d; border-radius: 10px; padding: 12px; margin: 8px 0; box-sizing: border-box; font-size: 14px; }
-        .list-container { max-height: 150px; overflow-y: auto; border-radius: 10px; background: rgba(0,0,0,0.5); margin: 10px 0; }
-        .list-item { padding: 10px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
         .screen { display: none; width: 100%; flex-direction: column; align-items: center; }
         #screen1 { display: flex; }
+        .list-item { padding: 10px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -36,105 +35,69 @@
             </div>
         </div>
 
-        <div id="screenSub" class="screen">
-            <div class="panel">
-                <h3 style="color: var(--primary);">REDES SOCIALES</h3>
-                <a href="https://t.me/TU_CANAL" target="_blank" class="btn" style="background:#0088cc;">Telegram</a>
-                <a href="https://youtube.com/@TU_CANAL" target="_blank" class="btn" style="background:#ff0000;">YouTube</a>
-                <label style="display:block; margin:15px 0; font-size:11px;">
-                    <input type="checkbox" id="checkSub" onclick="validarSub()"> Ya me suscribí
-                </label>
-                <button id="btnM" onclick="nav('screenMenu')" class="btn btn-green" style="opacity:0.3; pointer-events:none;">CONTINUAR</button>
-            </div>
-        </div>
-
         <div id="screenMenu" class="screen">
             <div class="panel">
-                <h3 style="margin:0;">MISIONES 🦴</h3>
-                <button onclick="nav('folderVideo')" class="btn btn-video">📹 VER VIDEOS</button>
-                <button onclick="irAAfiliados()" class="btn btn-green">👥 AFILIADOS</button>
+                <h3 style="margin:0;">MENÚ 🦴</h3>
+                <button onclick="sumarPuntos(10)" class="btn btn-video">📹 VER VIDEO (+10 🦴)</button>
                 <button onclick="checkRegistroCobro()" class="btn btn-gold">💰 COBRAR GANANCIAS</button>
-                <button onclick="nav('folderDonarG')" class="btn btn-orange">🎁 DONAR GANANCIAS</button>
                 <button onclick="mostrarMiLink()" class="btn" style="background:#34495e;">🔗 COPIAR MI LINK</button>
+                <button onclick="nav('screenDonar')" class="btn btn-orange">🎁 DONAR</button>
                 <p style="font-size: 18px; font-weight: bold;">SALDO: <span id="coinCount" style="color:var(--primary)">0</span> 🦴</p>
             </div>
         </div>
 
         <div id="screenRegistro" class="screen">
             <div class="panel">
-                <h2 style="color: var(--gold);">VERIFICACIÓN</h2>
+                <h2 style="color: var(--gold);">DATOS DE COBRO</h2>
                 <input type="text" id="regName" placeholder="Nombre de Usuario">
                 <input type="text" id="regID" placeholder="DNI / Cédula">
                 <select id="regCountry">
                     <option value="Colombia">Colombia</option>
                     <option value="Venezuela">Venezuela</option>
+                    <option value="España">España</option>
                     <option value="Otro">Otro</option>
                 </select>
-                <button onclick="finalizarRegistro()" class="btn btn-green">REGISTRAR</button>
+                <button onclick="finalizarRegistro()" class="btn btn-green">REGISTRARSE</button>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
 
-        <div id="folderAfiliados" class="screen">
+        <div id="screenSub" class="screen">
             <div class="panel">
-                <h3>MIS AFILIADOS</h3>
-                <h2 id="numAfiliados" style="color: var(--primary); font-size: 45px;">0</h2>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
-            </div>
-        </div>
-
-        <div id="folderDonarG" class="screen">
-            <div class="panel">
-                <h3>DONADORES</h3>
-                <button onclick="donarSaldo()" class="btn btn-orange">DONAR TODO</button>
-                <div class="list-container" id="listaDonadores"></div>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
-            </div>
-        </div>
-
-        <div id="folderVideo" class="screen">
-            <div class="panel">
-                <h3>MISIÓN VIDEO</h3>
-                <button onclick="sumarPuntos(10)" class="btn btn-video">VER (+10 🦴)</button>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
+                <h3>ÚNETE A LA CAUSA</h3>
+                <a href="#" class="btn" style="background:#0088cc;">Telegram</a>
+                <label style="display:block; margin:15px 0;"><input type="checkbox" id="checkSub"> Ya me uní</label>
+                <button onclick="if(document.getElementById('checkSub').checked) nav('screenMenu')" class="btn btn-green">CONTINUAR</button>
             </div>
         </div>
     </div>
 
     <script>
-        // TUS CREDENCIALES CONFIGURADAS
+        // CONFIGURACIÓN CON TUS DATOS DE LAS IMÁGENES
         const SUPABASE_URL = 'https://ywkcnxhlptqagwxjnygx.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let coins = 0;
         let isRegistered = false;
-        let userName = "Anónimo";
+        let userName = "";
         const urlParams = new URLSearchParams(window.location.search);
         const refPor = urlParams.get('ref');
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
-            if(id === 'folderDonarG') cargarDonadores();
-        }
-
-        function validarSub() {
-            const check = document.getElementById('checkSub').checked;
-            document.getElementById('btnM').style.opacity = check ? 1 : 0.3;
-            document.getElementById('btnM').style.pointerEvents = check ? 'auto' : 'none';
         }
 
         function sumarPuntos(pts) {
             coins += pts;
             document.getElementById('coinCount').innerText = coins;
             alert("Ganaste 10 monedas");
-            nav('screenMenu');
         }
 
         function checkRegistroCobro() {
             if (!isRegistered) nav('screenRegistro');
-            else alert("Solicitud en trámite.");
+            else alert("Solicitud enviada");
         }
 
         async function finalizarRegistro() {
@@ -143,39 +106,16 @@
             const p = document.getElementById('regCountry').value;
             if (n && d) {
                 const { error } = await _supabase.from('usuarios_registrados').insert([{ nombre_usuario: n, documento_id: d, pais: p, monedas: coins, referido_por: refPor }]);
-                if (error) alert("Error: Usuario ya existe.");
-                else { isRegistered = true; userName = n; alert("Registrado con éxito"); nav('screenMenu'); }
+                if (error) alert("Error: El usuario ya existe");
+                else { isRegistered = true; userName = n; alert("Registro exitoso"); nav('screenMenu'); }
             }
         }
 
         function mostrarMiLink() {
-            if (!isRegistered) { alert("Regístrate primero."); return; }
+            if (!isRegistered) { alert("Regístrate primero"); return; }
             const link = window.location.origin + window.location.pathname + "?ref=" + userName;
             navigator.clipboard.writeText(link);
             alert("Link copiado: " + link);
-        }
-
-        async function irAAfiliados() {
-            if (!isRegistered) { alert("Regístrate primero."); return; }
-            const { count } = await _supabase.from('usuarios_registrados').select('*', { count: 'exact', head: true }).eq('referido_por', userName);
-            document.getElementById('numAfiliados').innerText = count || 0;
-            nav('folderAfiliados');
-        }
-
-        async function donarSaldo() {
-            if (coins <= 0) return;
-            await _supabase.from('historial_donaciones').insert([{ nombre_usuario: userName, monto: coins }]);
-            coins = 0;
-            document.getElementById('coinCount').innerText = "0";
-            alert("¡Donación recibida!");
-            cargarDonadores();
-        }
-
-        async function cargarDonadores() {
-            const { data } = await _supabase.from('historial_donaciones').select('*').order('fecha', { ascending: false }).limit(5);
-            const l = document.getElementById('listaDonadores');
-            l.innerHTML = "";
-            data?.forEach(d => { l.innerHTML += `<div class="list-item"><span>${d.nombre_usuario}</span><span>${d.monto} 🦴</span></div>`; });
         }
     </script>
 </body>
