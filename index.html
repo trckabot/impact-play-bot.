@@ -45,14 +45,19 @@
 
         let player, lastTime = 0, videoEnded = false, coins = 0;
 
+        const texts = {
+            es: { done: "¡Video completado! Ya puedes validar.", donate: "¡Gracias! Donación registrada para personas y animales rescatados." }
+        };
+
         async function guardarWallet(tipo) {
             const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-            if (!user) return alert("Abre desde Telegram");
+            if (!user) return alert("Por favor, abre la app desde Telegram.");
             const direccion = tipo === 'BTC' ? document.getElementById('btcAddress').value : document.getElementById('usdtAddress').value;
+            if (!direccion) return alert("Escribe una dirección válida.");
             const campo = tipo === 'BTC' ? { wallet_btc: direccion } : { wallet_usdt: direccion };
             const { error } = await supabase.from('usuarios').update(campo).eq('id_telegram', user.id);
             if (error) alert("Error: " + error.message);
-            else alert("¡Wallet guardada!");
+            else alert("¡Wallet de " + tipo + " guardada para tus premios!");
         }
 
         function onYouTubeIframeAPIReady() {
@@ -76,12 +81,13 @@
         function onPlayerStateChange(e) {
             if (e.data === YT.PlayerState.ENDED) {
                 videoEnded = true;
-                document.getElementById('validateCode').style.display = 'block';
-                document.getElementById('validateCode').disabled = false;
+                const btn = document.getElementById('validateCode');
+                btn.style.display = 'block';
+                btn.disabled = false;
+                alert(texts.es.done);
             }
         }
 
-        // --- ESTA ES LA PARTE QUE FALTABA EN TU CAPTURA ---
         document.getElementById('readTerms').onclick = (e) => {
             document.getElementById('startButton').disabled = !e.target.checked;
         };
@@ -89,7 +95,9 @@
         document.getElementById('startButton').onclick = () => {
             document.getElementById('registration').style.display = 'none';
             document.getElementById('miniapppanel').style.display = 'block';
-            if (window.Telegram?.WebApp) window.Telegram.WebApp.expand();
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.expand();
+            }
         };
 
         document.getElementById('validateCode').onclick = async () => {
@@ -99,15 +107,23 @@
                 document.getElementById('validateCode').innerText = "✅ VALIDADO";
                 document.getElementById('validateCode').disabled = true;
                 const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-                if(user) await supabase.rpc('incrementar_puntos', { user_id: user.id, cantidad: 10 });
+                if(user) {
+                    await supabase.rpc('incrementar_puntos', { user_id: user.id, cantidad: 10 });
+                }
             }
         };
 
-        document.getElementById('donateButton').onclick = () => {
-            if (coins > 0) {
-                alert("Donación registrada para la causa.");
-                coins = 0;
-                document.getElementById('coins').innerText = "0";
+        document.getElementById('donateButton').onclick = async () => {
+            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            if (coins > 0 && user) {
+                const { error } = await supabase.from('donaciones').insert([{ id_telegram: user.id, cantidad_puntos: coins }]);
+                if (!error) {
+                    alert(texts.es.donate);
+                    coins = 0;
+                    document.getElementById('coins').innerText = "0";
+                }
+            } else {
+                alert("No tienes monedas para donar todavía.");
             }
         };
     </script>
