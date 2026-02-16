@@ -1,47 +1,188 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="all">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AXON IMPACT</title>
+    <title>AXON GLOBAL IMPACT</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #0d1117; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .panel { background: #161b22; padding: 30px; border-radius: 15px; text-align: center; width: 85%; max-width: 400px; border: 1px solid #30363d; }
-        .btn { display: block; width: 100%; padding: 15px; margin: 15px 0; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; background: #238636; color: white; }
+        :root { --primary: #4CAF50; --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --accent: #1f6feb; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; display: flex; justify-content: center; }
+        .panel { background: var(--panel); padding: 25px; border-radius: 20px; width: 90%; max-width: 420px; border: 1px solid #30363d; margin-top: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .btn { display: block; width: 100%; padding: 14px; margin: 12px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 16px; }
+        .btn-main { background: var(--primary); }
+        .btn-main:hover { filter: brightness(1.2); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); width: 48%; display: inline-block; }
+        
+        /* Sección Social YouTube */
+        .social-box { background: #0d1117; border-radius: 10px; padding: 15px; margin-top: 15px; border: 1px solid #30363d; }
+        textarea { width: 100%; height: 60px; background: #161b22; color: white; border: 1px solid #30363d; border-radius: 8px; padding: 10px; resize: none; box-sizing: border-box; }
+        
+        /* Modal Motivador */
+        #modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #21262d; padding: 30px; border-radius: 20px; border: 2px solid var(--primary); z-index: 10000; width: 85%; text-align: center; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; }
     </style>
 </head>
 <body>
 
-    <div id="registration" class="panel">
-        <h2 style="color: #4CAF50;">AXON: IMPACTO 🛡️</h2>
-        <p>Ayuda a personas sin hogar y animales rescatados.</p>
-        <hr style="border: 0.5px solid #333; margin: 20px 0;">
-        <label style="display: block; margin-bottom: 20px;">
-            <input type="checkbox" id="readTerms" checked> Acepto términos.
-        </label>
-        <button id="startButton" class="btn">ENTRAR A MISIONES</button>
+    <div id="overlay" class="overlay"></div>
+
+    <div id="modal">
+        <h2 id="mTitle">🌟</h2>
+        <p id="mMsg"></p>
+        <button class="btn btn-main" onclick="cerrarModal()">❤️ CONTINUE</button>
     </div>
 
-    <div id="missionList" class="panel" style="display:none;">
-        <h3>MISIONES DISPONIBLES 📋</h3>
-        <p>Elige una tarea para sumar impacto:</p>
-        <button onclick="alert('Iniciando Tarea 1...')" class="btn" style="background:#2c3e50;">📹 Tarea 1 (+10 pts)</button>
-        <button onclick="alert('Iniciando Tarea 2...')" class="btn" style="background:#2c3e50;">📹 Tarea 2 (+10 pts)</button>
+    <div id="screen1" class="panel">
+        <h2 id="h-title" style="color: var(--primary); margin-bottom: 5px;">AXON</h2>
+        <h3 id="h-subtitle" style="margin-top: 0; font-weight: 400;">Impact System</h3>
+        <p id="h-desc" style="font-size: 15px; line-height: 1.6; color: #8b949e;">
+            Uniendo esfuerzos por las <b>personas necesitadas</b> y los <b>animales indefensos de la calle</b>.
+        </p>
+        <button id="btn-start" class="btn btn-main">START MISSION</button>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <div id="screen2" class="panel" style="display:none;">
+        <h3 id="h-tasks">AVAILABLE MISSIONS</h3>
+        <div id="missionList">
+            <button onclick="playTask('dQw4w9WgXcQ', 'Misión Esperanza')" class="btn" style="background: #238636;">📹 Mission 1 (+10 pts)</button>
+        </div>
+        <div style="margin-top: 20px; font-size: 18px;">
+            <span id="h-coins">My Coins:</span> <span id="coins" style="color:var(--primary)">0</span> 🦴
+        </div>
+    </div>
+
+    <div id="screen3" class="panel" style="display:none;">
+        <h4 id="activeTask" style="margin: 0 0 15px 0;">Video</h4>
+        <div id="player"></div>
+        
+        <div class="social-box">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <button class="btn btn-outline" onclick="giveLike()">👍 Like</button>
+                <button class="btn btn-outline" onclick="giveShare()">🔗 Share</button>
+            </div>
+            <textarea id="commentInput" placeholder="Write a supportive comment..."></textarea>
+            <button class="btn btn-main" style="font-size: 13px; padding: 8px;" onclick="sendComment()">Post Comment</button>
+        </div>
+
+        <button class="btn btn-main" id="btnVerify" style="display:none; background: #1f6feb;">✅ VALIDATE IMPACT</button>
+        <button class="btn" onclick="location.reload()" style="background:#333; margin-top: 10px;">⬅️ EXIT</button>
+    </div>
+
     <script>
-        // FUNCIÓN DIRECTA SIN BLOQUEOS
-        document.getElementById('startButton').onclick = function() {
-            console.log("Botón pulsado correctamente");
-            document.getElementById('registration').style.display = 'none';
-            document.getElementById('missionList').style.display = 'block';
-            
-            // Si estás en Telegram, expande la pantalla
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.expand();
+        // 1. TRADUCCIÓN UNIVERSAL (Detecta cualquier idioma del mundo)
+        const userLang = navigator.language || navigator.userLanguage;
+        const isSpanish = userLang.startsWith('es');
+
+        const texts = {
+            es: {
+                start: "INICIAR MISIÓN",
+                desc: "Uniendo esfuerzos por las <b>personas necesitadas</b> y los <b>animales indefensos de la calle</b>.",
+                tasks: "MISIONES DISPONIBLES",
+                coins: "Mis Monedas:",
+                like: "¡Gracias por tu apoyo!",
+                placeholder: "Escribe un mensaje de apoyo...",
+                post: "Publicar Comentario",
+                verify: "✅ VALIDAR IMPACTO",
+                motivate: [
+                    "¡Tu compasión está cambiando el mundo!",
+                    "¡Gracias por ayudar a quienes no tienen voz!",
+                    "¡Cada segundo cuenta para un animal rescatado!",
+                    "¡Eres la esperanza de una persona necesitada!"
+                ]
+            },
+            en: {
+                start: "START MISSION",
+                desc: "Joining efforts for <b>people in need</b> and <b>defeless street animals</b>.",
+                tasks: "AVAILABLE MISSIONS",
+                coins: "My Coins:",
+                like: "Thanks for your support!",
+                placeholder: "Write a supportive comment...",
+                post: "Post Comment",
+                verify: "✅ VALIDATE IMPACT",
+                motivate: [
+                    "Your compassion is changing the world!",
+                    "Thank you for helping those who have no voice!",
+                    "Every second counts for a rescued animal!",
+                    "You are the hope for a person in need!"
+                ]
             }
         };
+
+        const t = isSpanish ? texts.es : texts.en;
+
+        // Aplicar textos dinámicos
+        document.getElementById('btn-start').innerText = t.start;
+        document.getElementById('h-desc').innerHTML = t.desc;
+        document.getElementById('h-tasks').innerText = t.tasks;
+        document.getElementById('h-coins').innerText = t.coins;
+        document.getElementById('commentInput').placeholder = t.placeholder;
+        document.getElementById('btnVerify').innerText = t.verify;
+
+        // 2. LÓGICA DE NAVEGACIÓN
+        document.getElementById('btn-start').onclick = () => {
+            document.getElementById('screen1').style.display = 'none';
+            document.getElementById('screen2').style.display = 'block';
+            if (window.Telegram?.WebApp) window.Telegram.WebApp.expand();
+        };
+
+        // 3. SUPABASE & YOUTUBE
+        const supabaseUrl = 'https://ywkcnxhlptqagwxjnygx.supabase.co'; 
+        const supabaseKey = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        let player, videoEnded = false;
+
+        function playTask(id, title) {
+            document.getElementById('screen2').style.display = 'none';
+            document.getElementById('screen3').style.display = 'block';
+            document.getElementById('activeTask').innerText = title;
+            if (player) player.loadVideoById(id);
+        }
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '220', width: '100%', videoId: 'dQw4w9WgXcQ',
+                playerVars: { 'modestbranding': 1, 'rel': 0, 'playsinline': 1 },
+                events: { 'onStateChange': (e) => {
+                    if (e.data === YT.PlayerState.ENDED) {
+                        videoEnded = true;
+                        document.getElementById('btnVerify').style.display = 'block';
+                    }
+                }}
+            });
+        }
+
+        // 4. VALIDACIÓN Y MODAL MOTIVADOR
+        document.getElementById('btnVerify').onclick = async () => {
+            const frase = t.motivate[Math.floor(Math.random() * t.motivate.length)];
+            document.getElementById('mMsg').innerText = frase;
+            document.getElementById('modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+
+            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            if(user) await supabase.rpc('incrementar_puntos', { user_id: user.id, cantidad: 10 });
+        };
+
+        function cerrarModal() { location.reload(); }
+
+        // 5. INTERACCIÓN SOCIAL
+        function giveLike() { alert(t.like); }
+        
+        async function sendComment() {
+            const comment = document.getElementById('commentInput').value;
+            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            if (comment && user) {
+                const { error } = await supabase.from('comentarios').insert([
+                    { id_telegram: user.id, texto: comment, username: user.username || 'Anonymous' }
+                ]);
+                if (!error) {
+                    alert(isSpanish ? "¡Comentario guardado!" : "Comment saved!");
+                    document.getElementById('commentInput').value = '';
+                }
+            }
+        }
     </script>
 </body>
 </html>
