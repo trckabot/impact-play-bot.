@@ -1,39 +1,44 @@
-// Configuración de Idiomas (Diccionario Global)
+// 1. Configuración de Idiomas AXON
 const translations = {
-    es: { start: "INICIAR", validate: "Validar Código", donate: "Donar al Rescate", coins: "Monedas", level: "Nivel", alertDone: "¡Video completado!", terms: "Acepto que los pagos dependen de la monetización de YouTube (Estonia EU Law)" },
-    en: { start: "START", validate: "Validate Code", donate: "Donate to Rescue", coins: "Coins", level: "Level", alertDone: "Video completed!", terms: "I accept that payments depend on YouTube monetization (Estonia EU Law)" },
-    fr: { start: "COMMENCER", validate: "Valider le Code", donate: "Faire un don", coins: "Pièces", level: "Niveau", alertDone: "Vidéo terminée !", terms: "J'accepte que los paiements dépendent de la monétisation YouTube" },
-    pt: { start: "INICIAR", validate: "Validar Código", donate: "Doar para Resgate", coins: "Moedas", level: "Nível", alertDone: "Vídeo concluído!", terms: "Aceito que os pagamentos dependem da monetização do YouTube" },
-    ar: { start: "ابدأ", validate: "تحقق من الرمز", donate: "تبرع للإنقاذ", coins: "عملات", level: "مستوى", alertDone: "اكتمل الفيديو!", terms: "أوافق على أن المدفوعات تعتمد على تحقيق الربح من YouTube" }
+    es: { done: "¡Video completado! Valida tu victoria.", win: "Has ganado 10 monedas para AXON.", donateMsg: "¡Gracias! Donación enviada para personas y animales.", noCoins: "Entrena más para poder donar." },
+    en: { done: "Video completed! Validate your victory.", win: "You earned 10 coins for AXON.", donateMsg: "Thanks! Donation sent for people and animals.", noCoins: "Train more to be able to donate." },
+    ru: { done: "Видео завершено! Подтвердите победу.", win: "Вы заработали 10 монет для AXON.", donateMsg: "Спасибо! Пожертвование отправлено.", noCoins: "Тренируйтесь больше." },
+    ar: { done: "اكتمل الفيديو! تحقق من فوزك.", win: "لقد ربحت 10 عملات لـ AXON.", donateMsg: "شكراً! تم إرسال التبرع.", noCoins: "تدرب أكثر لتتمكن من التبرع." }
 };
 
-// Detectar idioma (por defecto inglés si no existe el detectado)
 const userLang = navigator.language.split('-')[0] || 'en';
-const lang = translations[userLang] || translations['en'];
+const t = translations[userLang] || translations.en;
 
-// Aplicar traducciones a la UI al cargar
-document.addEventListener('DOMContentLoaded', () => {
-    if(userLang === 'ar') document.body.style.direction = 'rtl';
-    
-    document.getElementById('startButton').textContent = lang.start;
-    document.getElementById('validateCode').textContent = lang.validate;
-    document.getElementById('donate').textContent = lang.donate;
-    document.querySelector('label').innerText = lang.terms;
-    // Actualizar etiquetas de texto
-    document.body.innerHTML = document.body.innerHTML.replace("Monedas", lang.coins).replace("Nivel", lang.level);
-});
-
+// 2. Variables de juego
 let player;
 let videoEnded = false;
 let coins = 0;
+let lastTime = 0; // Para el bloqueo de adelanto
 
+// 3. Cargar API de YouTube con Bloqueo
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
-        height: '360', width: '640',
+        height: '360', width: '100%',
         videoId: 'TU_ID_DE_VIDEO', 
-        playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1 },
-        events: { 'onStateChange': onPlayerStateChange }
+        playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 
+            'onStateChange': onPlayerStateChange,
+            'onReady': startAntiCheat
+        }
     });
+}
+
+function startAntiCheat() {
+    setInterval(() => {
+        if (player && player.getCurrentTime) {
+            let curr = player.getCurrentTime();
+            if (curr > lastTime + 2) { // Si salta más de 2 segundos
+                player.seekTo(lastTime); 
+            } else {
+                lastTime = curr;
+            }
+        }
+    }, 1000);
 }
 
 function onPlayerStateChange(event) {
@@ -42,9 +47,37 @@ function onPlayerStateChange(event) {
         const btn = document.getElementById('validateCode');
         btn.style.display = 'block';
         btn.disabled = false;
-        alert(lang.alertDone);
+        alert(t.done);
     }
 }
 
-// Lógica de botones (Suma de monedas y donación)
-// [Aquí sigue el resto de tu lógica de coins...]
+// 4. Lógica de botones mejorada
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('readTerms').addEventListener('change', (e) => {
+        document.getElementById('startButton').disabled = !e.target.checked;
+    });
+
+    document.getElementById('startButton').addEventListener('click', () => {
+        document.getElementById('registration').style.display = 'none';
+        document.getElementById('miniapppanel').style.display = 'block';
+    });
+
+    document.getElementById('validateCode').addEventListener('click', () => {
+        if (videoEnded) {
+            coins += 10;
+            document.getElementById('coins').textContent = coins;
+            document.getElementById('validateCode').disabled = true;
+            alert(t.win);
+        }
+    });
+
+    document.getElementById('donateButton').addEventListener('click', () => {
+        if (coins > 0) {
+            alert(t.donateMsg + " [cite: 2026-02-14]");
+            coins = 0;
+            document.getElementById('coins').textContent = coins;
+        } else {
+            alert(t.noCoins);
+        }
+    });
+});
