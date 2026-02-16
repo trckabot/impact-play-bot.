@@ -1,7 +1,6 @@
 {
   "name": "impact-play-bot",
   "version": "1.0.0",
-  "description": "Bot para ayudar a personas y animales",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
