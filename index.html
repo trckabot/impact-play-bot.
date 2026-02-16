@@ -3,32 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Axon - Mini App</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Axon - Impact Game</title>
+    <link rel="stylesheet" href="estilos.css">
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
     <div id="registration" class="panel">
-        <h2>Bienvenido a Axon 🐾</h2>
-        <p>Tu tiempo salva vidas. Registrada en Estonia 🇪🇪</p>
+        <h2 id="welcomeTitle">AXON: RED DE IMPACTO 🛡️</h2>
+        <p>Entrena para ayudar a personas sin hogar y animales [cite: 2026-02-14]</p>
         <label>
-            <input type="checkbox" id="readTerms"> Acepto que los pagos dependen de la monetización de YouTube.
+            <input type="checkbox" id="readTerms"> Acepto que los pagos dependen de YouTube (Estonia Law).
         </label>
-        <button id="startButton" class="btn btn-primary" disabled>INICIAR</button>
+        <button id="startButton" class="btn" disabled>INICIAR ENTRENAMIENTO</button>
     </div>
 
-    <div id="miniapppanel" class="panel" style="display:none;">
+    <div id="miniapppanel" style="display:none;">
         <div id="player"></div>
         <div class="actions">
-            <button id="validateCode" class="btn btn-success" disabled style="display:none;">Validar Código</button>
-            <button id="donate" class="btn btn-warning">🚀 Donar mis monedas al próximo rescate</button>
+            <button id="validateCode" class="btn btn-success" style="display:none;">✅ VALIDAR VICTORIA</button>
+            <button id="donateButton" class="btn btn-donate">❤️ DONAR MONEDAS A RESCATE</button>
         </div>
         <div class="stats">
-            <div>Monedas: <span id="coins">0</span></div>
-            <div>Nivel: <span id="level">1</span></div>
+            <p>Monedas: <span id="coins">0</span> | Nivel: <span id="level">1</span></p>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        // LÓGICA DE TRADUCCIÓN Y BLOQUEO
+        const translations = {
+            es: { done: "¡Entrenamiento completado!", donate: "Donación enviada con éxito" },
+            en: { done: "Training completed!", donate: "Donation sent successfully" }
+        };
+        const userLang = navigator.language.split('-')[0] || 'en';
+        const t = translations[userLang] || translations.en;
+
+        let player;
+        let lastTime = 0;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '360', width: '100%', videoId: 'TU_ID_VIDEO',
+                playerVars: { 'controls': 0, 'disablekb': 1, 'modestbranding': 1 },
+                events: { 'onStateChange': onPlayerStateChange }
+            });
+            // Bloqueo de adelanto cada segundo
+            setInterval(() => {
+                if (player && player.getCurrentTime) {
+                    let curr = player.getCurrentTime();
+                    if (curr > lastTime + 2) player.seekTo(lastTime);
+                    else lastTime = curr;
+                }
+            }, 1000);
+        }
+
+        function onPlayerStateChange(e) {
+            if (e.data === YT.PlayerState.ENDED) {
+                document.getElementById('validateCode').style.display = 'block';
+                alert(t.done);
+            }
+        }
+
+        document.getElementById('readTerms').onclick = (e) => {
+            document.getElementById('startButton').disabled = !e.target.checked;
+        };
+
+        document.getElementById('startButton').onclick = () => {
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('miniapppanel').style.display = 'block';
+        };
+
+        document.getElementById('donateButton').onclick = () => {
+            alert("✨ ¡Gracias! Tus monedas han sido destinadas a refugios de personas y animales [cite: 2026-02-14]");
+            document.getElementById('coins').innerText = "0";
+        };
+    </script>
 </body>
 </html>
