@@ -1,84 +1,48 @@
-/* ESTILOS GENERALES */
 body {
-    background-color: #121212;
-    color: white;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #0b1f14; /* Tu color de fondo original */
+    color: #e8eefc;
+    font-family: 'Segoe UI', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    overflow-x: hidden;
 }
 
-/* EL PANEL PRINCIPAL - CORREGIDO */
 .panel {
-    background: rgba(255, 255, 255, 0.05);
+    background: #141a20;
     padding: 25px;
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
     text-align: center;
-    max-width: 380px;
-    width: 85%;
-    position: relative; /* Cambiado de absolute para evitar errores de capa */
-    z-index: 10;        /* Ahora está siempre al frente para que puedas pulsar */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-    margin: 20px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    z-index: 999; /* Máxima prioridad para que se pueda tocar */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-/* BOTONES */
 .btn {
     width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 15px;
-    transition: transform 0.2s, background 0.3s;
-}
-
-.btn:active {
-    transform: scale(0.98);
-}
-
-.btn-primary { background: linear-gradient(45deg, #007bff, #0056b3); color: white; }
-.btn-primary:disabled { background: #333; color: #777; cursor: not-allowed; }
-
-.btn-success { background: #28a745; color: white; }
-.btn-danger { background: #dc3545; color: white; }
-
-/* SECCIÓN DE VIDEO Y STATS */
-#player {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    background: #000;
-}
-
-.stats {
-    background: rgba(0, 0, 0, 0.3);
     padding: 15px;
-    border-radius: 10px;
-    margin-top: 15px;
-    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-/* FORMULARIOS DE WALLET */
+.btn-primary { background-color: #4CAF50; color: white; }
+.btn-primary:disabled { background-color: #3b493e; color: #777; cursor: not-allowed; }
+.btn-success { background-color: #27ae60; color: white; }
+.btn-danger { background-color: #e74c3c; color: white; }
+
 input[type="text"] {
     width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    border-radius: 8px;
-    border: 1px solid #444;
+    padding: 10px;
+    margin-top: 10px;
     background: #1a1a1a;
-    color: #00ff00; /* Color verde tipo consola para las direcciones */
-    font-family: monospace;
+    color: white;
+    border: 1px solid #43496b;
+    border-radius: 5px;
     box-sizing: border-box;
 }
-
-h2 { color: #4CAF50; margin-bottom: 10px; }
-h3 { font-size: 18px; margin-top: 20px; color: #ddd; }
-p { font-size: 14px; line-height: 1.5; color: #ccc; }
