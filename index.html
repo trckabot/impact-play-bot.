@@ -6,19 +6,17 @@
     <title>AXON IMPACT</title>
     <style>
         body { background: #0d1117; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .panel { background: #161b22; padding: 30px; border-radius: 15px; text-align: center; width: 85%; max-width: 400px; border: 1px solid #30363d; position: relative; z-index: 9999; }
+        .panel { background: #161b22; padding: 30px; border-radius: 15px; text-align: center; width: 85%; max-width: 400px; border: 1px solid #30363d; }
         .btn { display: block; width: 100%; padding: 15px; margin: 15px 0; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; background: #238636; color: white; }
-        .btn:disabled { background: #21262d; color: #484f58; cursor: not-allowed; }
-        #player { width: 100%; border-radius: 10px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
     <div id="registration" class="panel">
         <h2 style="color: #4CAF50;">AXON: IMPACTO 🛡️</h2>
-        <p>Ayuda a personas sin hogar y animales.</p>
-        <hr border="0" style="border-top: 1px solid #30363d; margin: 20px 0;">
-        <label style="cursor: pointer;">
+        <p>Ayuda a personas sin hogar y animales rescatados.</p>
+        <hr style="border: 0.5px solid #333; margin: 20px 0;">
+        <label style="display: block; margin-bottom: 20px;">
             <input type="checkbox" id="readTerms" checked> Acepto términos.
         </label>
         <button id="startButton" class="btn">ENTRAR A MISIONES</button>
@@ -26,80 +24,23 @@
 
     <div id="missionList" class="panel" style="display:none;">
         <h3>MISIONES DISPONIBLES 📋</h3>
-        <button onclick="iniciarMision('dQw4w9WgXcQ', 'Misión 1')" class="btn" style="background:#2c3e50;">📹 Tarea 1 (+10)</button>
-        <button onclick="iniciarMision('7wtfhZwyrcc', 'Misión 2')" class="btn" style="background:#2c3e50;">📹 Tarea 2 (+10)</button>
-        <div style="margin-top:20px;">Monedas: <span id="coins">0</span> 🦴</div>
-        <button id="donateButton" class="btn" style="background:#da3633;">❤️ DONAR A LA CAUSA</button>
-    </div>
-
-    <div id="miniapppanel" class="panel" style="display:none;">
-        <h4 id="activeTitle">Cargando...</h4>
-        <div id="player"></div>
-        <button id="validateCode" class="btn" style="display:none; background:#1f6feb;">✅ VALIDAR TAREA</button>
-        <button onclick="location.reload()" class="btn" style="background:#30363d;">⬅️ VOLVER</button>
+        <p>Elige una tarea para sumar impacto:</p>
+        <button onclick="alert('Iniciando Tarea 1...')" class="btn" style="background:#2c3e50;">📹 Tarea 1 (+10 pts)</button>
+        <button onclick="alert('Iniciando Tarea 2...')" class="btn" style="background:#2c3e50;">📹 Tarea 2 (+10 pts)</button>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
-
     <script>
-        // CONFIGURACIÓN
-        const supabaseUrl = 'https://ywkcnxhlptqagwxjnygx.supabase.co'; 
-        const supabaseKey = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
-        const supabase = (typeof supabase !== 'undefined') ? supabase.createClient(supabaseUrl, supabaseKey) : null;
-
-        let player, videoEnded = false, coins = 0;
-
-        // --- EL ARREGLO MAESTRO ---
-        // Usamos un listener de ventana para asegurar que el botón funcione sí o sí
-        window.onload = function() {
-            const btnInicio = document.getElementById('startButton');
+        // FUNCIÓN DIRECTA SIN BLOQUEOS
+        document.getElementById('startButton').onclick = function() {
+            console.log("Botón pulsado correctamente");
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('missionList').style.display = 'block';
             
-            btnInicio.onclick = function(e) {
-                e.preventDefault();
-                console.log("BOTÓN PULSADO");
-                
-                // CAMBIO DE PANTALLA MANUAL E INMEDIATO
-                document.getElementById('registration').style.display = 'none';
-                document.getElementById('missionList').style.display = 'block';
-                
-                // INTENTO DE TELEGRAM
-                try {
-                    if (window.Telegram && window.Telegram.WebApp) {
-                        window.Telegram.WebApp.expand();
-                        window.Telegram.WebApp.ready();
-                    }
-                } catch (err) {
-                    console.log("Telegram no disponible, pero la app sigue.");
-                }
-            };
-        };
-
-        function iniciarMision(id, titulo) {
-            document.getElementById('missionList').style.display = 'none';
-            document.getElementById('miniapppanel').style.display = 'block';
-            document.getElementById('activeTitle').innerText = titulo;
-            if (player && player.loadVideoById) player.loadVideoById(id);
-        }
-
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '200', width: '100%', videoId: 'dQw4w9WgXcQ',
-                events: { 'onStateChange': (e) => {
-                    if (e.data === YT.PlayerState.ENDED) {
-                        videoEnded = true;
-                        document.getElementById('validateCode').style.display = 'block';
-                    }
-                }}
-            });
-        }
-
-        document.getElementById('validateCode').onclick = async () => {
-            coins += 10;
-            document.getElementById('coins').innerText = coins;
-            alert("¡Sumaste 10 monedas para ayudar!");
-            location.reload();
+            // Si estás en Telegram, expande la pantalla
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.expand();
+            }
         };
     </script>
 </body>
