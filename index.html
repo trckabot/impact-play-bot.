@@ -6,204 +6,176 @@
     <title>AXON IMPACT GLOBAL</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { 
-            --primary: #2ecc71; 
-            --bg-dark: rgba(13, 17, 23, 0.7); 
-            --panel: rgba(22, 27, 34, 0.95); 
-            --text: #e6edf3; 
-            --music: #8a2be2; 
-            --video: #1f6feb;
-            --gold: #f1c40f;
-            --orange: #e67e22;
-        }
-        
-        body, html { 
-            height: 100%; margin: 0; color: var(--text); 
-            font-family: 'Segoe UI', sans-serif;
-            background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed;
-            background-size: cover;
-            display: flex; justify-content: center; align-items: center; overflow: hidden;
-        }
-
+        :root { --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.7); --panel: rgba(22, 27, 34, 0.95); --text: #e6edf3; --music: #8a2be2; --video: #1f6feb; --gold: #f1c40f; --orange: #e67e22; }
+        body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1; }
         .container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .app-logo { width: 60%; max-width: 200px; filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.5)); margin-bottom: -15px; z-index: 3; }
-
-        .panel { 
-            background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 380px; 
-            text-align: center; border: 1px solid rgba(46, 204, 113, 0.3);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            max-height: 85vh; overflow-y: auto;
-        }
-
+        .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 380px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 85vh; overflow-y: auto; }
         .btn { display: block; width: 100%; padding: 14px; margin: 8px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 13px; text-transform: uppercase; text-decoration: none; box-sizing: border-box; }
         .btn-green { background: var(--primary); }
         .btn-video { background: var(--video); }
-        .btn-music { background: var(--music); }
         .btn-gold { background: var(--gold); color: #000; }
         .btn-orange { background: var(--orange); }
         .btn-back { background: #333; font-size: 11px; }
-        
         input, select { width: 100%; background: rgba(13, 17, 23, 0.8); color: white; border: 1px solid #30363d; border-radius: 10px; padding: 12px; margin: 8px 0; box-sizing: border-box; font-size: 14px; }
-        
-        .list-container { max-height: 200px; overflow-y: auto; border-radius: 10px; background: rgba(0,0,0,0.5); margin: 10px 0; }
-        .list-item { padding: 12px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-
+        .list-container { max-height: 150px; overflow-y: auto; border-radius: 10px; background: rgba(0,0,0,0.5); margin: 10px 0; }
+        .list-item { padding: 10px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
         .screen { display: none; width: 100%; flex-direction: column; align-items: center; }
         #screen1 { display: flex; }
     </style>
 </head>
 <body>
-
     <div class="overlay-bg"></div>
-
     <div class="container">
-        
         <div id="screen1" class="screen">
-            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" alt="Logo" class="app-logo">
+            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="app-logo">
             <div class="panel">
-                <h2 style="color: var(--primary); margin: 0; font-size: 18px;">REGISTRO LEGAL AXON</h2>
-                <p style="font-size: 11px; margin: 10px 0; color: #aaa;">Para participar en sorteos y cobrar, debes ser una persona real.</p>
-                
-                <input type="text" id="regName" placeholder="Nombre de Usuario">
-                <input type="text" id="regID" placeholder="Nro de Identificación / DNI">
-                <select id="regCountry">
-                    <option value="">Selecciona tu País</option>
-                    <option value="Colombia">Colombia</option>
-                    <option value="Venezuela">Venezuela</option>
-                    <option value="España">España</option>
-                    <option value="México">México</option>
-                    <option value="Otro">Otro</option>
-                </select>
-
-                <div style="text-align: left; font-size: 11px; margin: 10px 0;">
-                    <label><input type="checkbox" id="checkLegal"> Acepto términos y verificación de identidad.</label>
-                </div>
-
-                <button onclick="registrarUsuario()" class="btn btn-green">GUARDAR Y CONTINUAR</button>
+                <h2 style="color: var(--primary);">AXON IMPACT</h2>
+                <button onclick="nav('screenSub')" class="btn btn-green">ENTRAR A MISIONES</button>
             </div>
         </div>
 
         <div id="screenSub" class="screen">
             <div class="panel">
-                <h2 style="color: var(--primary); font-size: 18px;">VERIFICACIÓN SOCIAL</h2>
-                <p style="font-size: 12px;">Únete para activar tu cuenta:</p>
-                <a href="#" class="btn" style="background:#0088cc;">Telegram</a>
-                <a href="#" class="btn" style="background:#ff0000;">YouTube</a>
-                <a href="#" class="btn" style="background:#000; border:1px solid #fff;">TikTok</a>
-                
-                <div style="text-align:left; font-size:12px; margin-top:10px;">
-                    <label><input type="checkbox" class="social-check" onclick="validarAcceso()"> Suscrito a todo</label>
-                </div>
-                <button id="btnEntrar" onclick="nav('screenMenu')" class="btn btn-green" style="opacity: 0.3; pointer-events: none;">ENTRAR A MISIONES</button>
+                <h3 style="color: var(--primary);">REDES SOCIALES</h3>
+                <a href="https://t.me/TU_CANAL" target="_blank" class="btn" style="background:#0088cc;">Telegram</a>
+                <a href="https://youtube.com/@TU_CANAL" target="_blank" class="btn" style="background:#ff0000;">YouTube</a>
+                <label style="display:block; margin:15px 0; font-size:11px;">
+                    <input type="checkbox" id="checkSub" onclick="validarSub()"> Ya me suscribí
+                </label>
+                <button id="btnM" onclick="nav('screenMenu')" class="btn btn-green" style="opacity:0.3; pointer-events:none;">CONTINUAR</button>
             </div>
         </div>
 
         <div id="screenMenu" class="screen">
             <div class="panel">
-                <h3 style="margin:0;">MENÚ AXON 🦴</h3>
-                <button onclick="nav('folderVideo')" class="btn btn-video">📹 VIDEOS AYUDA Y GANA</button>
-                <button onclick="nav('folderMusic')" class="btn btn-music">🎵 MÚSICA AYUDA Y GANA</button>
-                <button onclick="nav('folderAfiliados')" class="btn btn-green">👥 AFILIADOS ACTIVOS</button>
-                <button onclick="nav('folderDonarG')" class="btn btn-orange">🎁 DONAR MIS GANANCIAS</button>
-                <button onclick="nav('folderDonarCrypto')" class="btn btn-orange">⚡ DONAR CON BTC O USDT</button>
-                
-                <p style="font-size: 16px; margin-top: 15px; font-weight: bold;">MIS MONEDAS: <span id="coinCount" style="color:var(--primary)">0</span></p>
+                <h3 style="margin:0;">MISIONES 🦴</h3>
+                <button onclick="nav('folderVideo')" class="btn btn-video">📹 VER VIDEOS</button>
+                <button onclick="irAAfiliados()" class="btn btn-green">👥 AFILIADOS</button>
+                <button onclick="checkRegistroCobro()" class="btn btn-gold">💰 COBRAR GANANCIAS</button>
+                <button onclick="nav('folderDonarG')" class="btn btn-orange">🎁 DONAR GANANCIAS</button>
+                <button onclick="mostrarMiLink()" class="btn" style="background:#34495e;">🔗 COPIAR MI LINK</button>
+                <p style="font-size: 18px; font-weight: bold;">SALDO: <span id="coinCount" style="color:var(--primary)">0</span> 🦴</p>
             </div>
         </div>
 
-        <div id="folderDonarG" class="screen">
+        <div id="screenRegistro" class="screen">
             <div class="panel">
-                <h3 style="color: var(--orange);">DONAR GANANCIAS</h3>
-                <p style="font-size: 12px;">Tu donación ayuda directamente a animales y personas.</p>
-                
-                <button onclick="donarSaldo()" class="btn btn-orange">DONAR TODO MI SALDO</button>
-                
-                <h4 style="margin: 15px 0 5px 0; font-size: 14px; color: var(--gold);">TOP DONADORES ❤️</h4>
-                <div class="list-container" id="listaDonadores">
-                    <div class="list-item"><span>AdminAxon</span> <span>500 🦴</span></div>
-                </div>
-                
+                <h2 style="color: var(--gold);">VERIFICACIÓN</h2>
+                <input type="text" id="regName" placeholder="Nombre de Usuario">
+                <input type="text" id="regID" placeholder="DNI / Cédula">
+                <select id="regCountry">
+                    <option value="Colombia">Colombia</option>
+                    <option value="Venezuela">Venezuela</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <button onclick="finalizarRegistro()" class="btn btn-green">REGISTRAR</button>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
 
         <div id="folderAfiliados" class="screen">
             <div class="panel">
-                <h3>👥 AFILIADOS REALES</h3>
-                <p style="font-size: 12px;">Usuarios verificados en tu red:</p>
-                <h2 style="color: var(--primary); font-size: 45px;">12</h2>
+                <h3>MIS AFILIADOS</h3>
+                <h2 id="numAfiliados" style="color: var(--primary); font-size: 45px;">0</h2>
+                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
+            </div>
+        </div>
+
+        <div id="folderDonarG" class="screen">
+            <div class="panel">
+                <h3>DONADORES</h3>
+                <button onclick="donarSaldo()" class="btn btn-orange">DONAR TODO</button>
+                <div class="list-container" id="listaDonadores"></div>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
 
         <div id="folderVideo" class="screen">
             <div class="panel">
-                <h3>VIDEOS DE AYUDA</h3>
-                <button onclick="verContenido('dQw4w9WgXcQ', 'Misión 1', 10)" class="btn btn-video">VER VIDEO (+10 🦴)</button>
+                <h3>MISIÓN VIDEO</h3>
+                <button onclick="sumarPuntos(10)" class="btn btn-video">VER (+10 🦴)</button>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
-
     </div>
 
     <script>
-        let userData = { name: "", coins: 0 };
+        // TUS CREDENCIALES CONFIGURADAS
+        const SUPABASE_URL = 'https://ywkcnxhlptqagwxjnygx.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let coins = 0;
+        let isRegistered = false;
+        let userName = "Anónimo";
+        const urlParams = new URLSearchParams(window.location.search);
+        const refPor = urlParams.get('ref');
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
+            if(id === 'folderDonarG') cargarDonadores();
         }
 
-        function registrarUsuario() {
-            const name = document.getElementById('regName').value;
-            const idDoc = document.getElementById('regID').value;
-            const country = document.getElementById('regCountry').value;
-            const legal = document.getElementById('checkLegal').checked;
-
-            if (name && idDoc && country && legal) {
-                userData.name = name;
-                alert(`Usuario ${name} registrado correctamente para fines legales.`);
-                nav('screenSub');
-            } else {
-                alert("Por favor rellena todos los datos para continuar.");
-            }
+        function validarSub() {
+            const check = document.getElementById('checkSub').checked;
+            document.getElementById('btnM').style.opacity = check ? 1 : 0.3;
+            document.getElementById('btnM').style.pointerEvents = check ? 'auto' : 'none';
         }
 
-        function validarAcceso() {
-            const check = document.querySelector('.social-check').checked;
-            const btn = document.getElementById('btnEntrar');
-            btn.style.opacity = check ? "1" : "0.3";
-            btn.style.pointerEvents = check ? "auto" : "none";
-        }
-
-        function donarSaldo() {
-            if (userData.coins <= 0) {
-                alert("No tienes monedas para donar. ¡Mira videos o escucha música!");
-                return;
-            }
-            
-            const monto = userData.coins;
-            const nombre = userData.name;
-            
-            // Añadir a la lista visualmente
-            const lista = document.getElementById('listaDonadores');
-            const item = document.createElement('div');
-            item.className = 'list-item';
-            item.innerHTML = `<span>${nombre}</span> <span>${monto} 🦴</span>`;
-            lista.prepend(item);
-
-            userData.coins = 0;
-            document.getElementById('coinCount').innerText = "0";
-            alert(`¡Gracias ${nombre}! Has donado ${monto} monedas a la causa.`);
-        }
-
-        function verContenido(id, titulo, pts) {
-            // Aquí iría el reproductor de YouTube como en el código anterior
-            userData.coins += pts;
-            document.getElementById('coinCount').innerText = userData.coins;
-            alert(`Ganaste ${pts} monedas.`);
+        function sumarPuntos(pts) {
+            coins += pts;
+            document.getElementById('coinCount').innerText = coins;
+            alert("Ganaste 10 monedas");
             nav('screenMenu');
+        }
+
+        function checkRegistroCobro() {
+            if (!isRegistered) nav('screenRegistro');
+            else alert("Solicitud en trámite.");
+        }
+
+        async function finalizarRegistro() {
+            const n = document.getElementById('regName').value;
+            const d = document.getElementById('regID').value;
+            const p = document.getElementById('regCountry').value;
+            if (n && d) {
+                const { error } = await _supabase.from('usuarios_registrados').insert([{ nombre_usuario: n, documento_id: d, pais: p, monedas: coins, referido_por: refPor }]);
+                if (error) alert("Error: Usuario ya existe.");
+                else { isRegistered = true; userName = n; alert("Registrado con éxito"); nav('screenMenu'); }
+            }
+        }
+
+        function mostrarMiLink() {
+            if (!isRegistered) { alert("Regístrate primero."); return; }
+            const link = window.location.origin + window.location.pathname + "?ref=" + userName;
+            navigator.clipboard.writeText(link);
+            alert("Link copiado: " + link);
+        }
+
+        async function irAAfiliados() {
+            if (!isRegistered) { alert("Regístrate primero."); return; }
+            const { count } = await _supabase.from('usuarios_registrados').select('*', { count: 'exact', head: true }).eq('referido_por', userName);
+            document.getElementById('numAfiliados').innerText = count || 0;
+            nav('folderAfiliados');
+        }
+
+        async function donarSaldo() {
+            if (coins <= 0) return;
+            await _supabase.from('historial_donaciones').insert([{ nombre_usuario: userName, monto: coins }]);
+            coins = 0;
+            document.getElementById('coinCount').innerText = "0";
+            alert("¡Donación recibida!");
+            cargarDonadores();
+        }
+
+        async function cargarDonadores() {
+            const { data } = await _supabase.from('historial_donaciones').select('*').order('fecha', { ascending: false }).limit(5);
+            const l = document.getElementById('listaDonadores');
+            l.innerHTML = "";
+            data?.forEach(d => { l.innerHTML += `<div class="list-item"><span>${d.nombre_usuario}</span><span>${d.monto} 🦴</span></div>`; });
         }
     </script>
 </body>
