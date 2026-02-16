@@ -16,7 +16,7 @@
         <label>
             <input type="checkbox" id="readTerms"> Acepto que los pagos dependen de la monetización.
         </label>
-        <button id="startButton" class="btn btn-primary" disabled>INICIAR ENTRENAMIENTO</button>
+        <button id="startButton" class="btn btn-primary" disabled style="margin-top:20px;">INICIAR ENTRENAMIENTO</button>
     </div>
 
     <div id="miniapppanel" class="panel" style="display:none;">
@@ -26,37 +26,39 @@
             <button id="donateButton" class="btn btn-danger">❤️ DONAR AL RESCATE</button>
         </div>
         <div class="stats" style="margin-top: 15px;">
-            <div>Monedas: <span id="coins">0</span> 🦴</div>
+            <div>Monedas Acumuladas: <span id="coins">0</span> 🦴</div>
         </div>
         <div id="walletSection" style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px;">
-            <h3>Mis Premios</h3>
+            <h3>Mis Datos de Cobro</h3>
             <input type="text" id="btcAddress" placeholder="Dirección Bitcoin (BTC)">
-            <button onclick="guardarWallet('BTC')" class="btn" style="background: #333; font-size: 12px;">Guardar BTC</button>
+            <button onclick="guardarWallet('BTC')" class="btn" style="background:#333; font-size:12px;">Guardar BTC</button>
             <input type="text" id="usdtAddress" placeholder="Dirección USDT (TRC20)">
-            <button onclick="guardarWallet('USDT')" class="btn" style="background: #333; font-size: 12px;">Guardar USDT</button>
+            <button onclick="guardarWallet('USDT')" class="btn" style="background:#333; font-size:12px;">Guardar USDT</button>
         </div>
     </div>
 
     <script>
-        // CONEXIÓN SUPABASE
+        // CONFIGURACIÓN SUPABASE
         const supabaseUrl = 'https://ywkcnxhlptqagwxjnygx.supabase.co'; 
         const supabaseKey = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         let player, lastTime = 0, videoEnded = false, coins = 0;
 
-        // GUARDAR WALLET
-        async function guardarWallet(tipo) {
-            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-            if (!user) return alert("Abre desde Telegram");
-            const direccion = tipo === 'BTC' ? document.getElementById('btcAddress').value : document.getElementById('usdtAddress').value;
-            const campo = tipo === 'BTC' ? { wallet_btc: direccion } : { wallet_usdt: direccion };
-            const { error } = await supabase.from('usuarios').update(campo).eq('id_telegram', user.id);
-            if (error) alert("Error: " + error.message);
-            else alert("¡Wallet guardada!");
-        }
+        // FUNCIÓN PARA EL BOTÓN DE INICIO (LA QUE FALLABA)
+        document.getElementById('readTerms').onchange = function() {
+            document.getElementById('startButton').disabled = !this.checked;
+        };
 
-        // YOUTUBE API
+        document.getElementById('startButton').onclick = function() {
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('miniapppanel').style.display = 'block';
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.expand();
+            }
+        };
+
+        // YOUTUBE Y ANTI-TRAMPAS
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 height: '240', width: '100%', videoId: 'dQw4w9WgXcQ',
@@ -78,21 +80,22 @@
         function onPlayerStateChange(e) {
             if (e.data === YT.PlayerState.ENDED) {
                 videoEnded = true;
-                document.getElementById('validateCode').style.display = 'block';
-                document.getElementById('validateCode').disabled = false;
+                const vBtn = document.getElementById('validateCode');
+                vBtn.style.display = 'block';
+                vBtn.disabled = false;
             }
         }
 
-        // EVENTOS
-        document.getElementById('readTerms').onclick = (e) => {
-            document.getElementById('startButton').disabled = !e.target.checked;
-        };
-
-        document.getElementById('startButton').onclick = () => {
-            document.getElementById('registration').style.display = 'none';
-            document.getElementById('miniapppanel').style.display = 'block';
-            if (window.Telegram?.WebApp) window.Telegram.WebApp.expand();
-        };
+        // GUARDAR DATOS Y DONACIONES
+        async function guardarWallet(tipo) {
+            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            if (!user) return alert("Abre desde Telegram");
+            const direccion = tipo === 'BTC' ? document.getElementById('btcAddress').value : document.getElementById('usdtAddress').value;
+            const campo = tipo === 'BTC' ? { wallet_btc: direccion } : { wallet_usdt: direccion };
+            const { error } = await supabase.from('usuarios').update(campo).eq('id_telegram', user.id);
+            if (error) alert("Error: " + error.message);
+            else alert("¡Wallet de " + tipo + " guardada!");
+        }
 
         document.getElementById('validateCode').onclick = async () => {
             if (videoEnded) {
