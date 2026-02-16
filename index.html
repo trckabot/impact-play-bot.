@@ -49,6 +49,11 @@
         .btn-video { background: var(--video); }
         .btn-music { background: var(--music); }
         
+        input { width: 100%; background: rgba(13, 17, 23, 0.6); color: white; border: 1px solid #30363d; border-radius: 10px; padding: 12px; margin: 10px 0; box-sizing: border-box; }
+        
+        .song-list { max-height: 150px; overflow-y: auto; margin-top: 10px; border-radius: 10px; background: rgba(0,0,0,0.4); display: none; }
+        .song-item { padding: 14px; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+
         #player { width: 100%; border-radius: 15px; height: 220px; background: #000; margin-top: 15px; border: 1px solid var(--primary); }
 
         .screen { display: none; width: 100%; flex-direction: column; align-items: center; }
@@ -94,9 +99,21 @@
 
                 <div style="margin-bottom: 20px; border-top: 1px solid #333; padding-top: 15px;">
                     <h4 style="color: var(--music); margin: 0 0 10px 0;">🎵 MÚSICA SOLIDARIA</h4>
-                    <button onclick="verContenido('jNQXAC9IVRw', 'Música: Escucha y Gana', 15)" class="btn btn-music">
+                    <button id="btnMusicMain" onclick="toggleMusicList()" class="btn btn-music">
                         🎵 MÚSICA ESCUCHA Y GANA
                     </button>
+                    
+                    <div id="musicContent" style="display:none;">
+                        <input type="text" id="searchSong" placeholder="Buscar canción..." onkeyup="filterSongs()">
+                        <div class="song-list" id="songList" style="display:block;">
+                            <div class="song-item" onclick="verContenido('jNQXAC9IVRw', 'Reggaetón Mix 2026', 15)">
+                                <span>🎧 Reggaetón Mix</span> <span style="color:var(--primary)">+15🦴</span>
+                            </div>
+                            <div class="song-item" onclick="verContenido('5qap5aO4i9A', 'Rock Alternativo', 15)">
+                                <span>🎧 Rock Mix</span> <span style="color:var(--primary)">+15🦴</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <p style="font-size: 18px; margin-top: 20px; font-weight: bold;">MIS MONEDAS: <span id="coinCount" style="color:var(--primary)">0</span></p>
@@ -121,6 +138,22 @@
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
+        }
+
+        // Función para mostrar/ocultar la lista de canciones dentro del botón
+        function toggleMusicList() {
+            const content = document.getElementById('musicContent');
+            const isHidden = content.style.display === 'none';
+            content.style.display = isHidden ? 'block' : 'none';
+            document.getElementById('btnMusicMain').innerText = isHidden ? "CERRAR LISTA" : "🎵 MÚSICA ESCUCHA Y GANA";
+        }
+
+        function filterSongs() {
+            let input = document.getElementById('searchSong').value.toLowerCase();
+            let items = document.querySelectorAll('.song-item');
+            items.forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(input) ? "flex" : "none";
+            });
         }
 
         function verContenido(id, titulo, pts) {
@@ -158,7 +191,7 @@
         document.getElementById('btnVerify').onclick = () => {
             coins += currentPoints;
             document.getElementById('coinCount').innerText = coins;
-            showModal("¡RECOMPENSA!", `Has ganado ${currentPoints} monedas. ¡Gracias por apoyar!`);
+            showModal("¡RECOMPENSA!", `Has ganado ${currentPoints} monedas por tu ayuda.`);
             document.getElementById('btnVerify').style.display = 'none';
         };
 
