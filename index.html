@@ -15,7 +15,6 @@
         .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
         .main-logo { width: 180px; border-radius: 30px; margin-bottom: 15px; }
         
-        /* Estructura de Botones igual a la Imagen 1000297899.jpg */
         .btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; font-size: 13px; text-transform: uppercase; text-decoration: none; box-sizing: border-box; }
         .btn-green { background: var(--primary); }
         .btn-video { background: var(--video); }
@@ -26,6 +25,11 @@
         .btn-wallet { background: var(--wallet); color: #000; }
         .btn-invite { background: var(--invite); }
         
+        /* Colores Redes Sociales */
+        .btn-tg { background: #0088cc; }
+        .btn-fb { background: #1877f2; }
+        .btn-tk { background: #000000; border: 1px solid #fff; }
+
         .btn-yt { background: var(--red-yt); font-size: 11px; flex-direction: column; padding: 12px; line-height: 1.2; }
         .btn-upload { background: var(--gold); color: #000; display: none; margin-top: 15px; border: 2px solid #000; }
         .btn-back { background: #1b1c1d; font-size: 11px; margin-top: 15px; }
@@ -33,13 +37,14 @@
         .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 15px; margin-top: 20px; border: 1px dashed var(--primary); }
         #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; border: 1px solid #333; }
         input[type="file"] { display: none; }
+        .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
     </style>
 </head>
 <body>
     <div class="overlay-bg"></div>
     <div class="container">
         
-        <div id="screenStart" class="screen" style="display: flex; flex-direction: column; align-items: center;">
+        <div id="screenStart" class="screen" style="display: flex;">
             <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="main-logo">
             <div class="panel">
                 <h2 style="color: var(--primary); margin: 0;">AXON IMPACT GLOBAL</h2>
@@ -48,14 +53,15 @@
             </div>
         </div>
 
-        <div id="screenMenu" class="screen" style="display: none; flex-direction: column; align-items: center;">
+        <div id="screenMenu" class="screen">
             <div class="panel">
                 <h3 style="margin-bottom: 20px;">MISIONES ACTIVAS 🦴</h3>
                 <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Videos')" class="btn btn-video"><i class="fa-solid fa-camera-retro"></i> VIDEOS</button>
                 <button onclick="cargarMision('HL9VoQ-er_U', 5, 'Música')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
                 <button onclick="alert('Próximamente')" class="btn btn-game"><i class="fa-solid fa-gamepad"></i> JUEGOS</button>
                 <button onclick="alert('Próximamente')" class="btn btn-task"><i class="fa-solid fa-clipboard-list"></i> TAREAS</button>
-                <button onclick="nav('folderSocial')" class="btn btn-social"><i class="fa-solid fa-globe"></i> REDES SOCIALES</button>
+                
+                <button onclick="nav('screenSocial')" class="btn btn-social"><i class="fa-solid fa-globe"></i> REDES SOCIALES</button>
                 
                 <button onclick="alert('Vincula tu Wallet')" class="btn btn-wallet" style="margin-top: 20px;"><i class="fa-solid fa-gem"></i> VINCULAR WALLET</button>
                 <button onclick="mostrarMiLink()" class="btn btn-invite"><i class="fa-solid fa-link"></i> INVITAR AMIGOS</button>
@@ -67,7 +73,26 @@
             </div>
         </div>
 
-        <div id="screenPlayer" class="screen" style="display: none; flex-direction: column; align-items: center;">
+        <div id="screenSocial" class="screen">
+            <div class="panel">
+                <h3 style="margin-bottom: 20px;">NUESTRAS REDES</h3>
+                <button onclick="window.open('https://t.me/TuCanal', '_blank')" class="btn btn-tg">
+                    <i class="fa-brands fa-telegram"></i> TELEGRAM
+                </button>
+                <button onclick="window.open('https://facebook.com/TuPagina', '_blank')" class="btn btn-fb">
+                    <i class="fa-brands fa-facebook"></i> FACEBOOK
+                </button>
+                <button onclick="window.open('https://tiktok.com/@TuUsuario', '_blank')" class="btn btn-tk">
+                    <i class="fa-brands fa-tiktok"></i> TIKTOK
+                </button>
+                
+                <button onclick="nav('screenMenu')" class="btn btn-back">
+                    <i class="fa-solid fa-arrow-left"></i> VOLVER AL MENÚ
+                </button>
+            </div>
+        </div>
+
+        <div id="screenPlayer" class="screen">
             <div class="panel">
                 <h3 id="misionTitle">Video Beele</h3>
                 <div id="video-placeholder"></div>
