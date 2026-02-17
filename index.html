@@ -12,103 +12,106 @@
             --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); 
             --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; 
             --music: #a333c8; --video: #2185d0; --gold: #fbbd08; 
-            --red-yt: #ff0000; --social: #767676; --wallet: #fbbd08; 
-            --invite: #34495e; --donate: #e74c3c;
+            --red-yt: #ff0000; --social: #767676; --donate: #e74c3c;
         }
 
         body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1; }
         .container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
         
-        /* ESTADISTICAS ORIGINALES */
-        .country-stats { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 8px; border-radius: 12px; font-size: 10px; border: 1px solid var(--primary); z-index: 10; pointer-events: none; }
-        .country-stats div { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 2px; }
+        /* ESTADISTICAS DE PAISES */
+        .country-stats { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 12px; font-size: 10px; border: 1px solid var(--primary); z-index: 10; }
+        .country-stats div { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 3px; }
 
-        .panel { background: var(--panel); padding: 15px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 92vh; overflow-y: auto; }
-        .hero-img { width: 85%; max-width: 250px; border-radius: 40px; margin-bottom: -20px; z-index: 3; box-shadow: 0 0 35px rgba(46, 204, 113, 0.6); }
+        .panel { background: var(--panel); padding: 20px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
+        
+        /* IMAGEN PRINCIPAL */
+        .hero-img { width: 100%; max-width: 280px; border-radius: 40px; margin-bottom: 15px; box-shadow: 0 0 25px var(--primary); }
 
-        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; text-transform: uppercase; transition: 0.3s; }
+        .btn:active { transform: scale(0.95); }
+        
         .btn-video { background: var(--video); }
-        .btn-game { background: linear-gradient(45deg, #f1c40f, #d35400); border: 2px solid white; animation: shake 5s infinite; }
-        @keyframes shake { 0%, 90%, 100% {transform: rotate(0);} 92% {transform: rotate(2deg);} 95% {transform: rotate(-2deg);} }
+        .btn-game { background: linear-gradient(45deg, #f1c40f, #d35400); border: 2px solid white; }
+        .btn-tg { background: #0088cc; }
+        .btn-tk { background: #000; border: 1px solid #444; }
+        .btn-back { background: #333; font-size: 11px; margin-top: 15px; }
 
-        /* JUEGO MEJORADO */
-        .game-area { position: relative; width: 200px; height: 200px; margin: 10px auto; }
-        #avatar-container { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; border: 4px solid var(--gold); box-shadow: 0 0 20px var(--gold); position: relative; cursor: pointer; background: #000; }
-        #avatar-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.1s; }
-        #avatar-container:active #avatar-img { transform: scale(1.2); }
-
-        .xp-container { width: 100%; height: 15px; background: #111; border-radius: 10px; margin: 10px 0; border: 1px solid var(--primary); position: relative; overflow: hidden; }
-        #xp-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), #8effb1); transition: width 0.3s; }
-
-        .floating-points { position: fixed; pointer-events: none; color: var(--gold); font-weight: 900; font-size: 24px; text-shadow: 2px 2px #000; z-index: 100; animation: floatUp 0.6s forwards; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-120px) scale(1.5); } }
+        /* ESTILOS DEL JUEGO */
+        .game-char-box { width: 180px; height: 180px; margin: 15px auto; position: relative; cursor: pointer; }
+        #char-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 15px var(--gold)); }
+        .xp-bar { width: 100%; height: 12px; background: #000; border-radius: 10px; margin: 10px 0; border: 1px solid var(--primary); overflow: hidden; }
+        #xp-fill { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s; }
+        .particle { position: absolute; pointer-events: none; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: explode 0.6s forwards; }
+        @keyframes explode { 0% { opacity: 1; transform: translate(0,0); } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)); } }
 
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
-        .btn-back { background: #1b1c1d; font-size: 10px; margin-top: 10px; }
+        .balance-card { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 20px; border: 1px dashed var(--primary); margin: 10px 0; }
     </style>
 </head>
 <body>
     <div class="overlay-bg"></div>
 
     <div class="country-stats">
-        <b style="color: var(--primary);">USUARIOS HOY</b>
-        <div><span>🇨🇴 Colombia</span> <span>124</span></div>
-        <div><span>🇻🇪 Venezuela</span> <span>89</span></div>
-        <div><span>🇪🇸 España</span> <span>45</span></div>
+        <b style="color: var(--primary); display:block; margin-bottom:5px;">USUARIOS EN VIVO</b>
+        <div><span>🇨🇴 Colombia</span> <span>142</span></div>
+        <div><span>🇻🇪 Venezuela</span> <span>95</span></div>
+        <div><span>🇲🇽 México</span> <span>78</span></div>
+        <div><span>🇪🇸 España</span> <span>54</span></div>
     </div>
 
     <div class="container">
         
         <div id="screenStart" class="screen" style="display: flex;">
             <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="hero-img">
-            <div class="panel" style="padding-top: 30px;">
-                <h2 style="color: var(--primary);">AXON IMPACT GLOBAL</h2>
-                <button onclick="nav('screenMenu')" class="btn" style="background: var(--primary);">ENTRAR A MISIONES</button>
+            <div class="panel">
+                <h2 style="color: var(--primary); margin: 0;">AXON IMPACT GLOBAL</h2>
+                <p style="font-size: 14px; color: #ccc; margin: 10px 0;">Ayudando a animales de la calle y personas sin hogar a través de la tecnología Bitcoin.</p>
+                <button onclick="nav('screenMenu')" class="btn" style="background: var(--primary);">COMENZAR MISIONES</button>
             </div>
         </div>
 
         <div id="screenMenu" class="screen">
             <div class="panel">
-                <button onclick="nav('screenGame')" class="btn btn-game"><i class="fa-solid fa-bolt"></i> JUGAR: EVOLUCIÓN BITCOIN</button>
-                <button onclick="nav('screenVideoList')" class="btn btn-video"><i class="fa-solid fa-video"></i> VER VIDEOS (+1000 🦴)</button>
-                <div style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
-                <button onclick="window.open('https://t.me/TuCanal')" class="btn" style="background:#0088cc;"><i class="fa-brands fa-telegram"></i> TELEGRAM</button>
-                <button onclick="window.open('https://tiktok.com')" class="btn" style="background:#000;"><i class="fa-brands fa-tiktok"></i> TIKTOK</button>
+                <button onclick="nav('screenGame')" class="btn btn-game"><i class="fa-solid fa-rocket"></i> JUEGO: EVOLUCIÓN BITCOIN</button>
+                <button onclick="nav('screenVideoList')" class="btn btn-video"><i class="fa-solid fa-video"></i> VER VIDEOS (+500 🦴)</button>
+                <button onclick="window.open('https://t.me/TuCanal')" class="btn btn-tg"><i class="fa-brands fa-telegram"></i> TELEGRAM OFICIAL</button>
+                <button onclick="window.open('https://tiktok.com')" class="btn btn-tk"><i class="fa-brands fa-tiktok"></i> TIKTOK</button>
                 
-                <div class="balance-card" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 20px; border: 1px solid var(--primary); margin-top: 10px;">
-                    <small style="color: var(--primary);">SALDO TOTAL 🦴</small>
-                    <div style="font-size: 32px; font-weight: bold;" id="coinCount">0</div>
+                <div class="balance-card">
+                    <small style="color: var(--primary);">TU IMPACTO TOTAL</small>
+                    <div style="font-size: 30px; font-weight: bold;"><span id="coinCount">0</span> 🦴</div>
                 </div>
+                <button onclick="nav('screenStart')" class="btn btn-back">VOLVER AL INICIO</button>
             </div>
         </div>
 
         <div id="screenGame" class="screen">
             <div class="panel">
-                <h3 id="rankName" style="color: var(--gold); margin: 0;">NIÑO HUMILDE</h3>
-                <div class="xp-container"><div id="xp-bar"></div></div>
+                <h3 id="rankTitle" style="color: var(--gold); margin: 0;">NIÑO HUMILDE 🧒</h3>
+                <div class="xp-bar"><div id="xp-fill"></div></div>
                 
-                <div class="game-area">
-                    <div id="avatar-container" onclick="tapGame(event)">
-                        <img id="avatar-img" src="https://i.ibb.co/VpyXwQz/nino-humilde.jpg" alt="Evolucion">
-                    </div>
+                <div class="game-char-box" onclick="hacerTap(event)">
+                    <img id="char-img" src="https://i.ibb.co/VpyXwQz/nino-humilde.jpg">
                 </div>
 
-                <div style="font-size: 28px; font-weight: 900; color: #fff;"><span id="gamePoints">0</span></div>
-                <p style="font-size: 10px; color: var(--primary);">¡TOCA RÁPIDO PARA SUBIR DE NIVEL!</p>
+                <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;"><span id="gameCoins">0</span> 🦴</div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <button class="btn" style="background:#34495e; font-size: 9px;" onclick="buyEvo(5000, 'ESTUDIANTE', 'https://i.ibb.co/TqYfS1w/estudiante.jpg')">CURSO BLOCKCHAIN (5k)</button>
-                    <button class="btn" style="background:#34495e; font-size: 9px;" onclick="buyEvo(25000, 'EMPRESARIO', 'https://i.ibb.co/6y4t4mX/empresario.jpg')">FILANTROPO (25k)</button>
+                    <button class="btn" style="background:rgba(255,255,255,0.1); font-size: 10px;" onclick="subirNivel(2000, 'ESTUDIANTE 📚', 'https://i.ibb.co/TqYfS1w/estudiante.jpg')">CURSO (2k)</button>
+                    <button class="btn" style="background:rgba(255,255,255,0.1); font-size: 10px;" onclick="subirNivel(10000, 'EMPRESARIO 🎩', 'https://i.ibb.co/6y4t4mX/empresario.jpg')">FILANTROPO (10k)</button>
                 </div>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENU</button>
+                <button onclick="nav('screenMenu')" class="btn btn-back">SALIR DEL JUEGO</button>
             </div>
         </div>
 
         <div id="screenVideoList" class="screen">
             <div class="panel">
-                <h3>VIDEOS (GANA +1000)</h3>
-                <div id="vList"></div>
+                <h3>VIDEOS DISPONIBLES</h3>
+                <div id="vContainer">
+                    <button class="btn btn-video" onclick="ganarVideo(500)">AYUDA ANIMAL #1 (+500 🦴)</button>
+                    <button class="btn btn-video" onclick="ganarVideo(500)">MISIÓN COMEDOR #2 (+500 🦴)</button>
+                </div>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
@@ -116,76 +119,62 @@
     </div>
 
     <script>
-        // Variables de monetización equilibrada:
-        // El juego da números grandes (+50), pero las tarjetas cuestan mucho más.
-        // Los videos dan +1000 directamente.
         let coins = 0;
         let xp = 0;
-        let audio = new (window.AudioContext || window.webkitAudioContext)();
+        const audio = new (window.AudioContext || window.webkitAudioContext)();
 
-        function playNote(f) {
+        function sound(f) {
             let o = audio.createOscillator(); let g = audio.createGain();
-            o.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + 0.1);
+            o.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.1);
             o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime + 0.1);
         }
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
-            if(id === 'screenVideoList') renderVideos();
             updateUI();
         }
 
-        function tapGame(e) {
-            // Sensación de ganar mucho: +50 por toque
-            coins += 50; 
-            xp += 2;
-            playNote(400 + (xp * 2));
+        function hacerTap(e) {
+            coins += 10; xp += 5;
+            sound(400);
             
-            // Efecto visual de puntos volando
-            let t = document.createElement('div');
-            t.className = 'floating-points';
-            t.innerText = '+50';
-            t.style.left = e.clientX + 'px'; t.style.top = e.clientY + 'px';
-            document.body.appendChild(t);
-            setTimeout(() => t.remove(), 600);
-
-            if(xp >= 100) { xp = 100; }
+            // Explosión
+            for(let i=0; i<6; i++) {
+                let p = document.createElement('div'); p.className = 'particle';
+                p.style.left = e.clientX+'px'; p.style.top = e.clientY+'px';
+                p.style.setProperty('--tx', (Math.random()-0.5)*150+'px');
+                p.style.setProperty('--ty', (Math.random()-0.5)*150+'px');
+                document.body.appendChild(p); setTimeout(() => p.remove(), 600);
+            }
+            if(xp >= 100) xp = 100;
             updateUI();
         }
 
-        function buyEvo(cost, name, img) {
-            if(coins >= cost) {
-                coins -= cost;
-                document.getElementById('rankName').innerText = name;
-                document.getElementById('avatar-img').src = img;
+        function subirNivel(costo, nombre, img) {
+            if(coins >= costo) {
+                coins -= costo;
+                document.getElementById('rankTitle').innerText = nombre;
+                document.getElementById('char-img').src = img;
                 xp = 0;
-                Swal.fire('¡EVOLUCIONADO!', 'Has pasado de nivel. ¡Sigue ayudando!', 'success');
+                sound(800);
+                Swal.fire('¡Evolución!', 'Has mejorado tu impacto social.', 'success');
             } else {
-                Swal.fire('Faltan Huesitos', 'El juego es lento... ¡Mira un video para ganar +1000 de golpe!', 'warning');
+                Swal.fire('Faltan Monedas', 'Mira videos para ganar más rápido.', 'warning');
             }
             updateUI();
         }
 
-        function renderVideos() {
-            const list = [{id:'wC_sOpQjvWE', t:'Ayuda a Personas sin hogar'}];
-            const cont = document.getElementById('vList');
-            cont.innerHTML = '';
-            list.forEach(v => {
-                let b = document.createElement('button');
-                b.className = 'btn btn-video';
-                b.innerHTML = `${v.t} <b>(+1000 🦴)</b>`;
-                b.onclick = () => { coins += 1000; Swal.fire('¡BRUTAL!', 'Has ganado 1000 monedas viendo el video.', 'success'); nav('screenMenu'); };
-                cont.appendChild(b);
-            });
+        function ganarVideo(pts) {
+            coins += pts;
+            Swal.fire('¡Felicidades!', 'Has ganado ' + pts + ' monedas.', 'success');
+            nav('screenMenu');
         }
 
         function updateUI() {
-            document.getElementById('coinCount').innerText = Math.floor(coins).toLocaleString();
-            const gc = document.getElementById('gamePoints');
-            if(gc) gc.innerText = Math.floor(coins).toLocaleString() + " 🦴";
-            const xb = document.getElementById('xp-bar');
-            if(xb) xb.style.width = xp + "%";
+            document.getElementById('coinCount').innerText = Math.floor(coins);
+            document.getElementById('gameCoins').innerText = Math.floor(coins);
+            document.getElementById('xp-fill').style.width = xp + "%";
         }
     </script>
 </body>
