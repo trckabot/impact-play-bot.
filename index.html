@@ -8,15 +8,48 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        :root { --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; --music: #a333c8; --video: #2185d0; --gold: #fbbd08; --red-yt: #ff0000; --game: #db2828; --task: #3498db; --social: #767676; --wallet: #fbbd08; --invite: #34495e; }
+        :root { 
+            --primary: #2ecc71; 
+            --bg-dark: rgba(13, 17, 23, 0.9); 
+            --panel: rgba(22, 27, 34, 0.98); 
+            --text: #e6edf3; 
+            --music: #a333c8; 
+            --video: #2185d0; 
+            --gold: #fbbd08; 
+            --red-yt: #ff0000; 
+            --game: #db2828; 
+            --task: #3498db; 
+            --social: #767676; 
+            --wallet: #fbbd08; 
+            --invite: #34495e; 
+        }
+
         body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1; }
         .container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
-        .main-logo { width: 180px; border-radius: 30px; margin-bottom: 15px; }
         
-        .btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; font-size: 13px; text-transform: uppercase; text-decoration: none; box-sizing: border-box; }
-        .btn-green { background: var(--primary); }
+        .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
+        
+        /* ESTILO DE BOTONES SEGÚN TU IMAGEN */
+        .btn { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            width: 100%; 
+            padding: 16px; /* Más robustos como en la foto */
+            margin: 12px 0; 
+            border: none; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: white; 
+            font-size: 14px; 
+            text-transform: uppercase; 
+            transition: transform 0.2s;
+        }
+        .btn:active { transform: scale(0.98); }
+
         .btn-video { background: var(--video); }
         .btn-music { background: var(--music); }
         .btn-game { background: var(--game); }
@@ -24,22 +57,36 @@
         .btn-social { background: var(--social); }
         .btn-wallet { background: var(--wallet); color: #000; }
         .btn-invite { background: var(--invite); }
-        
-        .btn-yt { background: var(--red-yt); font-size: 11px; flex-direction: column; padding: 12px; line-height: 1.2; }
-        .btn-upload { background: var(--gold); color: #000; display: none; margin-top: 15px; border: 2px solid #000; }
         .btn-back { background: #1b1c1d; font-size: 11px; margin-top: 15px; }
+        
+        /* Colores Redes Sociales Internas */
+        .btn-tg { background: #0088cc; }
+        .btn-fb { background: #1877f2; }
+        .btn-tk { background: #000; border: 1px solid #fff; }
 
-        .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 15px; margin-top: 20px; border: 1px dashed var(--primary); }
-        #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; border: 1px solid #333; }
-        input[type="file"] { display: none; }
+        .balance-card { 
+            background: rgba(46, 204, 113, 0.05); 
+            border-radius: 20px; 
+            padding: 15px; 
+            margin-top: 20px; 
+            border: 1px dashed var(--primary); 
+        }
+
+        /* Buscador de Música */
+        .search-input { 
+            width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #444; 
+            background: #0d1117; color: white; margin-bottom: 10px; box-sizing: border-box; 
+        }
+        .music-item { 
+            background: rgba(163, 51, 200, 0.1); border: 1px solid var(--music); 
+            padding: 12px; margin: 8px 0; border-radius: 15px; cursor: pointer; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+
+        #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
-
-        /* Estilos Buscador */
-        .search-container { margin-bottom: 15px; position: relative; }
-        .search-input { width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #444; background: #0d1117; color: white; box-sizing: border-box; outline: none; }
-        .music-list { max-height: 250px; overflow-y: auto; margin-top: 10px; }
-        .music-item { background: rgba(163, 51, 200, 0.1); border: 1px solid var(--music); padding: 12px; margin: 5px 0; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; }
-        .music-item:hover { background: rgba(163, 51, 200, 0.3); }
+        .btn-yt-action { background: var(--red-yt); flex-direction: column; font-size: 12px; line-height: 1.4; }
+        .btn-upload { background: var(--gold); color: #000; display: none; border: 2px solid #000; }
     </style>
 </head>
 <body>
@@ -47,38 +94,68 @@
     <div class="container">
         
         <div id="screenStart" class="screen" style="display: flex;">
-            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="main-logo">
+            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width:180px; border-radius:30px; margin-bottom:15px;">
             <div class="panel">
                 <h2 style="color: var(--primary); margin: 0;">AXON IMPACT GLOBAL</h2>
-                <p style="font-size: 14px; line-height: 1.5; margin: 15px 0;">Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.</p>
-                <button onclick="nav('screenMenu')" class="btn btn-green">ENTRAR A MISIONES</button>
+                <p style="font-size: 14px; margin: 15px 0;">Ayudando a personas y animales con Blockchain.</p>
+                <button onclick="nav('screenMenu')" class="btn btn-video" style="background: var(--primary);">ENTRAR A MISIONES</button>
             </div>
         </div>
 
         <div id="screenMenu" class="screen">
             <div class="panel">
                 <h3 style="margin-bottom: 20px;">MISIONES ACTIVAS 🦴</h3>
-                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video')" class="btn btn-video"><i class="fa-solid fa-camera-retro"></i> VIDEOS</button>
-                <button onclick="nav('screenMusicList')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
-                <button onclick="alert('Próximamente')" class="btn btn-game"><i class="fa-solid fa-gamepad"></i> JUEGOS</button>
                 
-                <button onclick="nav('screenSocial')" class="btn btn-social"><i class="fa-solid fa-globe"></i> REDES SOCIALES</button>
+                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video')" class="btn btn-video">
+                    <i class="fa-solid fa-video"></i> VIDEOS
+                </button>
+                
+                <button onclick="nav('screenMusicList')" class="btn btn-music">
+                    <i class="fa-solid fa-music"></i> MÚSICA
+                </button>
+                
+                <button onclick="alert('Próximamente')" class="btn btn-game">
+                    <i class="fa-solid fa-gamepad"></i> JUEGOS
+                </button>
+                
+                <button onclick="alert('Próximamente')" class="btn btn-task">
+                    <i class="fa-solid fa-clipboard-list"></i> TAREAS
+                </button>
+                
+                <button onclick="nav('screenSocial')" class="btn btn-social">
+                    <i class="fa-solid fa-globe"></i> REDES SOCIALES
+                </button>
+                
+                <button onclick="alert('Vincula tu Wallet')" class="btn btn-wallet" style="margin-top: 25px;">
+                    <i class="fa-solid fa-gem"></i> VINCULAR WALLET
+                </button>
+                
+                <button onclick="mostrarMiLink()" class="btn btn-invite">
+                    <i class="fa-solid fa-link"></i> INVITAR AMIGOS
+                </button>
                 
                 <div class="balance-card">
-                    <span style="font-size: 11px; opacity: 0.8;">TU SALDO TOTAL</span>
-                    <div style="font-size: 28px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
+                    <span style="font-size: 12px; opacity: 0.8;">TU SALDO TOTAL</span>
+                    <div style="font-size: 32px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
                 </div>
             </div>
         </div>
 
         <div id="screenMusicList" class="screen">
             <div class="panel">
-                <h3 style="margin-bottom: 15px;">BIBLIOTECA MUSICAL</h3>
-                <div class="search-container">
-                    <input type="text" id="musicSearch" class="search-input" placeholder="Buscar canción o artista..." onkeyup="filterMusic()">
-                </div>
-                <div class="music-list" id="musicListContainer">
-                    </div>
+                <h3 style="color: var(--music);">BIBLIOTECA MUSICAL</h3>
+                <input type="text" id="musicSearch" class="search-input" placeholder="Buscar canción..." onkeyup="filterMusic()">
+                <div id="musicListContainer" style="max-height: 250px; overflow-y: auto;"></div>
+                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
+            </div>
+        </div>
+
+        <div id="screenSocial" class="screen">
+            <div class="panel">
+                <h3>NUESTRAS REDES</h3>
+                <button onclick="window.open('https://t.me/TuCanal', '_blank')" class="btn btn-tg"><i class="fa-brands fa-telegram"></i> TELEGRAM</button>
+                <button onclick="window.open('https://facebook.com/TuPagina', '_blank')" class="btn btn-fb"><i class="fa-brands fa-facebook"></i> FACEBOOK</button>
+                <button onclick="window.open('https://tiktok.com/@TuUsuario', '_blank')" class="btn btn-tk"><i class="fa-brands fa-tiktok"></i> TIKTOK</button>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
@@ -87,38 +164,23 @@
             <div class="panel">
                 <h3 id="misionTitle">---</h3>
                 <div id="video-placeholder"></div>
-                
-                <button id="btnInteract" class="btn btn-yt">
+                <button id="btnInteract" class="btn btn-yt-action">
                     <span>ABRIR YOUTUBE PARA INTERACTUAR</span>
-                    <span>LUEGO DE VER EL VIDEO Y VUELVE</span>
+                    <span style="font-size: 10px;">LUEGO DE VER EL VIDEO Y VUELVE</span>
                 </button>
-                
-                <p id="msgInstruccion" style="font-size: 11px; color: var(--gold); padding: 10px;">
+                <p id="msgInstruccion" style="font-size: 11px; color: var(--gold); padding: 10px; font-weight: bold;">
                     ⚠️ ¡Dale LIKE, COMENTA y COMPARTE en YouTube! Toma screenshot y cárgalo a continuación...
                 </p>
-
-                <label for="fileProof" id="labelUpload" class="btn btn-upload"><i class="fa-solid fa-image"></i> CARGAR CAPTURA DE PANTALLA</label>
+                <label for="fileProof" id="labelUpload" class="btn btn-upload"><i class="fa-solid fa-image"></i> CARGAR CAPTURA</label>
                 <input type="file" id="fileProof" accept="image/*" onchange="validarTodo()">
-
                 <button onclick="pararMision()" class="btn btn-back">CANCELAR Y VOLVER</button>
-            </div>
-        </div>
-
-        <div id="screenSocial" class="screen">
-            <div class="panel">
-                <h3 style="margin-bottom: 20px;">NUESTRAS REDES</h3>
-                <button onclick="window.open('https://t.me/TuCanal', '_blank')" class="btn btn-tg" style="background: #0088cc; width: 100%; margin: 5px 0; border-radius: 15px; padding: 10px; color: white; border: none;">TELEGRAM</button>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Datos de canciones
         const listadoCanciones = [
-            { id: 'HL9VoQ-er_U', titulo: 'No tiene sentido', artista: 'Beele', puntos: 5 },
-            // Puedes agregar más aquí:
-            // { id: 'VIDEO_ID', titulo: 'Nombre', artista: 'Artista', puntos: 5 }
+            { id: 'HL9VoQ-er_U', titulo: 'No tiene sentido', artista: 'Beele', puntos: 5 }
         ];
 
         let player, lastTime = 0, currentPoints = 0, coins = 0, videoFin = false;
@@ -135,24 +197,16 @@
             listadoCanciones.forEach(song => {
                 const item = document.createElement('div');
                 item.className = 'music-item';
-                item.innerHTML = `
-                    <div style="text-align: left;">
-                        <div style="font-weight: bold; font-size: 14px;">${song.titulo}</div>
-                        <div style="font-size: 12px; opacity: 0.7;">${song.artista}</div>
-                    </div>
-                    <div style="color: var(--primary); font-weight: bold;">+${song.puntos} 🦴</div>
-                `;
-                item.onclick = () => cargarMision(song.id, song.puntos, `${song.artista} - ${song.titulo}`);
+                item.innerHTML = `<div><b>${song.titulo}</b><br><small>${song.artista}</small></div><b>+${song.puntos} 🦴</b>`;
+                item.onclick = () => cargarMision(song.id, song.puntos, `Música: ${song.titulo}`);
                 container.appendChild(item);
             });
         }
 
         function filterMusic() {
             const query = document.getElementById('musicSearch').value.toLowerCase();
-            const items = document.querySelectorAll('.music-item');
-            items.forEach(item => {
-                const text = item.innerText.toLowerCase();
-                item.style.display = text.includes(query) ? 'flex' : 'none';
+            document.querySelectorAll('.music-item').forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(query) ? 'flex' : 'none';
             });
         }
 
@@ -160,48 +214,29 @@
             currentPoints = pts; videoFin = false;
             document.getElementById('misionTitle').innerText = titulo;
             document.getElementById('labelUpload').style.display = 'none';
-            document.getElementById('msgInstruccion').innerHTML = "⚠️ ¡Dale LIKE, COMENTA y COMPARTE en YouTube! Toma screenshot y cárgalo a continuación...";
             document.getElementById('btnInteract').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-            
             nav('screenPlayer');
-            
-            if (player) {
-                player.loadVideoById(videoId);
-            } else {
-                player = new YT.Player('video-placeholder', {
-                    height: '100%', width: '100%', videoId: videoId,
-                    playerVars: { 'autoplay': 1, 'controls': 1 },
-                    events: { 'onStateChange': onPlayerStateChange }
-                });
-            }
-            lastTime = 0;
-            // Anti-adelanto
-            const timer = setInterval(() => {
-                if (document.getElementById('screenPlayer').style.display === 'none') { clearInterval(timer); return; }
-                if (!player || typeof player.getCurrentTime !== 'function' || player.getPlayerState() !== 1) return;
-                let cur = player.getCurrentTime();
-                if (cur > lastTime + 2.5) { player.seekTo(lastTime); alert("⚠️ No adelantes el video."); }
-                lastTime = cur;
-            }, 1000);
-        }
-
-        function onPlayerStateChange(e) {
-            if (e.data === YT.PlayerState.ENDED) {
-                videoFin = true;
-                document.getElementById('labelUpload').style.display = 'flex';
-                document.getElementById('msgInstruccion').innerHTML = "✅ ¡Video terminado! Ahora carga la captura para recibir tus puntos.";
-            }
+            if (player) player.loadVideoById(videoId);
+            else player = new YT.Player('video-placeholder', {
+                height: '100%', width: '100%', videoId: videoId,
+                events: { 'onStateChange': (e) => { if (e.data === YT.PlayerState.ENDED) { 
+                    videoFin = true; 
+                    document.getElementById('labelUpload').style.display = 'flex';
+                    document.getElementById('msgInstruccion').innerHTML = "✅ ¡Video terminado! Sube tu captura ahora.";
+                }}}
+            });
         }
 
         function validarTodo() {
-            if (!videoFin) { alert("Debes ver el video completo primero."); return; }
+            if (!videoFin) return;
             alert("Validando captura... 🦴");
-            setTimeout(() => {
-                coins += currentPoints;
-                document.getElementById('coinCount').innerText = coins;
-                alert("¡Felicidades! Recompensa sumada.");
-                nav('screenMenu');
-            }, 2000);
+            setTimeout(() => { coins += currentPoints; document.getElementById('coinCount').innerText = coins; nav('screenMenu'); }, 2000);
+        }
+
+        function mostrarMiLink() {
+            const link = window.location.href;
+            navigator.clipboard.writeText(link);
+            alert("Link de invitación copiado.");
         }
 
         function pararMision() { if(player) player.stopVideo(); nav('screenMenu'); }
