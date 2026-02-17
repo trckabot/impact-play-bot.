@@ -98,6 +98,7 @@
         </div>
 
         <div id="screenVideoList" class="screen"><div class="panel"><h3 style="color:var(--video)">VÍDEOS</h3><div id="videoListContainer"></div><button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button></div></div>
+        
         <div id="screenMusicList" class="screen">
             <div class="panel">
                 <h3 style="color:var(--music)">MÚSICA</h3>
@@ -109,6 +110,7 @@
                 <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
             </div>
         </div>
+
         <div id="screenPlayer" class="screen">
             <div class="panel">
                 <h3 id="misionTitle" style="font-size: 15px; color: var(--gold);">---</h3>
@@ -122,7 +124,9 @@
                 <button onclick="volverDePlayer()" class="btn" style="background: #333;">VOLVER</button>
             </div>
         </div>
+
         <div id="screenGames" class="screen"><div class="panel"><h3 style="color:var(--game)">TABLÓN PETICIONES</h3><div id="peticionesContainer" style="max-height: 300px; overflow-y: auto;"></div><button onclick="nav('screenMenu')" class="btn" style="background:#333; margin-top:10px;">VOLVER</button></div></div>
+
         <div id="screenDonar" class="screen">
             <div class="panel">
                 <h3 style="color:var(--donar)">DONAR MIS 🦴</h3>
@@ -140,8 +144,35 @@
     <script>
         let coinsMisiones = 0, coinsReferidos = 0, player = null, currentPoints = 0, clickCount = 0;
         let listaPeticiones = [], blockEnvio = false, pendingReferralPoints = 0;
-        let miIDUnico = "AX-" + Math.floor(Math.random()*900000 + 100000);
+        let miIDUnico = localStorage.getItem('miID') || "AX-" + Math.floor(Math.random()*900000 + 100000);
         let CLAVE_ADMIN = localStorage.getItem('adminPass') || "1234";
+
+        // --- SISTEMA DE PERSISTENCIA ---
+        function guardarDatos() {
+            const data = {
+                nombre: document.getElementById('miNombre').innerText,
+                id: miIDUnico,
+                misiones: coinsMisiones,
+                referidos: coinsReferidos
+            };
+            localStorage.setItem('axon_user_data', JSON.stringify(data));
+        }
+
+        function cargarDatos() {
+            const saved = localStorage.getItem('axon_user_data');
+            if(saved) {
+                const d = JSON.parse(saved);
+                coinsMisiones = d.misiones || 0;
+                coinsReferidos = d.referidos || 0;
+                miIDUnico = d.id;
+                document.getElementById('miNombre').innerText = d.nombre;
+                document.getElementById('miID').innerText = d.id;
+                updateUI();
+                if(d.nombre !== "---") nav('screenMenu');
+            }
+        }
+
+        window.onload = () => { cargarDatos(); };
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
@@ -174,6 +205,7 @@
                 if(result.isConfirmed) { 
                     document.getElementById('miNombre').innerText = result.value; 
                     document.getElementById('miID').innerText = miIDUnico;
+                    guardarDatos();
                     nav('screenMenu'); 
                 }
             });
@@ -230,6 +262,7 @@
             if(cant <= coinsMisiones) { coinsMisiones -= cant; } 
             else { let r = cant - coinsMisiones; coinsMisiones = 0; coinsReferidos -= r; }
             updateUI();
+            guardarDatos();
             document.getElementById('totalCoinsDonar').innerText = coinsMisiones + coinsReferidos;
             document.getElementById('cantidadADonar').value = "";
             Swal.fire({ title: '¡Gracias!', text: `Donaste ${cant} 🦴 a la causa.`, icon: 'success', customClass: { popup: 'swal-custom-bg' } });
@@ -261,7 +294,7 @@
             const ratio = parseFloat(document.getElementById('valorMoneda').value) / 1000;
             const valRef = parseFloat(document.getElementById('valorReferido').value);
             const total = ((coinsMisiones * ratio) + (coinsReferidos/1000 * valRef)).toFixed(2);
-            document.getElementById('adminUsersBody').innerHTML = `<tr><td>${document.getElementById('miNombre').innerText}</td><td>${coinsMisiones}</td><td>${coinsReferidos}</td><td style="color:#2ecc71">$${total}</td><td><button onclick="coinsMisiones=0;coinsReferidos=0;updateUI();actualizarPanelAdmin();" style="background:red; color:white; border:none; padding:5px; border-radius:5px;">PAGAR</button></td></tr>`;
+            document.getElementById('adminUsersBody').innerHTML = `<tr><td>${document.getElementById('miNombre').innerText}</td><td>${coinsMisiones}</td><td>${coinsReferidos}</td><td style="color:#2ecc71">$${total}</td><td><button onclick="coinsMisiones=0;coinsReferidos=0;updateUI();guardarDatos();actualizarPanelAdmin();" style="background:red; color:white; border:none; padding:5px; border-radius:5px;">PAGAR</button></td></tr>`;
         }
 
         function cambiarClaveAdmin() {
@@ -284,6 +317,7 @@
                 coinsMisiones += currentPoints;
                 if(pendingReferralPoints > 0) { coinsReferidos += pendingReferralPoints; pendingReferralPoints = 0; }
                 updateUI();
+                guardarDatos();
                 Swal.fire({ title: 'Misión Exitosa', text: 'Puntos sumados correctamente.', icon: 'success', customClass: { popup: 'swal-custom-bg' } });
                 nav('screenMenu');
             }, 2000);
