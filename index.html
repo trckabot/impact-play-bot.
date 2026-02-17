@@ -17,37 +17,30 @@
             background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; 
             background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; 
         }
-        /* Clase para fondos de alertas con la imagen del proyecto */
         .swal-custom-bg {
             background: linear-gradient(rgba(22, 27, 34, 0.85), rgba(22, 27, 34, 0.85)), 
                         url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') !important;
             background-size: cover !important;
             border: 2px solid var(--primary) !important;
         }
-        
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1; }
         .container { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        
         .panel { 
             background: var(--panel); padding: 20px; border-radius: 30px; width: 85%; max-width: 400px; 
             text-align: center; border: 2px solid var(--primary); 
             box-shadow: 0 0 25px rgba(46, 204, 113, 0.5); 
             max-height: 85vh; overflow-y: auto;
         }
-
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
         .btn:active { transform: scale(0.95); }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .input-registro, #requestMusic { width: 90%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); font-size: 14px; margin-bottom: 10px; }
         #requestMusic { background: #000 !important; color: #fff !important; border-color: var(--music); height: 80px; }
-
         .admin-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: 10px; }
         .admin-table th, .admin-table td { border: 1px solid #444; padding: 6px; text-align: center; }
         .admin-table th { background: var(--primary); color: black; }
         .list-item { padding: 15px; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; font-size: 13px; background: rgba(255,255,255,0.03); margin-bottom: 5px; border-radius: 10px; }
-        
         .peticion-card { background: rgba(0,0,0,0.5); margin: 8px 0; padding: 10px; border-radius: 12px; text-align: left; border-left: 4px solid var(--music); }
         .peticion-input-edit { background: transparent; border: none; color: var(--gold); font-size: 12px; width: 100%; outline: none; }
     </style>
@@ -55,12 +48,11 @@
 <body>
     <div class="overlay-bg"></div>
     <div class="container">
-        
         <div id="screenStart" class="screen" style="display: flex;">
             <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width: 75%; border-radius: 40px; margin-bottom: -30px; z-index: 3; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
             <div class="panel" style="padding-top: 45px;">
                 <h2 id="axonTitle" style="color: var(--primary); margin: 0; cursor: pointer; text-shadow: 0 0 15px var(--primary);">AXON IMPACT GLOBAL</h2>
-                <p style="font-size: 12px; margin: 15px 0;"><b>Misión:</b> Personas sin hogar y animales rescatados.</p>
+                <p style="font-size: 12px; margin: 15px 0;">Ayudar a las personas necesitadas y animales indefensos con el poder de la blockchain.</p>
                 <button onclick="solicitarRegistro()" class="btn" style="background: var(--primary); box-shadow: 0 4px 15px rgba(46,204,113,0.4);">UNIRSE A LA CAUSA</button>
             </div>
         </div>
@@ -106,7 +98,6 @@
         </div>
 
         <div id="screenVideoList" class="screen"><div class="panel"><h3 style="color:var(--video)">VÍDEOS</h3><div id="videoListContainer"></div><button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button></div></div>
-        
         <div id="screenMusicList" class="screen">
             <div class="panel">
                 <h3 style="color:var(--music)">MÚSICA</h3>
@@ -118,7 +109,6 @@
                 <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
             </div>
         </div>
-
         <div id="screenPlayer" class="screen">
             <div class="panel">
                 <h3 id="misionTitle" style="font-size: 15px; color: var(--gold);">---</h3>
@@ -132,15 +122,7 @@
                 <button onclick="volverDePlayer()" class="btn" style="background: #333;">VOLVER</button>
             </div>
         </div>
-
-        <div id="screenGames" class="screen">
-            <div class="panel">
-                <h3 style="color:var(--game)">TABLÓN PETICIONES</h3>
-                <div id="peticionesContainer" style="max-height: 300px; overflow-y: auto;"></div>
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333; margin-top:10px;">VOLVER</button>
-            </div>
-        </div>
-
+        <div id="screenGames" class="screen"><div class="panel"><h3 style="color:var(--game)">TABLÓN PETICIONES</h3><div id="peticionesContainer" style="max-height: 300px; overflow-y: auto;"></div><button onclick="nav('screenMenu')" class="btn" style="background:#333; margin-top:10px;">VOLVER</button></div></div>
         <div id="screenDonar" class="screen">
             <div class="panel">
                 <h3 style="color:var(--donar)">DONAR MIS 🦴</h3>
@@ -157,8 +139,7 @@
 
     <script>
         let coinsMisiones = 0, coinsReferidos = 0, player = null, currentPoints = 0, clickCount = 0;
-        let listaPeticiones = [], blockEnvio = false;
-        let pendingReferralPoints = 0; // Puntos de referido en espera
+        let listaPeticiones = [], blockEnvio = false, pendingReferralPoints = 0;
         let miIDUnico = "AX-" + Math.floor(Math.random()*900000 + 100000);
         let CLAVE_ADMIN = localStorage.getItem('adminPass') || "1234";
 
@@ -169,10 +150,7 @@
                 target.style.display = 'flex';
                 if(id === 'screenDonar') document.getElementById('totalCoinsDonar').innerText = coinsMisiones + coinsReferidos;
                 if(id === 'screenVideoList') renderList('videoListContainer', [{id:'wC_sOpQjvWE', t:'Rescate Animal', s:300}, {id:'dQw4w9WgXcQ', t:'Misión Calle', s:400}]);
-                if(id === 'screenMusicList') {
-                    renderList('musicListContainer', [{id:'HL9VoQ-er_U', t:'Música Social', s:200}]);
-                    actualizarMisPeticiones();
-                }
+                if(id === 'screenMusicList') { renderList('musicListContainer', [{id:'HL9VoQ-er_U', t:'Música Social', s:200}]); actualizarMisPeticiones(); }
                 if(id === 'screenGames') actualizarTablonPeticiones();
             }
         }
@@ -184,16 +162,21 @@
                 confirmButtonText: 'ENTRAR',
                 customClass: { popup: 'swal-custom-bg' },
                 background: '#161b22', color: '#fff',
+                allowOutsideClick: false,
                 preConfirm: () => {
-                    const n = document.getElementById('regName').value;
-                    if(n.length < 3 || !document.getElementById('regCheck').checked) return Swal.showValidationMessage('Completa los datos');
-                    return n;
+                    const name = document.getElementById('regName').value;
+                    const check = document.getElementById('regCheck').checked;
+                    if (name.length < 3) { Swal.showValidationMessage('Nombre demasiado corto'); return false; }
+                    if (!check) { Swal.showValidationMessage('Debes aceptar los términos'); return false; }
+                    return name;
                 }
-            }).then(r => { if(r.isConfirmed){ 
-                document.getElementById('miNombre').innerText = r.value; 
-                document.getElementById('miID').innerText = miIDUnico;
-                nav('screenMenu'); 
-            }});
+            }).then(result => {
+                if(result.isConfirmed) { 
+                    document.getElementById('miNombre').innerText = result.value; 
+                    document.getElementById('miID').innerText = miIDUnico;
+                    nav('screenMenu'); 
+                }
+            });
         }
 
         function cargarVideo(id, t) {
@@ -216,37 +199,27 @@
             if(txt.length < 3) return;
             const prohibited = ["mierda", "puto", "estafa", "sexo"];
             if(prohibited.some(p => txt.toLowerCase().includes(p))) {
-                blockEnvio = true;
-                Swal.fire('Spam Detectado', 'Bloqueado por 1 min.', 'error');
-                setTimeout(() => blockEnvio = false, 60000);
-                return;
+                blockEnvio = true; setTimeout(() => blockEnvio = false, 60000);
+                Swal.fire('Spam Detectado', 'Bloqueado por 1 min.', 'error'); return;
             }
             listaPeticiones.push({ u: document.getElementById('miNombre').innerText, t: txt, f: new Date().toLocaleTimeString() });
             document.getElementById('requestMusic').value = "";
             actualizarMisPeticiones();
-            Swal.fire({ title: 'Éxito', text: 'Petición enviada. Puedes editarla abajo.', icon: 'success', customClass: { popup: 'swal-custom-bg' } });
+            Swal.fire({ title: 'Éxito', text: 'Petición enviada.', icon: 'success', customClass: { popup: 'swal-custom-bg' } });
         }
 
         function actualizarMisPeticiones() {
-            const container = document.getElementById('misPeticionesActuales');
-            container.innerHTML = "";
+            const container = document.getElementById('misPeticionesActuales'); container.innerHTML = "";
             const miNombre = document.getElementById('miNombre').innerText;
             listaPeticiones.filter(p => p.u === miNombre).forEach((p, i) => {
-                container.innerHTML += `<div class="peticion-card" style="border-left-color: var(--gold);">
-                    <div style="font-size:9px; color:#aaa;">Editar canción:</div>
-                    <input type="text" class="peticion-input-edit" value="${p.t}" onchange="p.t = this.value; actualizarTablonPeticiones();">
-                </div>`;
+                container.innerHTML += `<div class="peticion-card" style="border-left-color: var(--gold);"><div style="font-size:9px; color:#aaa;">Editar canción:</div><input type="text" class="peticion-input-edit" value="${p.t}" onchange="p.t = this.value; actualizarTablonPeticiones();"></div>`;
             });
         }
 
         function actualizarTablonPeticiones() {
-            const container = document.getElementById('peticionesContainer');
-            container.innerHTML = "";
+            const container = document.getElementById('peticionesContainer'); container.innerHTML = "";
             listaPeticiones.forEach((p, i) => {
-                container.innerHTML += `<div class="peticion-card">
-                    <div style="font-size:9px; color:#888;">${p.u} - ${p.f}</div>
-                    <div style="font-size:12px; color:var(--gold);">${p.t}</div>
-                </div>`;
+                container.innerHTML += `<div class="peticion-card"><div style="font-size:9px; color:#888;">${p.u} - ${p.f}</div><div style="font-size:12px; color:var(--gold);">${p.t}</div></div>`;
             });
         }
 
@@ -271,9 +244,8 @@
 
         function compartirWhatsApp() {
             const url = window.location.href + "?ref=" + miIDUnico;
-            const msg = encodeURIComponent("¡Ayúdame en AXON IMPACT! Usa mi código " + miIDUnico + " para rescatar animales: " + url);
+            const msg = encodeURIComponent("¡Ayúdame en AXON IMPACT! Usa mi código " + miIDUnico + ": " + url);
             window.open(`https://api.whatsapp.com/send?text=${msg}`);
-            // Ya no suma puntos aquí. Se activan en verificarIA.
             pendingReferralPoints += 1000; 
         }
 
@@ -289,13 +261,42 @@
             const ratio = parseFloat(document.getElementById('valorMoneda').value) / 1000;
             const valRef = parseFloat(document.getElementById('valorReferido').value);
             const total = ((coinsMisiones * ratio) + (coinsReferidos/1000 * valRef)).toFixed(2);
-            document.getElementById('adminUsersBody').innerHTML = `<tr>
-                <td>${document.getElementById('miNombre').innerText}</td>
-                <td>${coinsMisiones}</td><td>${coinsReferidos}</td>
-                <td style="color:#2ecc71">$${total}</td>
-                <td><button onclick="coinsMisiones=0;coinsReferidos=0;updateUI();actualizarPanelAdmin();" style="background:red; color:white; border:none; padding:5px; border-radius:5px;">PAGAR</button></td>
-            </tr>`;
+            document.getElementById('adminUsersBody').innerHTML = `<tr><td>${document.getElementById('miNombre').innerText}</td><td>${coinsMisiones}</td><td>${coinsReferidos}</td><td style="color:#2ecc71">$${total}</td><td><button onclick="coinsMisiones=0;coinsReferidos=0;updateUI();actualizarPanelAdmin();" style="background:red; color:white; border:none; padding:5px; border-radius:5px;">PAGAR</button></td></tr>`;
         }
 
         function cambiarClaveAdmin() {
-            Swal.fire({ title: 'Nueva Clave', input: 'password' }).then(r => { if(r.value) { 
+            Swal.fire({ title: 'Nueva Clave', input: 'password' }).then(r => { if(r.value) { CLAVE_ADMIN = r.value; localStorage.setItem('adminPass', r.value); }});
+        }
+
+        function renderList(cid, list) {
+            const c = document.getElementById(cid); c.innerHTML = '';
+            list.forEach(i => {
+                const div = document.createElement('div'); div.className = "list-item";
+                div.innerHTML = `<span>${i.t}</span> <b>${Math.floor(i.s/60*100)} 🦴</b>`;
+                div.onclick = () => { currentPoints = Math.floor(i.s/60*100); cargarVideo(i.id, i.t); };
+                c.appendChild(div);
+            });
+        }
+
+        function verificarIA() {
+            Swal.fire({ title: 'Analizando captura...', didOpen: () => Swal.showLoading(), customClass: { popup: 'swal-custom-bg' } });
+            setTimeout(() => {
+                coinsMisiones += currentPoints;
+                if(pendingReferralPoints > 0) { coinsReferidos += pendingReferralPoints; pendingReferralPoints = 0; }
+                updateUI();
+                Swal.fire({ title: 'Misión Exitosa', text: 'Puntos sumados correctamente.', icon: 'success', customClass: { popup: 'swal-custom-bg' } });
+                nav('screenMenu');
+            }, 2000);
+        }
+
+        function verDocumentos() { 
+            Swal.fire({
+                title: 'POLÍTICA Y MISIÓN',
+                html: `<div style="text-align:left; font-size:11px; color:#eee;"><b>AXON IMPACT GLOBAL LTD (Estonia)</b><br><br><b>Misión:</b> Ayudar a las personas necesitadas y animales indefensos con el poder de la blockchain.<br><br><b>Privacidad:</b> Datos protegidos bajo RGPD de la UE.</div>`,
+                icon: 'info',
+                customClass: { popup: 'swal-custom-bg' }
+            }); 
+        }
+    </script>
+</body>
+</html>
