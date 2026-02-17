@@ -25,7 +25,6 @@
             --invite: #34495e; 
             --airdrop: #f39c12;
             --donate: #e74c3c;
-            /* COLORES REDES SOCIALES */
             --tg-color: #0088cc;
             --fb-color: #1877f2;
             --tk-color: #000000;
@@ -64,26 +63,21 @@
 
         .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 10px; margin-top: 15px; border: 1px dashed var(--primary); }
         
-        .comment-box { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--music); background: rgba(0,0,0,0.3); color: white; margin-top: 10px; font-size: 12px; font-family: inherit; resize: none; box-sizing: border-box; }
-        .my-request { background: rgba(163, 51, 200, 0.2); padding: 8px; border-radius: 10px; margin-top: 5px; font-size: 11px; display: none; border: 1px solid var(--music); text-align: left; }
-
-        .donors-list { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 10px; margin-top: 10px; text-align: left; font-size: 12px; }
-        .donor-row { display: flex; justify-content: space-between; padding: 4px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        /* ESTILOS ESPECÍFICOS DEL JUEGO TAP */
+        .tap-area { width: 150px; height: 150px; background: radial-gradient(circle, var(--primary) 0%, #1a472a 100%); border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; border: 6px solid var(--gold); cursor: pointer; transition: transform 0.1s; }
+        .tap-area:active { transform: scale(0.92); }
+        .tap-area img { width: 75%; border-radius: 50%; pointer-events: none; }
+        .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; padding-bottom: 20px; }
+        .edu-card { background: rgba(255,255,255,0.05); border: 1px solid var(--primary); border-radius: 12px; padding: 8px; text-align: left; cursor: pointer; }
+        .edu-card b { color: var(--gold); font-size: 10px; display: block; margin-bottom: 2px; }
+        .edu-card small { font-size: 9px; opacity: 0.8; line-height: 1; display: block; }
+        .card-price { color: var(--primary); font-weight: bold; font-size: 11px; margin-top: 4px; }
 
         #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
         .btn-yt-action { background: var(--red-yt); flex-direction: column; font-size: 11px; line-height: 1.3; }
         .btn-upload { background: var(--gold); color: #000; display: none; border: 2px solid #000; }
-
-        /* ESTILOS DEL JUEGO */
-        .tap-area { width: 150px; height: 150px; background: radial-gradient(circle, var(--primary) 0%, #1a472a 100%); border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; border: 6px solid var(--gold); box-shadow: 0 0 20px rgba(46, 204, 113, 0.5); cursor: pointer; transition: transform 0.1s; }
-        .tap-area:active { transform: scale(0.9); }
-        .tap-area img { width: 75%; border-radius: 50%; pointer-events: none; }
-        .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 300px; overflow-y: auto; padding: 10px 5px; }
-        .edu-card { background: rgba(255,255,255,0.05); border: 1px solid var(--primary); border-radius: 12px; padding: 10px; text-align: left; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
-        .edu-card b { color: var(--gold); font-size: 11px; display: block; margin-bottom: 3px; }
-        .edu-card small { font-size: 9px; opacity: 0.8; line-height: 1.1; }
-        .card-price { color: var(--primary); font-weight: bold; margin-top: 5px; font-size: 11px; }
+        
         @keyframes fadeOutUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-50px); } }
     </style>
 </head>
@@ -111,14 +105,17 @@
 
         <div id="screenMenu" class="screen">
             <div class="panel">
-                <h3 style="margin-bottom: 10px; font-size: 16px;">MISIONES ACTIVAS 🦴</h3>
+                <h3 style="margin-bottom: 15px; font-size: 16px;">MISIONES ACTIVAS 🦴</h3>
                 
                 <button onclick="nav('screenGame')" class="btn" style="background: linear-gradient(135deg, var(--primary), #1a472a); border: 2px solid var(--gold);">
-                    🎮 JUGAR: AXON JOURNEY
+                    <i class="fa-solid fa-gamepad"></i> JUGAR: AXON JOURNEY
                 </button>
 
-                <button onclick="alert('Próximamente: Cobro de Airdrop')" class="btn btn-airdrop" style="height: 50px;">
+                <button onclick="alert('Próximamente: Cobro de Airdrop')" class="btn btn-airdrop">
                     <i class="fa-solid fa-coins"></i> COBRAR AIRDROP
+                </button>
+                <button onclick="alert('¡Gracias por tu apoyo!')" class="btn btn-donate">
+                    <i class="fa-solid fa-heart"></i> DONAR GANANCIAS
                 </button>
 
                 <div class="donors-list">
@@ -127,7 +124,7 @@
                     <div class="donor-row"><span>@CryptoHelp</span> <span>500 🦴</span></div>
                 </div>
 
-                <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
+                <div style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
 
                 <button onclick="nav('screenVideoList')" class="btn btn-video"><i class="fa-solid fa-video"></i> VIDEOS</button>
                 <button onclick="nav('screenMusicList')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
@@ -144,8 +141,8 @@
 
         <div id="screenGame" class="screen">
             <div class="panel">
-                <h2 id="userRank" style="color: var(--gold); margin: 0; font-size: 16px;">Nivel 1: Voluntario Novato 🐾</h2>
-                <div class="balance-card" style="margin-top: 10px; padding: 10px;">
+                <h2 id="userRank" style="color: var(--gold); font-size: 16px; margin: 0;">Nivel 1: Voluntario Novato 🐾</h2>
+                <div class="balance-card" style="margin: 10px 0;">
                     <div style="font-size: 24px; font-weight: bold; color: var(--primary);"><span id="gameCoinCount">0</span> 🦴</div>
                 </div>
 
@@ -154,47 +151,28 @@
                 </div>
 
                 <div class="card-grid">
-                    <div class="edu-card" onclick="buyCard('Binance/Bybit', 150, 'Aprende el registro KYC y seguridad 2FA. ¡Primer paso al éxito!', 1)">
-                        <b>NIVEL 1: BROKERS</b>
-                        <small>Cómo registrarse y comprar.</small>
+                    <div class="edu-card" onclick="buyCard('Brokers', 150, 'Regístrate en Binance o Bybit usando KYC y 2FA.', 1)">
+                        <b>REGISTRO BROKER</b>
+                        <small>Binance y Bybit inicial.</small>
                         <div class="card-price">150 🦴</div>
                     </div>
-                    <div class="edu-card" onclick="buyCard('Escasez Digital', 300, 'Solo habrá 21 millones. Nadie puede imprimir más Bitcoin.', 1)">
-                        <b>NIVEL 1: ESCASEZ</b>
-                        <small>¿Por qué BTC es valioso?</small>
-                        <div class="card-price">300 🦴</div>
+                    <div class="edu-card" onclick="buyCard('Lutero', 500, 'Lutero separó Iglesia de Estado. BTC separa Dinero de Estado.', 2)">
+                        <b>FILOSOFÍA LUTERO</b>
+                        <small>Libertad financiera.</small>
+                        <div class="card-price">500 🦴</div>
                     </div>
-                    <div class="edu-card" onclick="buyCard('Martín Lutero', 800, 'Lutero separó Iglesia de Estado. Bitcoin separa Dinero de Estado.', 2)">
-                        <b>NIVEL 2: FILOSOFÍA</b>
-                        <small>La gran reforma financiera.</small>
-                        <div class="card-price">800 🦴</div>
+                    <div class="edu-card" onclick="buyCard('Jade', 1500, 'Jade es Open Source y usa Liquid Network.', 3)">
+                        <b>JADE WALLET</b>
+                        <small>Hardware de seguridad.</small>
+                        <div class="card-price">1500 🦴</div>
                     </div>
-                    <div class="edu-card" onclick="buyCard('Bizantinos', 1200, 'Bitcoin permite confiar en desconocidos sin un jefe central.', 2)">
-                        <b>NIVEL 2: PARADOJA</b>
-                        <small>Consenso sin confianza.</small>
-                        <div class="card-price">1200 🦴</div>
-                    </div>
-                    <div class="edu-card" onclick="buyCard('Jade Wallet', 2500, 'Hardware de código abierto. ¡Tus llaves, tu poder!', 3)">
-                        <b>NIVEL 3: JADE WALLET</b>
-                        <small>Soberanía y Liquid Network.</small>
-                        <div class="card-price">2500 🦴</div>
-                    </div>
-                    <div class="edu-card" onclick="buyCard('BitBox02', 4000, 'Seguridad extrema suiza. Código abierto y chip dual.', 3)">
-                        <b>NIVEL 3: BITBOX02</b>
-                        <small>Tu caja fuerte digital.</small>
-                        <div class="card-price">4000 🦴</div>
-                    </div>
-                    <div class="edu-card" onclick="buyCard('Time Lock', 8000, 'Bloquea tus fondos por años. Patrimonio generacional.', 4)">
-                        <b>NIVEL 4: TIME LOCK</b>
-                        <small>Ahorro inmutable.</small>
-                        <div class="card-price">8000 🦴</div>
-                    </div>
-                    <div class="edu-card" onclick="buyCard('Geo-Wallet', 15000, 'Tu wallet solo abre en coordenadas seguras. ¡Experto!', 4)">
-                        <b>NIVEL 4: GEOGRÁFICA</b>
-                        <small>Seguridad por GPS.</small>
-                        <div class="card-price">15000 🦴</div>
+                    <div class="edu-card" onclick="buyCard('TimeLock', 5000, 'Bloquea tus BTC para el futuro. Patrimonio real.', 4)">
+                        <b>TIME LOCK</b>
+                        <small>Ahorro generacional.</small>
+                        <div class="card-price">5000 🦴</div>
                     </div>
                 </div>
+
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
             </div>
         </div>
@@ -210,14 +188,7 @@
         <div id="screenMusicList" class="screen">
             <div class="panel">
                 <h3 style="color: var(--music); font-size: 16px;">BIBLIOTECA MUSICAL</h3>
-                <input type="text" class="search-input" style="padding: 10px; border-radius: 12px; width: 80%; margin-bottom: 10px;" placeholder="Buscar canción..." onkeyup="filterMusic(this.value)">
                 <div id="musicListContainer" style="max-height: 200px; overflow-y: auto;"></div>
-                <textarea id="musicComment" class="comment-box" rows="2" placeholder="¿Qué canción deseas? Ej: La Player - Tego Calderón"></textarea>
-                <div id="myMusicRequest" class="my-request">
-                    <b>Tu pedido:</b> <span id="requestText"></span>
-                    <i class="fa-solid fa-pen-to-square" onclick="editRequest()" style="float:right; cursor:pointer; color: var(--gold);"></i>
-                </div>
-                <button id="btnSendMusic" onclick="sendMusicRequest()" class="btn btn-music" style="padding: 8px; font-size: 11px; margin-top: 5px;">ENVIAR SUGERENCIA</button>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
             </div>
         </div>
@@ -238,10 +209,9 @@
                 <div id="video-placeholder"></div>
                 <button id="btnInteract" class="btn btn-yt-action">
                     <span>ABRIR YOUTUBE PARA INTERACTUAR</span>
-                    <span style="font-size: 9px;">LUEGO DE VER EL VIDEO Y VUELVE</span>
                 </button>
-                <p id="msgInstruccion" style="font-size: 10px; color: var(--gold); padding: 5px; font-weight: bold;">
-                    ⚠️ ¡LIKE, COMENTA y COMPARTE! Ve a Youtube toma screenshot y cargalo al finalizar el vídeo en la app.
+                <p id="msgInstruccion" style="font-size: 10px; color: var(--gold); font-weight: bold;">
+                    ⚠️ ¡LIKE, COMENTA y COMPARTE! Ve a Youtube toma screenshot y cárgalo al finalizar el vídeo.
                 </p>
                 <label for="fileProof" id="labelUpload" class="btn btn-upload"><i class="fa-solid fa-image"></i> CARGAR CAPTURA</label>
                 <input type="file" id="fileProof" accept="image/*" onchange="validarTodo()" style="display:none;">
@@ -257,16 +227,10 @@
         let player, currentPoints = 0, coins = 0, videoFin = false;
         let userLevel = 1, cardsPurchased = 0;
 
-        const motivationalMsgs = [
-            "¡Excelente! Cada huesito ganado ayuda a un animal necesitado. 🐾",
-            "¡Sigue así! Estás separando tu dinero del control estatal. 🗽",
-            "¡Increíble! Tu conocimiento es tu mayor activo. 🧠",
-            "¡Eres un titán! Tu futuro financiero está blindado. 💎"
-        ];
-
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'flex';
+            const target = document.getElementById(id);
+            if(target) target.style.display = 'flex';
             if(id === 'screenMusicList') renderList('musicListContainer', listadoCanciones, 'item-music');
             if(id === 'screenVideoList') renderList('videoListContainer', listadoVideos, 'item-video');
             updateCoinDisplay();
@@ -278,40 +242,83 @@
             list.forEach(item => {
                 const div = document.createElement('div');
                 div.className = `list-item ${extraClass}`;
-                div.style.padding = '8px';
-                div.style.fontSize = '12px';
-                div.style.display = 'flex';
-                div.style.justifyContent = 'space-between';
-                div.style.alignItems = 'center';
-                div.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                div.style.padding = '10px'; div.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                div.style.display = 'flex'; div.style.justifyContent = 'space-between';
                 div.innerHTML = `<div><b>${item.titulo}</b><br><small>${item.artista}</small></div><b>+${item.puntos} 🦴</b>`;
                 div.onclick = () => cargarMision(item.id, item.puntos, `${item.artista} - ${item.titulo}`);
                 container.appendChild(div);
             });
         }
 
-        /* LÓGICA DEL JUEGO */
+        // LÓGICA DEL JUEGO
         function gameTap(event) {
             coins += 1;
             updateCoinDisplay();
-            const plusOne = document.createElement('div');
-            plusOne.innerText = '+1 🦴';
-            plusOne.style.position = 'fixed';
-            plusOne.style.left = `${event.clientX}px`;
-            plusOne.style.top = `${event.clientY}px`;
-            plusOne.style.color = 'var(--primary)';
-            plusOne.style.fontWeight = 'bold';
-            plusOne.style.zIndex = '9999';
-            plusOne.style.animation = 'fadeOutUp 0.8s forwards';
-            document.body.appendChild(plusOne);
-            setTimeout(() => plusOne.remove(), 800);
+            const p = document.createElement('div');
+            p.innerText = '+1 🦴'; p.style.position = 'fixed';
+            p.style.left = `${event.clientX}px`; p.style.top = `${event.clientY}px`;
+            p.style.color = 'var(--primary)'; p.style.fontWeight = 'bold';
+            p.style.animation = 'fadeOutUp 0.8s forwards';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 800);
         }
 
         function buyCard(titulo, costo, leccion, cardLevel) {
             if (userLevel < cardLevel) {
-                Swal.fire('Nivel Bloqueado', 'Debes subir de rango para aprender esto.', 'warning');
+                Swal.fire('Bloqueado', 'Sube de nivel para esta tarjeta.', 'error');
                 return;
             }
             if (coins >= costo) {
                 coins -= costo;
-                cards
+                cardsPurchased++;
+                updateCoinDisplay();
+                checkLevelUp();
+                Swal.fire(titulo, leccion, 'success');
+            } else {
+                Swal.fire('Huesitos Insuficientes', 'Sigue haciendo tap para ayudar.', 'info');
+            }
+        }
+
+        function checkLevelUp() {
+            let r = document.getElementById('userRank');
+            if(cardsPurchased >= 2 && userLevel == 1) { userLevel = 2; r.innerText = "Nivel 2: Rescatista de Valor 🛡️"; }
+            if(cardsPurchased >= 4 && userLevel == 2) { userLevel = 3; r.innerText = "Nivel 3: Guardián de Semillas 🔑"; }
+        }
+
+        function updateCoinDisplay() {
+            document.getElementById('coinCount').innerText = Math.floor(coins);
+            const g = document.getElementById('gameCoinCount');
+            if(g) g.innerText = Math.floor(coins);
+        }
+
+        function cargarMision(videoId, pts, titulo) {
+            currentPoints = pts; videoFin = false;
+            document.getElementById('misionTitle').innerText = titulo;
+            document.getElementById('labelUpload').style.display = 'none';
+            document.getElementById('btnInteract').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+            nav('screenPlayer');
+            if (player) player.loadVideoById(videoId);
+            else player = new YT.Player('video-placeholder', {
+                height: '100%', width: '100%', videoId: videoId,
+                events: { 'onStateChange': (e) => { if (e.data === YT.PlayerState.ENDED) { 
+                    videoFin = true; 
+                    document.getElementById('labelUpload').style.display = 'flex';
+                }}}
+            });
+        }
+
+        function validarTodo() {
+            if (!videoFin) return;
+            alert("Validando captura... 🦴");
+            setTimeout(() => { coins += currentPoints; updateCoinDisplay(); nav('screenMenu'); }, 2000);
+        }
+
+        function mostrarMiLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Link de invitación copiado.");
+        }
+
+        function pararMision() { if(player) player.stopVideo(); nav('screenMenu'); }
+    </script>
+</body>
+</html>
