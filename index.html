@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AXON IMPACT GLOBAL - SISTEMA INTEGRADO</title>
+    <title>AXON IMPACT GLOBAL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         :root { 
-            --primary: #2ecc71; 
-            --panel: #161b22; 
-            --text: #e6edf3; 
+            --primary: #2ecc71; --panel: #161b22; --text: #e6edf3; 
             --video: #2185d0; --gold: #fbbd08; --red-yt: #ff0000;
             --invite: #34495e; --music: #a333c8; --game: #e91e63; --donar: #e67e22;
         }
@@ -19,47 +17,31 @@
             background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; 
             background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; 
         }
-        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1; }
+        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1; }
         .container { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
         
         .panel { 
-            background: var(--panel); 
-            padding: 15px; 
-            border-radius: 30px; 
-            width: 85%; 
-            max-width: 400px; 
-            text-align: center; 
-            border: 2px solid var(--primary); 
-            box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); 
-            max-height: 90vh; 
-            overflow-y: auto; 
+            background: var(--panel); padding: 20px; border-radius: 30px; width: 85%; max-width: 400px; 
+            text-align: center; border: 2px solid var(--primary); 
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.5); 
+            max-height: 85vh; overflow-y: auto;
         }
 
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
         .btn:active { transform: scale(0.95); }
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
-        
-        .input-registro { width: 90%; padding: 12px; border-radius: 10px; border: 2px solid var(--primary); font-size: 16px !important; color: #000 !important; background: #ffffff !important; margin-bottom: 10px; }
-        
-        #requestMusic { 
-            width: 90%; 
-            height: 60px; 
-            border-radius: 10px; 
-            background: #000 !important; 
-            color: #fff !important; 
-            border: 1px solid var(--music);
-            padding: 10px;
-            font-family: inherit;
-        }
+        .screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .admin-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: 10px; color: white; }
-        .admin-table th, .admin-table td { border: 1px solid #444; padding: 5px; text-align: center; }
+        .input-registro, #requestMusic { width: 90%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); font-size: 14px; margin-bottom: 10px; }
+        #requestMusic { background: #000 !important; color: #fff !important; border-color: var(--music); height: 80px; }
+
+        .admin-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: 10px; }
+        .admin-table th, .admin-table td { border: 1px solid #444; padding: 6px; text-align: center; }
         .admin-table th { background: var(--primary); color: black; }
-        .list-item { padding: 12px; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; font-size: 12px; }
+        .list-item { padding: 15px; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; font-size: 13px; background: rgba(255,255,255,0.03); margin-bottom: 5px; border-radius: 10px; }
         
-        /* Estilo para el tablón editable */
-        .peticion-card { background: rgba(255,255,255,0.05); margin: 5px; padding: 8px; border-radius: 10px; text-align: left; border-left: 3px solid var(--music); }
-        .peticion-input-edit { background: transparent; border: none; color: var(--gold); font-size: 11px; width: 80%; }
+        .peticion-card { background: rgba(0,0,0,0.5); margin: 8px 0; padding: 10px; border-radius: 12px; text-align: left; border-left: 4px solid var(--music); }
+        .peticion-input-edit { background: transparent; border: none; color: var(--gold); font-size: 12px; width: 100%; outline: none; }
     </style>
 </head>
 <body>
@@ -67,160 +49,131 @@
     <div class="container">
         
         <div id="screenStart" class="screen" style="display: flex;">
-            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width: 80%; border-radius: 40px; margin-bottom: -30px; z-index: 3;">
-            <div class="panel" style="padding-top: 40px;">
-                <h2 id="axonTitle" style="color: var(--primary); margin: 0; cursor: pointer; text-shadow: 0 0 10px var(--primary);">AXON IMPACT GLOBAL</h2>
-                <p style="font-size: 11px; margin-top: 10px;"><b>Misión:</b> Ayudar a personas sin hogar y animales rescatados.</p>
-                <button onclick="solicitarRegistro()" class="btn" style="background: var(--primary);">UNIRSE A LA CAUSA</button>
+            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width: 75%; border-radius: 40px; margin-bottom: -30px; z-index: 3; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+            <div class="panel" style="padding-top: 45px;">
+                <h2 id="axonTitle" style="color: var(--primary); margin: 0; cursor: pointer; text-shadow: 0 0 15px var(--primary);">AXON IMPACT GLOBAL</h2>
+                <p style="font-size: 12px; margin: 15px 0;"><b>Misión:</b> Personas sin hogar y animales rescatados.</p>
+                <button onclick="solicitarRegistro()" class="btn" style="background: var(--primary); box-shadow: 0 4px 15px rgba(46,204,113,0.4);">UNIRSE A LA CAUSA</button>
             </div>
         </div>
 
         <div id="screenAdmin" class="screen">
             <div class="panel">
-                <h3 style="color: var(--gold); text-shadow: 0 0 5px var(--gold);"><i class="fa-solid fa-user-shield"></i> ADMINISTRACIÓN</h3>
-                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 10px; font-size: 10px; text-align: left;">
-                    <label>VALOR 1000 🦴 EN $: </label>
-                    <input type="number" id="valorMoneda" value="1.00" step="0.10" style="width: 50px;" onchange="actualizarPanelAdmin()">
+                <h3 style="color: var(--gold);"><i class="fa-solid fa-user-shield"></i> ADMINISTRACIÓN</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 15px; margin-bottom: 10px; font-size: 11px; text-align: left; border: 1px solid var(--gold);">
+                    <label>VALOR 1000 🦴 EN $: </label> <input type="number" id="valorMoneda" value="1.00" step="0.1" style="width: 50px;" onchange="actualizarPanelAdmin()">
                     <br><br>
-                    <label>VALOR POR REFERIDO EN $: </label>
-                    <input type="number" id="valorReferido" value="0.50" step="0.10" style="width: 50px;" onchange="actualizarPanelAdmin()">
+                    <label>VALOR REFERIDO $: </label> <input type="number" id="valorReferido" value="0.50" step="0.1" style="width: 50px;" onchange="actualizarPanelAdmin()">
                 </div>
-                <table class="admin-table">
-                    <thead><tr><th>Usuario</th><th>Misiones</th><th>Referidos</th><th>Pagar ($)</th><th>Acción</th></tr></thead>
-                    <tbody id="adminUsersBody"></tbody>
-                </table>
-                <button onclick="cambiarClaveAdmin()" class="btn" style="background: var(--red-yt); font-size: 10px;">CAMBIAR CLAVE ADMIN</button>
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top: 10px;">SALIR DEL PANEL</button>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Héroe</th><th>Misiones</th><th>Refer.</th><th>Total $</th><th>Acción</th></tr></thead>
+                        <tbody id="adminUsersBody"></tbody>
+                    </table>
+                </div>
+                <button onclick="cambiarClaveAdmin()" class="btn" style="background: var(--red-yt); font-size: 10px; margin-top: 15px;">CAMBIAR CLAVE</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333;">VOLVER AL MENÚ</button>
             </div>
         </div>
 
         <div id="screenMenu" class="screen">
             <div class="panel">
-                <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px;">
-                    <span style="color: var(--gold); font-weight: bold;"><i class="fa-solid fa-fire"></i> RACHA: 1</span>
-                    <span style="color: var(--primary); font-weight:bold; font-size: 14px;"><span id="totalCoins">0</span> 🦴</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="color: var(--gold); font-weight: bold; font-size: 12px;"><i class="fa-solid fa-fire"></i> RACHA: 1</span>
+                    <span style="color: var(--primary); font-weight:bold; font-size: 18px; text-shadow: 0 0 10px rgba(46,204,113,0.5);"><span id="totalCoins">0</span> 🦴</span>
                 </div>
-                <div class="mini-card" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; margin-bottom: 10px; text-align: left; border: 1px solid rgba(46,204,113,0.2);">
-                    <div style="font-size:12px; color: #fff;">Héroe: <b id="miNombre">---</b></div>
-                    <div style="font-size:10px; color: var(--primary);">Misiones: <span id="ptsMisiones">0 🦴</span></div>
-                    <div style="font-size:10px; color: var(--video);">Referidos: <span id="ptsReferidos">0 🦴</span></div>
-                    <div style="font-size:9px; color: #777; margin-top:4px;">ID: <span id="miID">---</span></div>
+                <div class="mini-card" style="background: rgba(255,255,255,0.07); padding: 12px; border-radius: 18px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(46,204,113,0.3);">
+                    <div style="font-size:14px; color: #fff; margin-bottom: 5px;">Héroe: <b id="miNombre">---</b></div>
+                    <div style="font-size:11px; color: var(--primary);">Misiones: <span id="ptsMisiones">0 🦴</span></div>
+                    <div style="font-size:11px; color: var(--video);">Referidos: <span id="ptsReferidos">0 🦴</span></div>
+                    <div style="font-size:9px; color: #888; margin-top:5px; letter-spacing: 1px;">ID: <span id="miID">---</span></div>
                 </div>
                 <button onclick="nav('screenVideoList')" class="btn" style="background: var(--video);"><i class="fa-solid fa-video"></i> CARPETA VÍDEOS</button>
                 <button onclick="nav('screenMusicList')" class="btn" style="background: var(--music);"><i class="fa-solid fa-music"></i> CARPETA MÚSICA</button>
-                <button onclick="nav('screenGames')" class="btn" style="background: var(--game);"><i class="fa-solid fa-comments"></i> PETICIONES DE MÚSICA</button>
-                <button onclick="nav('screenDonar')" class="btn" style="background: var(--donar);"><i class="fa-solid fa-heart"></i> DONAR A LA CAUSA</button>
-                <button onclick="compartirWhatsApp()" class="btn" style="background: #25d366; border: 1px solid var(--gold);"><i class="fa-brands fa-whatsapp"></i> INVITAR POR WHATSAPP</button>
-                <button onclick="verDocumentos()" class="btn" style="background: #444;"><i class="fa-solid fa-shield"></i> INFO Y LEGAL</button>
+                <button onclick="nav('screenGames')" class="btn" style="background: var(--game);"><i class="fa-solid fa-comments"></i> PETICIONES MÚSICA</button>
+                <button onclick="nav('screenDonar')" class="btn" style="background: var(--donar);"><i class="fa-solid fa-heart"></i> DONAR MIS 🦴</button>
+                <button onclick="compartirWhatsApp()" class="btn" style="background: #25d366;"><i class="fa-brands fa-whatsapp"></i> INVITAR AMIGOS</button>
+                <button onclick="verDocumentos()" class="btn" style="background: #444; font-size: 10px;">INFO LEGAL (ESTONIA)</button>
+            </div>
+        </div>
+
+        <div id="screenVideoList" class="screen"><div class="panel"><h3 style="color:var(--video)">VÍDEOS</h3><div id="videoListContainer"></div><button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button></div></div>
+        
+        <div id="screenMusicList" class="screen">
+            <div class="panel">
+                <h3 style="color:var(--music)">MÚSICA</h3>
+                <div id="musicListContainer"></div>
+                <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
+                <textarea id="requestMusic" placeholder="Escribe el nombre de la canción..."></textarea>
+                <button onclick="enviarPeticion()" class="btn" style="background:var(--music);"><i class="fa-solid fa-paper-plane"></i> ENVIAR PETICIÓN</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
             </div>
         </div>
 
         <div id="screenPlayer" class="screen">
             <div class="panel">
-                <h3 id="misionTitle" style="font-size: 14px; color: var(--gold); text-shadow: 0 0 5px var(--gold);">---</h3>
-                <div id="video-placeholder" style="width:100%; aspect-ratio:16/9; border-radius:20px; background:#000;"></div>
-                <div style="background: rgba(255,0,0,0.1); border: 1px solid red; padding: 10px; border-radius: 15px; margin: 10px 0; font-size: 10px; text-align: left;">
-                    <b><i class="fa-solid fa-robot"></i> REGLA IA:</b> Like + Comentario. La IA rechazará capturas falsas.
+                <h3 id="misionTitle" style="font-size: 15px; color: var(--gold);">---</h3>
+                <div id="video-placeholder" style="width:100%; aspect-ratio:16/9; border-radius:15px; background:#000; overflow:hidden;"></div>
+                <div style="background: rgba(255,0,0,0.15); border: 1px solid red; padding: 10px; border-radius: 15px; margin: 12px 0; font-size: 10px;">
+                    <b><i class="fa-solid fa-robot"></i> REGLA:</b> Like + Comentario. La IA analiza la captura.
                 </div>
-                <button onclick="abrirYoutube()" class="btn" style="background: var(--red-yt);"><i class="fa-brands fa-youtube"></i> ABRIR YOUTUBE</button>
-                <label for="fileProof" id="labelUpload" class="btn" style="background: var(--gold); color: black; display: none;"><i class="fa-solid fa-camera"></i> ADJUNTAR CAPTURA (PROCESAR)</label>
+                <button onclick="abrirYoutube()" class="btn" style="background: var(--red-yt);"><i class="fa-brands fa-youtube"></i> VER EN YOUTUBE</button>
+                <label for="fileProof" id="labelUpload" class="btn" style="background: var(--gold); color: black; display: none;"><i class="fa-solid fa-camera"></i> SUBIR CAPTURA</label>
                 <input type="file" id="fileProof" accept="image/*" onchange="verificarIA()" style="display:none;">
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333;">VOLVER</button>
-            </div>
-        </div>
-
-        <div id="screenVideoList" class="screen"><div class="panel"><h3>VÍDEOS</h3><div id="videoListContainer"></div><button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button></div></div>
-        
-        <div id="screenMusicList" class="screen">
-            <div class="panel">
-                <h3 style="color: var(--music);">MÚSICA</h3>
-                <div id="musicListContainer"></div>
-                <hr style="border: 0.5px solid #333;">
-                <p style="font-size: 11px; font-weight: bold; color: var(--gold);">¿QUÉ CANCIÓN QUIERES ESCUCHAR?</p>
-                <textarea id="requestMusic" placeholder="Escribe el nombre de la canción aquí..."></textarea>
-                <button id="btnEnviarPeticion" onclick="enviarPeticion()" class="btn" style="background:var(--music);"><i class="fa-solid fa-paper-plane"></i> PEDIR CANCIÓN</button>
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+                <button onclick="volverDePlayer()" class="btn" style="background: #333;">VOLVER</button>
             </div>
         </div>
 
         <div id="screenGames" class="screen">
             <div class="panel">
-                <h3 style="color: var(--game);">TABLÓN DE PETICIONES</h3>
-                <p style="font-size: 9px; color: #888;">(Haz clic en el texto para corregir si hay spam)</p>
-                <div id="peticionesContainer" style="max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 15px; margin-bottom: 10px; padding: 5px;"></div>
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+                <h3 style="color:var(--game)">TABLÓN PETICIONES</h3>
+                <div id="peticionesContainer" style="max-height: 300px; overflow-y: auto;"></div>
+                <button onclick="nav('screenMenu')" class="btn" style="background:#333; margin-top:10px;">VOLVER</button>
             </div>
         </div>
 
         <div id="screenDonar" class="screen">
             <div class="panel">
-                <h3 style="color: var(--donar); text-shadow: 0 0 5px var(--donar);"><i class="fa-solid fa-hand-holding-heart"></i> DONAR MIS 🦴</h3>
-                <p style="font-size:11px;">Tus donaciones ayudan directamente a animales y personas sin hogar a través de <b>AXON IMPACT GLOBAL</b>.</p>
-                
-                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 20px; margin: 10px 0; border: 1px solid var(--donar);">
-                    <div style="font-size:10px; color: #888;">SALDO DISPONIBLE:</div>
-                    <div style="font-size:24px; font-weight:bold; color: var(--primary);"><span id="totalCoinsDonar">0</span> 🦴</div>
+                <h3 style="color:var(--donar)">DONAR MIS 🦴</h3>
+                <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; border: 1px solid var(--donar); margin-bottom: 15px;">
+                    <div style="font-size:11px; color:#aaa;">SALDO DISPONIBLE</div>
+                    <div style="font-size:28px; font-weight:bold; color:var(--primary);"><span id="totalCoinsDonar">0</span> 🦴</div>
                 </div>
-
-                <input type="number" id="cantidadADonar" class="input-registro" placeholder="Cantidad 🦴" style="background:#000 !important; color:#fff !important; text-align: center;">
-                
-                <button onclick="ejecutarDonacionInterna()" class="btn" style="background:var(--donar);"><i class="fa-solid fa-gift"></i> CONFIRMAR DONACIÓN</button>
-                <p style="font-size:9px; color: #777; margin-top:10px;">* Al donar, estas monedas se reinvierten en la misión social según las leyes de Estonia.</p>
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333;">VOLVER</button>
+                <input type="number" id="cantidadADonar" class="input-registro" placeholder="Cantidad a donar" style="background:#000 !important; color:#fff !important; text-align:center;">
+                <button onclick="ejecutarDonacionInterna()" class="btn" style="background:var(--donar);">CONFIRMAR DONACIÓN</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
             </div>
         </div>
     </div>
 
     <script>
-        let coinsMisiones = 0, coinsReferidos = 0, player, currentPoints = 0, clickCount = 0;
-        let listaPeticiones = [];
-        let blockEnvio = false;
+        let coinsMisiones = 0, coinsReferidos = 0, player = null, currentPoints = 0, clickCount = 0;
+        let listaPeticiones = [], blockEnvio = false;
         let miIDUnico = "AX-" + Math.floor(Math.random()*900000 + 100000);
         let CLAVE_ADMIN = localStorage.getItem('adminPass') || "1234";
 
-        // ACCESO ADMIN
-        document.getElementById('axonTitle').onclick = function() {
-            clickCount++;
-            if(clickCount >= 5) {
-                clickCount = 0;
-                Swal.fire({
-                    title: 'CLAVE DE ACCESO',
-                    input: 'password',
-                    confirmButtonText: 'ENTRAR',
-                    preConfirm: (pass) => {
-                        if(pass === CLAVE_ADMIN) return true;
-                        else Swal.showValidationMessage('Clave Incorrecta');
-                    }
-                }).then(r => { if(r.isConfirmed) { actualizarPanelAdmin(); nav('screenAdmin'); }});
+        // NAVEGACIÓN SEGURA
+        function nav(id) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            const target = document.getElementById(id);
+            if(target) {
+                target.style.display = 'flex';
+                if(id === 'screenDonar') document.getElementById('totalCoinsDonar').innerText = coinsMisiones + coinsReferidos;
+                if(id === 'screenVideoList') renderList('videoListContainer', [{id:'wC_sOpQjvWE', t:'Rescate Animal', s:300}, {id:'dQw4w9WgXcQ', t:'Misión Calle', s:400}]);
+                if(id === 'screenMusicList') renderList('musicListContainer', [{id:'HL9VoQ-er_U', t:'Música Social', s:200}]);
+                if(id === 'screenGames') actualizarTablonPeticiones();
             }
-            setTimeout(() => clickCount = 0, 3000);
-        };
-
-        function cambiarClaveAdmin() {
-            Swal.fire({
-                title: 'NUEVA CLAVE',
-                input: 'password',
-                showCancelButton: true,
-                confirmButtonText: 'GUARDAR'
-            }).then(r => {
-                if(r.isConfirmed && r.value.length >= 4) {
-                    CLAVE_ADMIN = r.value;
-                    localStorage.setItem('adminPass', r.value);
-                    Swal.fire('Éxito', 'Clave actualizada', 'success');
-                }
-            });
         }
 
         function solicitarRegistro() {
             Swal.fire({
                 title: 'REGISTRO HÉROE',
-                html: `<input type="text" id="regName" class="input-registro" placeholder="Tu Nombre"><br><label style="font-size:10px; color: #fff;"><input type="checkbox" id="regCheck"> Acepto RGPD y Misión Social</label>`,
-                confirmButtonText: 'COMENZAR',
-                background: '#161b22',
-                color: '#fff',
+                html: `<input type="text" id="regName" class="input-registro" placeholder="Tu Nombre"><br><label style="font-size:10px; color:#fff;"><input type="checkbox" id="regCheck"> Acepto Misión Social y RGPD</label>`,
+                confirmButtonText: 'ENTRAR',
+                background: '#161b22', color: '#fff',
                 preConfirm: () => {
                     const n = document.getElementById('regName').value;
-                    if(n.length < 3 || !document.getElementById('regCheck').checked) return Swal.showValidationMessage('Datos incompletos');
+                    if(n.length < 3 || !document.getElementById('regCheck').checked) return Swal.showValidationMessage('Completa los datos');
                     return n;
                 }
             }).then(r => { if(r.isConfirmed){ 
@@ -230,94 +183,75 @@
             }});
         }
 
-        // REFERIDOS WHATSAPP
-        function compartirWhatsApp() {
-            const url = window.location.href + "?ref=" + miIDUnico;
-            const msg = encodeURIComponent(`¡Únete a AXON IMPACT GLOBAL! Usa mi código ${miIDUnico} y ayuda a animales y personas sin hogar: ${url}`);
-            window.open(`https://api.whatsapp.com/send?text=${msg}`);
-            // Simulación: sumamos por compartir
-            coinsReferidos += 1000;
-            updateUI();
-            Swal.fire('¡Invitación Enviada!', '+1000 🦴 agregados a extras.', 'success');
+        // YOUTUBE API FIX
+        function cargarVideo(id, t) {
+            document.getElementById('misionTitle').innerText = t;
+            document.getElementById('labelUpload').style.display = 'none';
+            nav('screenPlayer');
+            
+            if (player) {
+                player.destroy();
+                player = null;
+            }
+            
+            player = new YT.Player('video-placeholder', {
+                videoId: id,
+                events: { 
+                    'onStateChange': (e) => { if(e.data === 0) document.getElementById('labelUpload').style.display='flex'; } 
+                }
+            });
         }
 
-        // SISTEMA ANTISPAM Y PETICIONES
+        function volverDePlayer() {
+            if(player) { player.stopVideo(); }
+            nav('screenMenu');
+        }
+
+        function abrirYoutube() { if(player) window.open('https://www.youtube.com/watch?v=' + player.getVideoData().video_id, '_blank'); }
+
+        // PETICIONES CON FILTRO
         function enviarPeticion() {
-            if(blockEnvio) {
-                Swal.fire('Bloqueado', 'Espera 1 minuto por favor.', 'error');
-                return;
-            }
-            const cancion = document.getElementById('requestMusic').value.trim();
-            const insultos = ["puto", "mierda", "tonto", "estafa", "sex"]; // Lista base
-
-            if(cancion.length < 3) {
-                Swal.fire('Error', 'Nombre de canción muy corto', 'error');
-                return;
-            }
-
-            const contieneInsulto = insultos.some(i => cancion.toLowerCase().includes(i));
-            if(contieneInsulto) {
+            if(blockEnvio) { Swal.fire('Bloqueo', 'Espera 1 min por spam.', 'error'); return; }
+            const txt = document.getElementById('requestMusic').value.trim();
+            if(txt.length < 3) return;
+            
+            const prohibited = ["mierda", "puto", "estafa", "sexo"];
+            if(prohibited.some(p => txt.toLowerCase().includes(p))) {
                 blockEnvio = true;
-                Swal.fire('SISTEMA ANTISPAM', 'Lenguaje no permitido. Bloqueado por 1 min.', 'error');
-                setTimeout(() => { blockEnvio = false; }, 60000);
+                Swal.fire('Spam Detectado', 'Bloqueado por 1 min.', 'error');
+                setTimeout(() => blockEnvio = false, 60000);
                 return;
             }
 
-            listaPeticiones.push({
-                usuario: document.getElementById('miNombre').innerText,
-                texto: cancion,
-                fecha: new Date().toLocaleTimeString()
-            });
+            listaPeticiones.push({ u: document.getElementById('miNombre').innerText, t: txt, f: new Date().toLocaleTimeString() });
             document.getElementById('requestMusic').value = "";
-            Swal.fire('Enviado', 'Petición registrada.', 'success');
+            Swal.fire('Éxito', 'Petición enviada al tablón.', 'success');
         }
 
         function actualizarTablonPeticiones() {
             const container = document.getElementById('peticionesContainer');
             container.innerHTML = "";
-            listaPeticiones.forEach((p, index) => {
-                const div = document.createElement('div');
-                div.className = "peticion-card";
-                div.innerHTML = `
-                    <div style="font-size:9px; color: #888;"><b>${p.usuario}</b> - ${p.fecha}</div>
-                    <input type="text" class="peticion-input-edit" value="${p.texto}" onchange="editarPeticion(${index}, this.value)">
-                `;
-                container.appendChild(div);
+            listaPeticiones.forEach((p, i) => {
+                container.innerHTML += `<div class="peticion-card">
+                    <div style="font-size:9px; color:#888;">${p.u} - ${p.f}</div>
+                    <input type="text" class="peticion-input-edit" value="${p.t}" onchange="listaPeticiones[${i}].t = this.value">
+                </div>`;
             });
         }
 
-        function editarPeticion(index, nuevoTexto) {
-            listaPeticiones[index].texto = nuevoTexto;
-        }
-
-        // DONACIÓN INTERNA
+        // DONACIONES E INTERFAZ
         function ejecutarDonacionInterna() {
             const cant = parseInt(document.getElementById('cantidadADonar').value);
-            const saldoTotal = coinsMisiones + coinsReferidos;
-            if (isNaN(cant) || cant <= 0 || cant > saldoTotal) {
-                Swal.fire('Error', 'Cantidad inválida o saldo insuficiente', 'error');
-                return;
-            }
-            if (cant <= coinsMisiones) coinsMisiones -= cant;
-            else { let resto = cant - coinsMisiones; coinsMisiones = 0; coinsReferidos -= resto; }
+            const total = coinsMisiones + coinsReferidos;
+            if(isNaN(cant) || cant <= 0 || cant > total) { Swal.fire('Error', 'Cantidad no válida', 'error'); return; }
+            
+            if(cant <= coinsMisiones) { coinsMisiones -= cant; } 
+            else { let r = cant - coinsMisiones; coinsMisiones = 0; coinsReferidos -= r; }
+            
             updateUI();
             document.getElementById('totalCoinsDonar').innerText = coinsMisiones + coinsReferidos;
             document.getElementById('cantidadADonar').value = "";
-            Swal.fire('¡HÉROE!', `Has donado ${cant} 🦴 con éxito.`, 'success');
-        }
-
-        // FUNCIONES GENERALES
-        function verificarIA() {
-            Swal.fire({ title: 'IA ANALIZANDO...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-            setTimeout(() => {
-                if(Math.random() > 0.15) {
-                    coinsMisiones += currentPoints; updateUI();
-                    Swal.fire('MISION ÉXITO', 'IA validó tu captura.', 'success');
-                    nav('screenMenu');
-                } else {
-                    Swal.fire('IA RECHAZO', 'No se detectó el Like/Comentario.', 'error');
-                }
-            }, 3000);
+            Swal.fire('¡Gracias!', `Donaste ${cant} 🦴 a la causa.`, 'success');
         }
 
         function updateUI() {
@@ -325,16 +259,60 @@
             document.getElementById('totalCoins').innerText = total;
             document.getElementById('ptsMisiones').innerText = coinsMisiones + " 🦴";
             document.getElementById('ptsReferidos').innerText = coinsReferidos + " 🦴";
-            if(document.getElementById('totalCoinsDonar')) document.getElementById('totalCoinsDonar').innerText = total;
         }
 
-        function actualizarPanelAdmin() {
-            const miNombre = document.getElementById('miNombre').innerText;
-            const ratioMisiones = parseFloat(document.getElementById('valorMoneda').value) / 1000;
-            const valorFijoReferido = parseFloat(document.getElementById('valorReferido').value);
-            const totalAPagar = ((coinsMisiones * ratioMisiones) + (coinsReferidos / 1000 * valorFijoReferido)).toFixed(2);
+        function compartirWhatsApp() {
+            const url = window.location.href + "?ref=" + miIDUnico;
+            const msg = encodeURIComponent("¡Ayúdame en AXON IMPACT! Usa mi código " + miIDUnico + " para rescatar animales: " + url);
+            window.open(`https://api.whatsapp.com/send?text=${msg}`);
+            coinsReferidos += 1000; updateUI();
+        }
 
-            document.getElementById('adminUsersBody').innerHTML = `
-                <tr>
-                    <td>${miNombre}</td>
-                    <td>${coinsMisiones}<
+        // ADMIN FUNCTIONS
+        document.getElementById('axonTitle').onclick = () => {
+            clickCount++;
+            if(clickCount >= 5) {
+                clickCount = 0;
+                Swal.fire({ title: 'ADMIN', input: 'password', preConfirm: (p) => p === CLAVE_ADMIN }).then(r => { if(r.isConfirmed) { actualizarPanelAdmin(); nav('screenAdmin'); }});
+            }
+        };
+
+        function actualizarPanelAdmin() {
+            const ratio = parseFloat(document.getElementById('valorMoneda').value) / 1000;
+            const valRef = parseFloat(document.getElementById('valorReferido').value);
+            const total = ((coinsMisiones * ratio) + (coinsReferidos/1000 * valRef)).toFixed(2);
+            document.getElementById('adminUsersBody').innerHTML = `<tr>
+                <td>${document.getElementById('miNombre').innerText}</td>
+                <td>${coinsMisiones}</td><td>${coinsReferidos}</td>
+                <td style="color:#2ecc71">$${total}</td>
+                <td><button onclick="coinsMisiones=0;coinsReferidos=0;updateUI();actualizarPanelAdmin();" style="background:red; color:white; border:none; padding:5px; border-radius:5px;">PAGAR</button></td>
+            </tr>`;
+        }
+
+        function cambiarClaveAdmin() {
+            Swal.fire({ title: 'Nueva Clave', input: 'password' }).then(r => { if(r.value) { CLAVE_ADMIN = r.value; localStorage.setItem('adminPass', r.value); }});
+        }
+
+        function renderList(cid, list) {
+            const c = document.getElementById(cid); c.innerHTML = '';
+            list.forEach(i => {
+                const div = document.createElement('div'); div.className = "list-item";
+                div.innerHTML = `<span>${i.t}</span> <b>${Math.floor(i.s/60*100)} 🦴</b>`;
+                div.onclick = () => { currentPoints = Math.floor(i.s/60*100); cargarVideo(i.id, i.t); };
+                c.appendChild(div);
+            });
+        }
+
+        function verificarIA() {
+            Swal.fire({ title: 'Analizando...', didOpen: () => Swal.showLoading() });
+            setTimeout(() => {
+                coinsMisiones += currentPoints; updateUI();
+                Swal.fire('Misión Exitosa', 'Puntos sumados.', 'success');
+                nav('screenMenu');
+            }, 2000);
+        }
+
+        function verDocumentos() { Swal.fire('Legal', 'Empresa en Estonia. Misión Social. Datos RGPD.', 'info'); }
+    </script>
+</body>
+</html>
