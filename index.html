@@ -30,21 +30,23 @@
         
         .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
         
-        /* IMAGEN PRINCIPAL RESALTADA */
+        /* IMAGEN PRINCIPAL ALTA */
         .hero-img { 
-            width: 80%; 
+            width: 85%; 
             max-width: 320px; 
+            height: 380px; 
+            object-fit: cover;
             border-radius: 40px; 
-            margin-bottom: -20px; /* Solape ligero con el panel */
+            margin-bottom: -30px; 
             z-index: 3;
-            box-shadow: 0 0 30px rgba(46, 204, 113, 0.5);
+            box-shadow: 0 0 35px rgba(46, 204, 113, 0.6);
             animation: pulse 3s infinite ease-in-out;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); }
-            50% { transform: scale(1.03); box-shadow: 0 0 40px rgba(46, 204, 113, 0.7); }
-            100% { transform: scale(1); box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
 
         .btn { 
@@ -68,7 +70,15 @@
 
         .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 15px; margin-top: 20px; border: 1px dashed var(--primary); }
         .search-input { width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #444; background: #0d1117; color: white; margin-bottom: 10px; box-sizing: border-box; }
-        .music-item { background: rgba(163, 51, 200, 0.1); border: 1px solid var(--music); padding: 12px; margin: 8px 0; border-radius: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        
+        .list-item { 
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 12px; margin: 8px 0; border-radius: 15px; cursor: pointer; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+        .item-video { border-color: var(--video); }
+        .item-music { border-color: var(--music); }
+
         #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
         .btn-yt-action { background: var(--red-yt); flex-direction: column; font-size: 12px; line-height: 1.4; }
@@ -81,7 +91,7 @@
         
         <div id="screenStart" class="screen" style="display: flex;">
             <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="hero-img">
-            <div class="panel" style="padding-top: 40px;">
+            <div class="panel" style="padding-top: 50px;">
                 <h2 style="color: var(--primary); margin: 0;">AXON IMPACT GLOBAL</h2>
                 <p style="font-size: 14px; line-height: 1.6; margin: 15px 0;">Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.</p>
                 <button onclick="nav('screenMenu')" class="btn" style="background: var(--primary); font-size: 16px;">ENTRAR A MISIONES</button>
@@ -91,7 +101,7 @@
         <div id="screenMenu" class="screen">
             <div class="panel">
                 <h3 style="margin-bottom: 20px;">MISIONES ACTIVAS 🦴</h3>
-                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video')" class="btn btn-video"><i class="fa-solid fa-video"></i> VIDEOS</button>
+                <button onclick="nav('screenVideoList')" class="btn btn-video"><i class="fa-solid fa-video"></i> VIDEOS</button>
                 <button onclick="nav('screenMusicList')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
                 <button onclick="alert('Próximamente')" class="btn btn-game" style="background:var(--game)"><i class="fa-solid fa-gamepad"></i> JUEGOS</button>
                 <button onclick="nav('screenSocial')" class="btn btn-social"><i class="fa-solid fa-globe"></i> REDES SOCIALES</button>
@@ -104,10 +114,18 @@
             </div>
         </div>
 
+        <div id="screenVideoList" class="screen">
+            <div class="panel">
+                <h3 style="color: var(--video);">BIBLIOTECA DE VIDEOS</h3>
+                <div id="videoListContainer" style="max-height: 300px; overflow-y: auto;"></div>
+                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
+            </div>
+        </div>
+
         <div id="screenMusicList" class="screen">
             <div class="panel">
                 <h3 style="color: var(--music);">BIBLIOTECA MUSICAL</h3>
-                <input type="text" id="musicSearch" class="search-input" placeholder="Buscar canción..." onkeyup="filterMusic()">
+                <input type="text" class="search-input" placeholder="Buscar canción..." onkeyup="filterMusic(this.value)">
                 <div id="musicListContainer" style="max-height: 250px; overflow-y: auto;"></div>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
             </div>
@@ -142,31 +160,34 @@
     </div>
 
     <script>
+        const listadoVideos = [{ id: 'wC_sOpQjvWE', titulo: 'La Plena', artista: 'Beele', puntos: 10 }];
         const listadoCanciones = [{ id: 'HL9VoQ-er_U', titulo: 'No tiene sentido', artista: 'Beele', puntos: 5 }];
+
         let player, lastTime = 0, currentPoints = 0, coins = 0, videoFin = false;
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
-            if(id === 'screenMusicList') renderMusic();
+            if(id === 'screenMusicList') renderList('musicListContainer', listadoCanciones, 'item-music');
+            if(id === 'screenVideoList') renderList('videoListContainer', listadoVideos, 'item-video');
         }
 
-        function renderMusic() {
-            const container = document.getElementById('musicListContainer');
+        function renderList(containerId, list, extraClass) {
+            const container = document.getElementById(containerId);
             container.innerHTML = '';
-            listadoCanciones.forEach(song => {
-                const item = document.createElement('div');
-                item.className = 'music-item';
-                item.innerHTML = `<div><b>${song.titulo}</b><br><small>${song.artista}</small></div><b>+${song.puntos} 🦴</b>`;
-                item.onclick = () => cargarMision(song.id, song.puntos, `Música: ${song.titulo}`);
-                container.appendChild(item);
+            list.forEach(item => {
+                const div = document.createElement('div');
+                div.className = `list-item ${extraClass}`;
+                div.innerHTML = `<div><b>${item.titulo}</b><br><small>${item.artista}</small></div><b>+${item.puntos} 🦴</b>`;
+                div.onclick = () => cargarMision(item.id, item.puntos, `${item.artista} - ${item.titulo}`);
+                container.appendChild(div);
             });
         }
 
-        function filterMusic() {
-            const query = document.getElementById('musicSearch').value.toLowerCase();
-            document.querySelectorAll('.music-item').forEach(item => {
-                item.style.display = item.innerText.toLowerCase().includes(query) ? 'flex' : 'none';
+        function filterMusic(query) {
+            const items = document.getElementById('musicListContainer').querySelectorAll('.list-item');
+            items.forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(query.toLowerCase()) ? 'flex' : 'none';
             });
         }
 
