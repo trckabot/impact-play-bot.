@@ -23,13 +23,19 @@
         .panel { background: var(--panel); padding: 15px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
         .btn:active { transform: scale(0.95); }
-        .mini-card { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; margin: 10px 0; border: 1px solid rgba(46, 204, 113, 0.2); font-size: 11px; text-align: left; }
-        .hero-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
-        #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; }
-        .admin-only { display: none; background: #1a1a1a; padding: 10px; border-radius: 10px; margin-top: 10px; border: 1px solid red; text-align: left; font-size: 11px; }
-        .swal2-popup { background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') !important; background-size: cover !important; border-radius: 30px !important; }
-        .swal-content-box { background: rgba(0,0,0,0.8); padding: 15px; border-radius: 20px; color: white; border: 1px solid var(--primary); }
+        
+        /* Estilos específicos para que se vea el nombre al escribir */
+        .input-registro { width: 90%; padding: 12px; border-radius: 10px; border: 2px solid var(--primary); font-size: 16px; color: #000 !important; background: white !important; margin-bottom: 10px; }
+        
+        /* Ajuste de SweetAlert para centrar imagen y ver textos */
+        .swal2-popup { 
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') !important; 
+            background-size: cover !important; 
+            background-position: center !important;
+            border-radius: 30px !important; 
+            color: white !important;
+        }
     </style>
 </head>
 <body>
@@ -40,17 +46,8 @@
             <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width: 80%; border-radius: 40px; margin-bottom: -30px; z-index: 3;">
             <div class="panel" style="padding-top: 40px;">
                 <h2 onclick="handleAdminClick()" style="color: var(--primary); margin: 0; cursor: pointer;">AXON IMPACT GLOBAL</h2>
-                <p style="font-size: 12px; margin-bottom: 15px;">Misión: Ayudar a los más necesitados y aprender a monetizar redes sociales.</p>
+                <p style="font-size: 11px; margin-top: 10px;">Incentivamos la ayuda a los más necesitados y el aprendizaje de monetización digital.</p>
                 <button onclick="solicitarRegistro()" class="btn" style="background: var(--primary);">UNIRSE A LA CAUSA</button>
-                
-                <div id="adminPanel" class="admin-only">
-                    <p style="color:red; font-weight:bold; text-align:center;">CONTROL PRIVADO</p>
-                    <label>Fondo Monetización (€):</label>
-                    <input type="number" id="montoMonetizacion" style="width:90%; margin-bottom:10px;">
-                    <label>Bono Referido (€):</label>
-                    <input type="number" id="bonoReferido" style="width:90%; margin-bottom:10px;">
-                    <button onclick="guardarAdmin()" class="btn" style="background:#444;">GUARDAR</button>
-                </div>
             </div>
         </div>
 
@@ -60,20 +57,21 @@
                     <span style="color: var(--gold);"><i class="fa-solid fa-fire"></i> RACHA: 1</span>
                     <span style="color: var(--primary); font-weight:bold;"><span id="coinCountTop">0</span> 🦴</span>
                 </div>
-                <div class="mini-card">
-                    <div style="text-align:center; color:var(--primary); font-weight:bold; margin-bottom:5px;">🏆 PANEL DE HÉROE</div>
-                    <div class="hero-row"><span>Tú: <span id="miNombre">---</span></span> <span id="misPuntosRank">0 🦴</span></div>
-                    <div class="hero-row" style="color: #a333c8; font-weight: bold; margin-top:5px; padding-top:5px;">
-                        <span>Referidos Activos:</span> <span id="refCount">0</span>
+                <div class="mini-card" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; margin: 10px 0; text-align: left;">
+                    <div style="text-align:center; color:var(--primary); font-weight:bold;">🏆 PANEL DE HÉROE</div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; margin-top:5px;">
+                        <span>Héroe: <span id="miNombre">---</span></span> 
+                        <span id="misPuntosRank">0 🦴</span>
                     </div>
+                    <div style="color: #a333c8; font-weight: bold; font-size:11px; margin-top:5px;">Referidos Activos: <span id="refCount">0</span></div>
                 </div>
                 <button onclick="nav('screenVideoList')" class="btn" style="background: var(--video);"><i class="fa-solid fa-video"></i> VIDEOS DE IMPACTO</button>
                 <button onclick="nav('screenMusicList')" class="btn" style="background: var(--music);"><i class="fa-solid fa-music"></i> MÚSICA SOCIAL</button>
                 <button onclick="copiarLinkReferido()" class="btn" style="background: var(--invite); border: 2px solid var(--gold);"><i class="fa-solid fa-users"></i> INVITAR (+1000 🦴)</button>
-                <button onclick="alert('Funcionalidad de Wallet próximamente')" class="btn" style="background: var(--gold); color:black;"><i class="fa-solid fa-wallet"></i> VINCULAR WALLET</button>
+                <button onclick="verDocumentos()" class="btn" style="background: #444;"><i class="fa-solid fa-file-contract"></i> INFO Y LEGAL</button>
                 
                 <div style="margin-top:10px; border-top:1px solid #333; padding-top:10px;">
-                    <span style="font-size:10px; opacity: 0.7;">PUNTOS PARA EL AIRDROP</span>
+                    <span style="font-size:10px; opacity: 0.7;">PUNTOS ACUMULADOS</span>
                     <div style="font-size:28px; color:var(--primary); font-weight:bold;"><span id="coinCount">0</span> 🦴</div>
                 </div>
             </div>
@@ -82,13 +80,11 @@
         <div id="screenPlayer" class="screen">
             <div class="panel">
                 <h3 id="misionTitle" style="font-size: 15px;">---</h3>
-                <div id="video-placeholder"></div>
+                <div id="video-placeholder" style="width:100%; aspect-ratio:16/9; border-radius:20px; background:#000;"></div>
                 <div id="puntosEstimados" style="font-size:13px; color:var(--gold); margin:10px 0; font-weight:bold;">Calculando...</div>
-                
                 <button onclick="abrirYoutube()" class="btn" style="background: var(--red-yt);">ABRIR EN YOUTUBE</button>
-                <p style="font-size: 9px; color: #aaa; margin: 0 0 10px 0;">* Si no tienes muchos gigas, te recomendamos abrir YouTube para bajar la calidad del video y ahorrar datos.</p>
-                
-                <label for="fileProof" id="labelUpload" class="btn" style="background: var(--gold); color: black; display: none;"><i class="fa-solid fa-camera"></i> VALIDAR CON CAPTURA</label>
+                <p style="font-size: 9px; color: #aaa; margin: 5px 0;">* Recomendamos bajar la calidad en YT para ahorrar datos.</p>
+                <label for="fileProof" id="labelUpload" class="btn" style="background: var(--gold); color: black; display: none;"><i class="fa-solid fa-camera"></i> VALIDAR CAPTURA</label>
                 <input type="file" id="fileProof" accept="image/*" onchange="completarMision()" style="display:none;">
                 <button onclick="nav('screenMenu')" class="btn" style="background: #333;">VOLVER</button>
             </div>
@@ -99,42 +95,50 @@
     </div>
 
     <script>
-        let coins = 0, referidos = 0, player, videoFin = false, currentPoints = 0, adminClicks = 0;
-        const listadoVideos = [{ id: 'wC_sOpQjvWE', titulo: 'Rescate Animal', segundos: 300 }, { id: 'wC_sOpQjvWE', titulo: 'Ayuda Personas Necesitadas', segundos: 600 }];
-        const listadoCanciones = [{ id: 'HL9VoQ-er_U', titulo: 'Música Social', segundos: 240 }];
-
-        function handleAdminClick() {
-            adminClicks++;
-            if(adminClicks >= 3) { document.getElementById('adminPanel').style.display = 'block'; }
-        }
-
-        function copiarLinkReferido() {
-            const link = window.location.href + "?ref=" + document.getElementById('miNombre').innerText;
-            navigator.clipboard.writeText(link);
-            Swal.fire({ title: '¡LINK COPIADO!', text: 'Ganas 1000 🦴 de marcador.', icon: 'success', confirmButtonColor: '#2ecc71' });
-            setTimeout(() => { coins += 1000; referidos += 1; updateUI(); }, 2000);
-        }
+        let coins = 0, referidos = 0, player, videoFin = false, currentPoints = 0;
+        const listadoVideos = [{ id: 'wC_sOpQjvWE', titulo: 'Rescate Animal', segundos: 300 }, { id: 'wC_sOpQjvWE', titulo: 'Ayuda Personas', segundos: 600 }];
+        const listadoCanciones = [{ id: 'HL9VoQ-er_U', titulo: 'Himno Social', segundos: 240 }];
 
         function solicitarRegistro() {
             Swal.fire({
-                title: '<span style="color:white">REGISTRO DE HÉROE</span>',
+                title: 'REGISTRO DE HÉROE',
                 html: `
-                    <div class="swal-content-box">
-                        <input type="text" id="swal-input-name" class="swal2-input" placeholder="Nombre completo" style="color:black; width: 80%;">
-                        <div style="text-align:left; font-size:10px; margin-top:10px;">
-                            <strong>NUESTRA MISIÓN:</strong> AXON tiene como objetivo incentivar a las personas a ayudar a los más necesitados (personas sin hogar y animales) mientras aprenden técnicas para monetizar sus redes sociales.<br><br>
-                            <strong>POLÍTICAS:</strong> Tus datos están protegidos por RGPD (Ley Española). Se usarán solo para identificar tus puntos y futuros pagos.<br><br>
-                            <input type="checkbox" id="legalCheck"> <b>Acepto términos y políticas de privacidad.</b>
+                    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 20px;">
+                        <input type="text" id="swal-input-name" class="input-registro" placeholder="Escribe tu nombre aquí...">
+                        <div style="text-align:left; font-size:11px; line-height:1.4; margin-top:10px;">
+                            <strong>NUESTRA MISIÓN:</strong> Incentivar la ayuda a personas sin hogar y animales, mientras aprendes a monetizar tus redes sociales.<br><br>
+                            <strong>POLÍTICAS:</strong> Tus datos están protegidos por RGPD (España). Se usan solo para tus puntos y futuros pagos.<br><br>
+                            <label><input type="checkbox" id="legalCheck"> Acepto términos y políticas de privacidad.</label>
                         </div>
                     </div>`,
-                showConfirmButton: true, confirmButtonText: 'COMENZAR', confirmButtonColor: '#2ecc71', allowOutsideClick: false,
+                confirmButtonText: 'COMENZAR',
+                confirmButtonColor: '#2ecc71',
                 preConfirm: () => {
-                    const n = document.getElementById('swal-input-name').value;
-                    const l = document.getElementById('legalCheck').checked;
-                    if(n.length < 7 || !l) { Swal.showValidationMessage('Nombre incompleto o términos no aceptados'); return false; }
-                    return n;
+                    const name = document.getElementById('swal-input-name').value;
+                    const check = document.getElementById('legalCheck').checked;
+                    if (name.length < 5) { Swal.showValidationMessage('Escribe un nombre real'); return false; }
+                    if (!check) { Swal.showValidationMessage('Acepta los términos'); return false; }
+                    return name;
                 }
-            }).then((res) => { if(res.isConfirmed) { document.getElementById('miNombre').innerText = res.value; nav('screenMenu'); } });
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('miNombre').innerText = result.value;
+                    nav('screenMenu');
+                }
+            });
+        }
+
+        function verDocumentos() {
+            Swal.fire({
+                title: 'INFORMACIÓN OFICIAL',
+                html: `
+                    <div style="text-align:left; font-size:12px;">
+                        <p><strong>Misión:</strong> Ayuda humanitaria y animal mediante tecnología.</p>
+                        <p><strong>Monetización:</strong> Aprende a usar tus redes para generar impacto y ganancias.</p>
+                        <p><strong>Privacidad:</strong> Cumplimos estrictamente el RGPD español.</p>
+                    </div>`,
+                confirmButtonText: 'ENTENDIDO'
+            });
         }
 
         function nav(id) {
@@ -157,8 +161,7 @@
         }
 
         function cargarVideo(id, t) {
-            videoFin = false; 
-            document.getElementById('misionTitle').innerText = t;
+            videoFin = false; document.getElementById('misionTitle').innerText = t;
             document.getElementById('labelUpload').style.display = 'none';
             nav('screenPlayer');
             if(player) player.loadVideoById(id);
@@ -168,7 +171,7 @@
                     events: { 
                         'onReady': (e) => {
                             currentPoints = Math.floor((player.getDuration() / 60) * 100);
-                            document.getElementById('puntosEstimados').innerText = `RECOMPENSA: ${currentPoints} 🦴`;
+                            document.getElementById('puntosEstimados').innerText = `PUNTOS: ${currentPoints} 🦴`;
                         },
                         'onStateChange': (e) => { if(e.data === 0) { videoFin = true; document.getElementById('labelUpload').style.display='flex'; } } 
                     } 
@@ -178,7 +181,7 @@
 
         function completarMision() {
             if(!videoFin) return;
-            Swal.fire({ title: '¡Misión Validada!', text: `Has ganado ${currentPoints} 🦴`, icon: 'success' });
+            Swal.fire({ title: '¡Misión Validada!', text: `Ganaste ${currentPoints} 🦴`, icon: 'success' });
             coins += currentPoints;
             nav('screenMenu');
         }
@@ -189,8 +192,15 @@
             document.getElementById('misPuntosRank').innerText = coins + " 🦴";
             document.getElementById('refCount').innerText = referidos;
         }
+
+        function copiarLinkReferido() {
+            const link = window.location.href + "?ref=" + document.getElementById('miNombre').innerText;
+            navigator.clipboard.writeText(link);
+            Swal.fire({ title: 'LINK COPIADO', icon: 'success' });
+            setTimeout(() => { coins += 1000; referidos += 1; updateUI(); }, 2000);
+        }
+
         function abrirYoutube() { if(player) window.open('https://www.youtube.com/watch?v=' + player.getVideoData().video_id, '_blank'); }
-        function guardarAdmin() { Swal.fire('Éxito', 'Ajustes guardados.', 'success'); }
     </script>
 </body>
 </html>
