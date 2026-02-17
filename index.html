@@ -9,8 +9,10 @@
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         :root { 
-            --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); 
-            --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; 
+            --primary: #2ecc71; 
+            /* Panel ahora brillante y sin opacidad excesiva */
+            --panel: #161b22; 
+            --text: #e6edf3; 
             --video: #2185d0; --gold: #fbbd08; --red-yt: #ff0000;
             --invite: #34495e; --music: #a333c8; --game: #e91e63; --donar: #e67e22;
         }
@@ -18,15 +20,41 @@
             background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; 
             background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; 
         }
-        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1; }
+        /* Fondo exterior oscurecido pero panel brillante */
+        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1; }
         .container { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        .panel { background: var(--panel); padding: 15px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
+        
+        .panel { 
+            background: var(--panel); 
+            padding: 15px; 
+            border-radius: 30px; 
+            width: 85%; 
+            max-width: 400px; 
+            text-align: center; 
+            border: 2px solid var(--primary); 
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); 
+            max-height: 90vh; 
+            overflow-y: auto; 
+        }
+
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
         .btn:active { transform: scale(0.95); }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
         
         .input-registro { width: 90%; padding: 12px; border-radius: 10px; border: 2px solid var(--primary); font-size: 16px !important; color: #000 !important; background: #ffffff !important; margin-bottom: 10px; }
         
+        /* Input de música solicitado: Fondo Negro, Letras Blancas */
+        #requestMusic { 
+            width: 90%; 
+            height: 60px; 
+            border-radius: 10px; 
+            background: #000 !important; 
+            color: #fff !important; 
+            border: 1px solid var(--music);
+            padding: 10px;
+            font-family: inherit;
+        }
+
         .admin-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: 10px; color: white; }
         .admin-table th, .admin-table td { border: 1px solid #444; padding: 5px; text-align: center; }
         .admin-table th { background: var(--primary); color: black; }
@@ -49,12 +77,17 @@
         <div id="screenAdmin" class="screen">
             <div class="panel">
                 <h3 style="color: var(--gold);"><i class="fa-solid fa-user-shield"></i> ADMINISTRACIÓN</h3>
-                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 10px; font-size: 11px;">
-                    VALOR 1000 🦴 EN €: <input type="number" id="valorMoneda" value="1.00" step="0.10" style="width: 50px;" onchange="actualizarPanelAdmin()">
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 10px; font-size: 10px; text-align: left;">
+                    <label>VALOR 1000 🦴 (Misiones) EN $: </label>
+                    <input type="number" id="valorMoneda" value="1.00" step="0.10" style="width: 50px;" onchange="actualizarPanelAdmin()">
+                    <br><br>
+                    <label>VALOR POR REFERIDO EN $: </label>
+                    <input type="number" id="valorReferido" value="0.50" step="0.10" style="width: 50px;" onchange="actualizarPanelAdmin()">
                 </div>
                 
                 <table class="admin-table">
-                    <thead><tr><th>Usuario</th><th>Misiones</th><th>Referidos</th><th>Pagar</th><th>Acción</th></tr></thead>
+                    <thead><tr><th>Usuario</th><th>Misiones</th><th>Referidos</th><th>Pagar ($)</th><th>Acción</th></tr></thead>
                     <tbody id="adminUsersBody"></tbody>
                 </table>
                 
@@ -76,7 +109,7 @@
                 
                 <button onclick="nav('screenVideoList')" class="btn" style="background: var(--video);"><i class="fa-solid fa-video"></i> CARPETA VÍDEOS</button>
                 <button onclick="nav('screenMusicList')" class="btn" style="background: var(--music);"><i class="fa-solid fa-music"></i> CARPETA MÚSICA</button>
-                <button onclick="nav('screenGames')" class="btn" style="background: var(--game);"><i class="fa-solid fa-comments"></i> JUEGOS Y PETICIONES</button>
+                <button onclick="nav('screenGames')" class="btn" style="background: var(--game);"><i class="fa-solid fa-comments"></i> PETICIONES DE MÚSICA</button>
                 <button onclick="nav('screenDonar')" class="btn" style="background: var(--donar);"><i class="fa-solid fa-heart"></i> DONAR A LA CAUSA</button>
                 <button onclick="copiarLinkReferido()" class="btn" style="background: var(--invite); border: 1px solid var(--gold);"><i class="fa-solid fa-users"></i> INVITAR (+1000 🦴)</button>
                 <button onclick="verDocumentos()" class="btn" style="background: #444;"><i class="fa-solid fa-shield"></i> INFO Y LEGAL</button>
@@ -98,16 +131,36 @@
         </div>
 
         <div id="screenVideoList" class="screen"><div class="panel"><h3>VÍDEOS</h3><div id="videoListContainer"></div><button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button></div></div>
-        <div id="screenMusicList" class="screen"><div class="panel"><h3>MÚSICA</h3><div id="musicListContainer"></div><hr><textarea id="requestMusic" style="width:90%; height:30px; border-radius:10px;"></textarea><button onclick="enviarPeticion()" class="btn" style="background:var(--music);">PEDIR</button><button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button></div></div>
-        <div id="screenGames" class="screen"><div class="panel"><h3>TABLÓN PETICIONES</h3><div id="peticionesContainer"></div><button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button></div></div>
+        
+        <div id="screenMusicList" class="screen">
+            <div class="panel">
+                <h3>MÚSICA</h3>
+                <div id="musicListContainer"></div>
+                <hr>
+                <p style="font-size: 11px;">¿Qué canción quieres escuchar?</p>
+                <textarea id="requestMusic" placeholder="Escribe aquí el nombre de la canción..."></textarea>
+                <button onclick="enviarPeticion()" class="btn" style="background:var(--music);">PEDIR CANCIÓN</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+            </div>
+        </div>
+
+        <div id="screenGames" class="screen">
+            <div class="panel">
+                <h3>TABLÓN DE PETICIONES</h3>
+                <div id="peticionesContainer" style="max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 10px; margin-bottom: 10px;"></div>
+                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+            </div>
+        </div>
+
         <div id="screenDonar" class="screen"><div class="panel"><h3>DONAR</h3><p style="font-size:11px;">Binance: 88229911</p><button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button></div></div>
     </div>
 
     <script>
         let coinsMisiones = 0, coinsReferidos = 0, player, currentPoints = 0, clickCount = 0;
-        const CLAVE_ADMIN = "1234"; // CAMBIA TU CLAVE AQUÍ
+        let listaPeticiones = [];
+        const CLAVE_ADMIN = "1234"; 
 
-        // ACCESO ADMIN PROTEGIDO
+        // ACCESO ADMIN
         document.getElementById('axonTitle').onclick = function() {
             clickCount++;
             if(clickCount >= 5) {
@@ -163,37 +216,47 @@
             document.getElementById('ptsReferidos').innerText = coinsReferidos + " 🦴";
         }
 
+        // Lógica de Administración con Fórmulas de Monetización
         function actualizarPanelAdmin() {
-            const ratio = parseFloat(document.getElementById('valorMoneda').value) / 1000;
-            const aPagar = (coinsMisiones * ratio).toFixed(2);
+            const miNombre = document.getElementById('miNombre').innerText;
+            const ratioMisiones = parseFloat(document.getElementById('valorMoneda').value) / 1000;
+            const valorFijoReferido = parseFloat(document.getElementById('valorReferido').value);
+            
+            // Fórmula: (Monedas Misiones * Valor monetización) + (Total Referidos * Valor por referido)
+            const pagoMisiones = (coinsMisiones * ratioMisiones);
+            const pagoReferidos = (coinsReferidos / 1000 * valorFijoReferido);
+            const totalAPagar = (pagoMisiones + pagoReferidos).toFixed(2);
+
             document.getElementById('adminUsersBody').innerHTML = `
                 <tr>
-                    <td>${document.getElementById('miNombre').innerText}</td>
+                    <td>${miNombre}</td>
                     <td>${coinsMisiones}</td>
                     <td>${coinsReferidos}</td>
-                    <td style="color:#2ecc71"><b>${aPagar}€</b></td>
-                    <td><button onclick="resetMisiones()" style="font-size:9px; background:red; color:white; border:none; border-radius:5px;">PAGADO</button></td>
+                    <td style="color:#2ecc71; font-weight:bold;">$${totalAPagar}</td>
+                    <td><button onclick="resetMisiones()" style="font-size:9px; background:red; color:white; border:none; border-radius:5px; padding:5px;">PAGAR</button></td>
                 </tr>`;
         }
 
         function resetMisiones() {
-            Swal.fire({ title: '¿Confirmas Pago?', text: 'Se pondrán a 0 las misiones del usuario.', icon: 'warning', showCancelButton: true })
-            .then(r => { if(r.isConfirmed) { coinsMisiones = 0; updateUI(); actualizarPanelAdmin(); }});
+            Swal.fire({ title: '¿Confirmas Pago?', text: 'Se pondrán a 0 las misiones y referidos del usuario.', icon: 'warning', showCancelButton: true })
+            .then(r => { if(r.isConfirmed) { coinsMisiones = 0; coinsReferidos = 0; updateUI(); actualizarPanelAdmin(); }});
         }
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
-            if(id === 'screenVideoList') renderList('videoListContainer', [{id:'wC_sOpQjvWE', t:'Ayuda Animal', s:300}]);
+            if(id === 'screenVideoList') renderList('videoListContainer', [{id:'wC_sOpQjvWE', t:'Ayuda Animal', s:300}, {id:'dQw4w9WgXcQ', t:'Misión Social', s:500}]);
             if(id === 'screenMusicList') renderList('musicListContainer', [{id:'HL9VoQ-er_U', t:'Relajación Social', s:200}]);
+            if(id === 'screenGames') actualizarTablonPeticiones();
         }
 
         function renderList(cid, list) {
             const c = document.getElementById(cid); c.innerHTML = '';
             list.forEach(i => {
                 const div = document.createElement('div'); div.className = "list-item";
+                // Cálculo de valor basado en duración para dar variedad a las misiones
                 div.innerHTML = `<span>${i.t}</span> <b>${Math.floor(i.s/60*100)} 🦴</b>`;
-                div.onclick = () => cargarVideo(i.id, i.t);
+                div.onclick = () => { currentPoints = Math.floor(i.s/60*100); cargarVideo(i.id, i.t); };
                 c.appendChild(div);
             });
         }
@@ -205,15 +268,43 @@
             if(player) player.loadVideoById(id);
             else {
                 player = new YT.Player('video-placeholder', { videoId: id, events: { 
-                    'onReady': (e) => currentPoints = Math.floor(player.getDuration()/60*100),
                     'onStateChange': (e) => { if(e.data === 0) document.getElementById('labelUpload').style.display='flex'; } 
                 }});
             }
         }
+
+        function enviarPeticion() {
+            const cancion = document.getElementById('requestMusic').value;
+            if(cancion.length > 2) {
+                const nuevaPeticion = {
+                    usuario: document.getElementById('miNombre').innerText,
+                    texto: cancion,
+                    fecha: new Date().toLocaleTimeString()
+                };
+                listaPeticiones.push(nuevaPeticion);
+                document.getElementById('requestMusic').value = "";
+                Swal.fire('Enviado', 'Tu petición ha sido registrada en el tablón.', 'success');
+            } else {
+                Swal.fire('Error', 'Escribe el nombre de la canción', 'error');
+            }
+        }
+
+        function actualizarTablonPeticiones() {
+            const container = document.getElementById('peticionesContainer');
+            container.innerHTML = "";
+            listaPeticiones.forEach((p, index) => {
+                const item = document.createElement('div');
+                item.style.padding = "10px";
+                item.style.borderBottom = "1px solid #444";
+                item.style.fontSize = "11px";
+                item.style.textAlign = "left";
+                item.innerHTML = `<b>${p.usuario}</b> (${p.fecha}): <span style="color:var(--gold)">${p.texto}</span>`;
+                container.appendChild(item);
+            });
+        }
+
         function abrirYoutube() { if(player) window.open('https://www.youtube.com/watch?v=' + player.getVideoData().video_id, '_blank'); }
-        function verDocumentos() { Swal.fire('Legal', 'Misión social: Animales y Personas. Datos RGPD España.', 'info'); }
-        function enviarPeticion() { Swal.fire('Enviado', 'Tu petición ya está en juegos.', 'success'); }
+        function verDocumentos() { Swal.fire('Legal', 'Misión social: Ayuda a personas sin hogar y animales rescatados. Datos protegidos bajo RGPD España.', 'info'); }
     </script>
 </body>
-    </html>
-    
+</html>
