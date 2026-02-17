@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { 
             --primary: #2ecc71; --panel: #161b22; --text: #e6edf3; 
@@ -150,43 +149,49 @@
         let CLAVE_ADMIN = localStorage.getItem('adminPass') || "1234";
         let referidoPor = null;
 
-        // --- FASE A: ESPACIO PARA FIREBASE ---
-        /* Para activar Firebase, pega aquí tus credenciales:
-           const firebaseConfig = { ... };
-           firebase.initializeApp(firebaseConfig);
-           const database = firebase.database();
-        */
+        // --- CONFIGURACIÓN SUPABASE REAL ---
+        const SUPABASE_URL = 'https://ywkcnxhlptqagwxjnygx.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // --- SISTEMA DE PERSISTENCIA LOCAL ---
-        function guardarDatos() {
+        // --- SISTEMA DE PERSISTENCIA ---
+        async function guardarDatos() {
             const data = {
+                usuario_id: miIDUnico,
                 nombre: document.getElementById('miNombre').innerText,
-                id: miIDUnico,
-                misiones: coinsMisiones,
-                referidos: coinsReferidos
+                puntos_misiones: coinsMisiones,
+                puntos_referidos: coinsReferidos,
+                invitado_por: referidoPor
             };
+            
+            // Guardado Local
             localStorage.setItem('axon_user_data', JSON.stringify(data));
             localStorage.setItem('miID', miIDUnico);
-            
-            // FASE A: Aquí se enviaría a Firebase en el futuro
-            // if(typeof database !== 'undefined') database.ref('users/' + miIDUnico).set(data);
+
+            // Guardado en la Nube (Supabase)
+            try {
+                await supabaseClient
+                    .from('usuarios')
+                    .upsert(data, { onConflict: 'usuario_id' });
+            } catch (err) {
+                console.log("Error al sincronizar con Supabase");
+            }
         }
 
         function cargarDatos() {
             const saved = localStorage.getItem('axon_user_data');
             if(saved) {
                 const d = JSON.parse(saved);
-                coinsMisiones = d.misiones || 0;
-                coinsReferidos = d.referidos || 0;
-                miIDUnico = d.id;
+                coinsMisiones = d.puntos_misiones || 0;
+                coinsReferidos = d.puntos_referidos || 0;
+                miIDUnico = d.usuario_id || d.id;
                 document.getElementById('miNombre').innerText = d.nombre;
-                document.getElementById('miID').innerText = d.id;
+                document.getElementById('miID').innerText = miIDUnico;
                 updateUI();
                 if(d.nombre !== "---") nav('screenMenu');
             }
         }
 
-        // --- DETECTAR REFERIDO (FASE 2) ---
         function checkReferido() {
             const params = new URLSearchParams(window.location.search);
             const ref = params.get('ref');
