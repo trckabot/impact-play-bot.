@@ -63,6 +63,10 @@
 
         .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 10px; margin-top: 15px; border: 1px dashed var(--primary); }
         
+        /* ESTILOS NUEVOS: RANKING Y RACHA */
+        .mini-card { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; margin: 10px 0; border: 1px solid rgba(46, 204, 113, 0.2); font-size: 11px; text-align: left; }
+        .hero-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
         .comment-box { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--music); background: rgba(0,0,0,0.3); color: white; margin-top: 10px; font-size: 12px; font-family: inherit; resize: none; box-sizing: border-box; }
         .my-request { background: rgba(163, 51, 200, 0.2); padding: 8px; border-radius: 10px; margin-top: 5px; font-size: 11px; display: none; border: 1px solid var(--music); text-align: left; }
 
@@ -106,26 +110,30 @@
 
         <div id="screenMenu" class="screen">
             <div class="panel">
-                <h3 style="margin-bottom: 15px; font-size: 16px;">MISIONES ACTIVAS 🦴</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="font-size: 11px; color: var(--gold); font-weight: bold;"><i class="fa-solid fa-fire"></i> RACHA: 1 DÍAS</span>
+                    <span style="font-size: 11px; color: var(--primary); font-weight: bold;"><span id="coinCountTop">0</span> 🦴</span>
+                </div>
+
+                <h3 style="margin-bottom: 10px; font-size: 16px;">MISIONES ACTIVAS 🦴</h3>
                 
                 <button onclick="nav('screenMatchGame')" class="btn" style="background: linear-gradient(45deg, #f1c40f, #d35400); border: 2px solid white;">
                     <i class="fa-solid fa-star"></i> JUGAR CANDY BITCOIN
                 </button>
 
-                <button onclick="alert('Próximamente: Cobro de Airdrop')" class="btn btn-airdrop">
-                    <i class="fa-solid fa-coins"></i> COBRAR AIRDROP
-                </button>
-                <button onclick="alert('¡Gracias por tu apoyo!')" class="btn btn-donate">
-                    <i class="fa-solid fa-heart"></i> DONAR GANANCIAS
-                </button>
-
-                <div class="donors-list">
-                    <div style="font-weight: bold; margin-bottom: 5px; color: var(--primary); text-align: center; font-size: 11px;">ÚLTIMAS DONACIONES (TG)</div>
-                    <div class="donor-row"><span>@User_Telegram1</span> <span>150 🦴</span></div>
-                    <div class="donor-row"><span>@CryptoHelp</span> <span>500 🦴</span></div>
+                <div class="mini-card">
+                    <div style="color: var(--primary); font-weight: bold; margin-bottom: 5px; border-bottom: 1px solid var(--primary); text-align: center;">🏆 TOP HÉROES DE LA SEMANA</div>
+                    <div class="hero-row"><span>1. @Alex_Charity</span> <span>2,500 🦴</span></div>
+                    <div class="hero-row"><span>2. @Marta_Pets</span> <span>1,820 🦴</span></div>
+                    <div class="hero-row"><span>3. @Juan_Impact</span> <span>1,150 🦴</span></div>
                 </div>
 
-                <div style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button onclick="alert('Próximamente')" class="btn btn-airdrop" style="height: 50px; font-size: 11px;">AIRDROP</button>
+                    <button onclick="alert('¡Gracias!')" class="btn btn-donate" style="height: 50px; font-size: 11px;">DONAR</button>
+                </div>
+
+                <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
 
                 <button onclick="nav('screenVideoList')" class="btn btn-video"><i class="fa-solid fa-video"></i> VIDEOS</button>
                 <button onclick="nav('screenMusicList')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
@@ -188,12 +196,18 @@
             <div class="panel">
                 <h3 id="misionTitle" style="font-size: 15px;">---</h3>
                 <div id="video-placeholder"></div>
-                <button id="btnInteract" class="btn btn-yt-action">
-                    <span>ABRIR YOUTUBE PARA INTERACTUAR</span>
-                    <span style="font-size: 9px;">LUEGO DE VER EL VIDEO Y VUELVE</span>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="font-size: 10px; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="dataSaver" onchange="toggleDataSaver()"> 📉 ACTIVAR AHORRO DE DATOS
+                    </label>
+                </div>
+
+                <button id="btnInteract" class="btn btn-yt-action" onclick="abrirYoutube()">
+                    <span>ABRIR YOUTUBE</span>
                 </button>
-                <p id="msgInstruccion" style="font-size: 10px; color: var(--gold); padding: 5px; font-weight: bold;">
-                    ⚠️ ¡LIKE, COMENTA y COMPARTE! Ve a Youtube toma screenshot y cargalo al finalizar el vídeo en la app.
+                <p id="msgInstruccion" style="font-size: 11px; color: var(--gold); padding: 5px; font-weight: bold; line-height: 1.2;">
+                    ⚠️ ¡Da Like y Comenta! Sube captura al terminar el video para cobrar tus 🦴.
                 </p>
                 <label for="fileProof" id="labelUpload" class="btn btn-upload"><i class="fa-solid fa-image"></i> CARGAR CAPTURA</label>
                 <input type="file" id="fileProof" accept="image/*" onchange="validarTodo()" style="display:none;">
@@ -203,7 +217,7 @@
     </div>
 
     <script>
-        let coins = 0, player, currentPoints = 0, videoFin = false;
+        let coins = 0, player, currentPoints = 0, videoFin = false, lastTime = 0, checkTimer;
         const listadoVideos = [{ id: 'wC_sOpQjvWE', titulo: 'La Plena', artista: 'Beele', puntos: 10 }];
         const listadoCanciones = [{ id: 'HL9VoQ-er_U', titulo: 'No tiene sentido', artista: 'Beele', puntos: 5 }];
 
@@ -214,9 +228,21 @@
             if(id === 'screenMusicList') renderList('musicListContainer', listadoCanciones);
             if(id === 'screenVideoList') renderList('videoListContainer', listadoVideos);
             document.getElementById('coinCount').innerText = coins;
+            document.getElementById('coinCountTop').innerText = coins;
         }
 
-        // LÓGICA DE COMENTARIOS DE MÚSICA
+        // LÓGICA DE AHORRO DE DATOS
+        function toggleDataSaver() {
+            if(!player) return;
+            const isChecked = document.getElementById('dataSaver').checked;
+            if(isChecked) {
+                player.setPlaybackQuality('small');
+                Swal.fire({ toast: true, position: 'top', title: 'Calidad reducida (Ahorro)', timer: 2000, showConfirmButton: false });
+            } else {
+                player.setPlaybackQuality('default');
+            }
+        }
+
         function sendMusicRequest() {
             const input = document.getElementById('musicComment');
             const display = document.getElementById('myMusicRequest');
@@ -291,7 +317,6 @@
             document.getElementById('matchMoves').innerText = matchMoves; 
         }
 
-        // FUNCIONES DE VIDEO Y LISTADOS
         function renderList(id, list) {
             const container = document.getElementById(id); container.innerHTML = '';
             list.forEach(item => {
@@ -302,29 +327,4 @@
         }
 
         function cargarMision(id, pts, t) {
-            currentPoints = pts; videoFin = false; 
-            document.getElementById('misionTitle').innerText = t;
-            document.getElementById('labelUpload').style.display = 'none';
-            document.getElementById('msgInstruccion').style.color = "var(--gold)";
-            document.getElementById('msgInstruccion').innerHTML = "⚠️ ¡LIKE, COMENTA y COMPARTE! Ve a Youtube toma screenshot y cargalo al finalizar el vídeo en la app.";
-            nav('screenPlayer');
-            if(player) player.loadVideoById(id);
-            else player = new YT.Player('video-placeholder', { 
-                videoId: id, 
-                events: { 'onStateChange': (e) => { 
-                    if(e.data === 0) { 
-                        videoFin = true; 
-                        document.getElementById('labelUpload').style.display='flex'; 
-                        document.getElementById('msgInstruccion').innerHTML = "✅ ¡Video terminado! Sube tu captura para cobrar."; 
-                        document.getElementById('msgInstruccion').style.color = "var(--primary)";
-                    } 
-                } } 
-            });
-        }
-
-        function validarTodo() { if(videoFin) { coins += currentPoints; nav('screenMenu'); } }
-        function mostrarMiLink() { navigator.clipboard.writeText(window.location.href); alert("Copiado al portapapeles"); }
-        function pararMision() { if(player) player.stopVideo(); nav('screenMenu'); }
-    </script>
-</body>
-</html>
+            currentPoints = 
