@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
         :root { 
             --primary: #2ecc71; --panel: #161b22; --text: #e6edf3; 
@@ -146,8 +148,16 @@
         let listaPeticiones = [], blockEnvio = false, pendingReferralPoints = 0;
         let miIDUnico = localStorage.getItem('miID') || "AX-" + Math.floor(Math.random()*900000 + 100000);
         let CLAVE_ADMIN = localStorage.getItem('adminPass') || "1234";
+        let referidoPor = null;
 
-        // --- SISTEMA DE PERSISTENCIA ---
+        // --- FASE A: ESPACIO PARA FIREBASE ---
+        /* Para activar Firebase, pega aquí tus credenciales:
+           const firebaseConfig = { ... };
+           firebase.initializeApp(firebaseConfig);
+           const database = firebase.database();
+        */
+
+        // --- SISTEMA DE PERSISTENCIA LOCAL ---
         function guardarDatos() {
             const data = {
                 nombre: document.getElementById('miNombre').innerText,
@@ -156,6 +166,10 @@
                 referidos: coinsReferidos
             };
             localStorage.setItem('axon_user_data', JSON.stringify(data));
+            localStorage.setItem('miID', miIDUnico);
+            
+            // FASE A: Aquí se enviaría a Firebase en el futuro
+            // if(typeof database !== 'undefined') database.ref('users/' + miIDUnico).set(data);
         }
 
         function cargarDatos() {
@@ -172,7 +186,23 @@
             }
         }
 
-        window.onload = () => { cargarDatos(); };
+        // --- DETECTAR REFERIDO (FASE 2) ---
+        function checkReferido() {
+            const params = new URLSearchParams(window.location.search);
+            const ref = params.get('ref');
+            if (ref && ref.startsWith('AX-') && ref !== miIDUnico) {
+                referidoPor = ref;
+                const toast = Swal.mixin({
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000
+                });
+                toast.fire({ icon: 'info', title: '¡Bonus de invitado detectado!' });
+            }
+        }
+
+        window.onload = () => { 
+            checkReferido();
+            cargarDatos(); 
+        };
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
@@ -276,7 +306,7 @@
         }
 
         function compartirWhatsApp() {
-            const url = window.location.href + "?ref=" + miIDUnico;
+            const url = window.location.origin + window.location.pathname + "?ref=" + miIDUnico;
             const msg = encodeURIComponent("¡Ayúdame en AXON IMPACT! Usa mi código " + miIDUnico + ": " + url);
             window.open(`https://api.whatsapp.com/send?text=${msg}`);
             pendingReferralPoints += 1000; 
