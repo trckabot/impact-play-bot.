@@ -3,295 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AXON IMPACT GLOBAL</title>
+    <title>AXON IMPACT GLOBAL - MATCH 3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root { 
-            --primary: #2ecc71; 
-            --bg-dark: rgba(13, 17, 23, 0.9); 
-            --panel: rgba(22, 27, 34, 0.98); 
-            --text: #e6edf3; 
-            --music: #a333c8; 
-            --video: #2185d0; 
-            --gold: #fbbd08; 
-            --red-yt: #ff0000; 
-            --game: #db2828; 
-            --task: #3498db; 
-            --social: #767676; 
-            --wallet: #fbbd08; 
-            --invite: #34495e; 
-            --airdrop: #f39c12;
-            --donate: #e74c3c;
-            --tg-color: #0088cc;
-            --fb-color: #1877f2;
-            --tk-color: #000000;
+            --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); 
+            --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; 
+            --gold: #fbbd08; --video: #2185d0;
         }
 
         body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1; }
         .container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
         
-        .panel { background: var(--panel); padding: 15px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 92vh; overflow-y: auto; }
+        /* ESTADISTICAS ORIGINALES */
+        .country-stats { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); padding: 8px; border-radius: 12px; font-size: 10px; border: 1px solid var(--primary); z-index: 10; }
+
+        .panel { background: var(--panel); padding: 15px; border-radius: 30px; width: 90%; max-width: 380px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+
+        /* TABLERO ESTILO CANDY CRUSH */
+        .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 10px; }
+        .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; width: 330px; height: 330px; margin: 0 auto; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 15px; border: 2px solid var(--primary); position: relative; }
         
-        .country-stats { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 8px; border-radius: 12px; font-size: 10px; border: 1px solid var(--primary); z-index: 10; pointer-events: none; }
-        .country-stats div { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 2px; }
+        .cell { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; border-radius: 10px; background: rgba(255,255,255,0.05); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .cell:hover { background: rgba(255,255,255,0.15); }
+        .selected { transform: scale(1.15); box-shadow: 0 0 15px var(--gold); background: rgba(251, 189, 8, 0.3) !important; z-index: 10; }
+        
+        /* EXPLOSIONES */
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.4); opacity: 0.7; } 100% { transform: scale(0); opacity: 0; } }
+        .exploding { animation: pop 0.4s forwards; }
 
-        .hero-img { width: 85%; max-width: 280px; height: 320px; object-fit: cover; border-radius: 40px; margin-bottom: -30px; z-index: 3; box-shadow: 0 0 35px rgba(46, 204, 113, 0.6); animation: pulse 3s infinite ease-in-out; }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-
-        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: transform 0.2s; }
-        .btn i { font-size: 14px; }
-        .btn:active { transform: scale(0.98); }
-
+        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; }
         .btn-video { background: var(--video); }
-        .btn-music { background: var(--music); }
-        .btn-social { background: var(--social); }
-        .btn-wallet { background: var(--wallet); color: #000; }
-        .btn-invite { background: var(--invite); }
-        .btn-back { background: #1b1c1d; font-size: 10px; margin-top: 10px; padding: 8px; }
-
-        .btn-airdrop { background: linear-gradient(145deg, #f39c12, #e67e22); border-bottom: 3px solid #d35400; height: 60px; }
-        .btn-donate { background: linear-gradient(145deg, #e74c3c, #c0392b); border-bottom: 3px solid #962d22; height: 60px; }
-        
-        .btn-tg { background: var(--tg-color); }
-        .btn-fb { background: var(--fb-color); }
-        .btn-tk { background: var(--tk-color); border: 1px solid rgba(255,255,255,0.2); }
-
-        .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 10px; margin-top: 15px; border: 1px dashed var(--primary); }
-        
-        .comment-box { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--music); background: rgba(0,0,0,0.3); color: white; margin-top: 10px; font-size: 12px; font-family: inherit; resize: none; box-sizing: border-box; }
-        .my-request { background: rgba(163, 51, 200, 0.2); padding: 8px; border-radius: 10px; margin-top: 5px; font-size: 11px; display: none; border: 1px solid var(--music); text-align: left; }
-
-        .donors-list { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 10px; margin-top: 10px; text-align: left; font-size: 12px; }
-        .donor-row { display: flex; justify-content: space-between; padding: 4px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; }
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
-        .btn-yt-action { background: var(--red-yt); flex-direction: column; font-size: 11px; line-height: 1.3; }
-        .btn-upload { background: var(--gold); color: #000; display: none; border: 2px solid #000; }
-
-        /* ESTILOS EXCLUSIVOS DEL JUEGO ADICTIVO */
-        .game-canvas-area { width: 220px; height: 220px; margin: 15px auto; position: relative; cursor: pointer; }
-        #game-char { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 15px var(--gold)); transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .game-canvas-area:active #game-char { transform: scale(0.85); }
-        .xp-container { width: 100%; height: 12px; background: #000; border-radius: 10px; margin: 10px 0; border: 1px solid var(--primary); overflow: hidden; }
-        #xp-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), #fff); transition: width 0.3s; }
-        .particle { position: absolute; pointer-events: none; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; z-index: 100; animation: explode 0.6s forwards; }
-        @keyframes explode { 0% { opacity: 1; transform: translate(0,0); } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)); } }
+        .btn-back { background: #1b1c1d; font-size: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="overlay-bg"></div>
 
     <div class="country-stats">
-        <b style="color: var(--primary); display: block; margin-bottom: 4px;">USUARIOS HOY</b>
-        <div><span>🇨🇴 Colombia</span> <span>124</span></div>
-        <div><span>🇻🇪 Venezuela</span> <span>89</span></div>
-        <div><span>🇪🇸 España</span> <span>45</span></div>
-        <div><span>🇲🇽 México</span> <span>67</span></div>
+        <b style="color: var(--primary);">AXON NETWORK</b>
+        <div style="display:flex; justify-content:space-between; gap:10px;"><span>LIVE USERS</span> <span>1,240</span></div>
     </div>
 
     <div class="container">
         
-        <div id="screenStart" class="screen" style="display: flex;">
-            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="hero-img">
-            <div class="panel" style="padding-top: 40px;">
-                <h2 style="color: var(--primary); margin: 0; font-size: 20px;">AXON IMPACT GLOBAL</h2>
-                <p style="font-size: 13px; line-height: 1.4; margin: 10px 0;">Ayudando a personas necesitadas y animales de la calle con Blockchain.</p>
-                <button onclick="nav('screenMenu')" class="btn" style="background: var(--primary); font-size: 14px;">ENTRAR A MISIONES</button>
+        <div id="screenStart" class="screen" style="display: flex; flex-direction: column; align-items: center;">
+            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width: 200px; border-radius: 40px; margin-bottom: 15px; box-shadow: 0 0 30px var(--primary);">
+            <div class="panel">
+                <h2 style="color: var(--primary); margin: 0;">CRYPTO MATCH 3</h2>
+                <p style="font-size: 13px; opacity: 0.8;">Explota las criptos para financiar la ayuda social.</p>
+                <button onclick="startGame()" class="btn" style="background: var(--primary);">JUGAR NIVEL 1</button>
             </div>
         </div>
 
-        <div id="screenMenu" class="screen">
+        <div id="screenGame" class="screen" style="display: none; flex-direction: column; align-items: center;">
             <div class="panel">
-                <h3 style="margin-bottom: 15px; font-size: 16px;">MISIONES ACTIVAS 🦴</h3>
+                <div class="game-header">
+                    <div><small>PUNTOS</small><br><b id="score" style="color: var(--gold); font-size: 20px;">0</b></div>
+                    <div><small>MOVIMIENTOS</small><br><b id="moves" style="color: var(--primary); font-size: 20px;">20</b></div>
+                </div>
                 
-                <button onclick="nav('screenGame')" class="btn" style="background: linear-gradient(45deg, #f1c40f, #d35400); border: 2px solid white; box-shadow: 0 0 15px var(--gold);">
-                    <i class="fa-solid fa-gamepad"></i> JUEGO: EVOLUCIÓN BITCOIN
-                </button>
-
-                <button onclick="alert('Próximamente: Cobro de Airdrop')" class="btn btn-airdrop">
-                    <i class="fa-solid fa-coins"></i> COBRAR AIRDROP
-                </button>
-                <button onclick="alert('¡Gracias por tu apoyo!')" class="btn btn-donate">
-                    <i class="fa-solid fa-heart"></i> DONAR GANANCIAS
-                </button>
-
-                <div class="donors-list">
-                    <div style="font-weight: bold; margin-bottom: 5px; color: var(--primary); text-align: center; font-size: 11px;">ÚLTIMAS DONACIONES (TG)</div>
-                    <div class="donor-row"><span>@User_Telegram1</span> <span>150 🦴</span></div>
-                    <div class="donor-row"><span>@CryptoHelp</span> <span>500 🦴</span></div>
-                </div>
-
-                <div style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
-
-                <button onclick="nav('screenVideoList')" class="btn btn-video"><i class="fa-solid fa-video"></i> VIDEOS</button>
-                <button onclick="nav('screenMusicList')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
-                <button onclick="nav('screenSocial')" class="btn btn-social"><i class="fa-solid fa-globe"></i> REDES SOCIALES</button>
-                <button onclick="alert('Vincula tu Wallet')" class="btn btn-wallet"><i class="fa-solid fa-gem"></i> VINCULAR WALLET</button>
-                <button onclick="mostrarMiLink()" class="btn btn-invite"><i class="fa-solid fa-link"></i> INVITAR AMIGOS</button>
+                <div id="grid" class="grid"></div>
                 
-                <div class="balance-card">
-                    <span style="font-size: 11px; opacity: 0.8;">TU SALDO TOTAL</span>
-                    <div style="font-size: 28px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
+                <div style="margin-top: 15px; font-size: 12px;">
+                    Objetivo: Consigue <b>2,000</b> puntos para cobrar 🦴
                 </div>
-            </div>
-        </div>
-
-        <div id="screenGame" class="screen">
-            <div class="panel">
-                <h3 id="gameRank" style="color: var(--gold); margin: 0; font-size: 14px;">NIÑO HUMILDE 🧒</h3>
-                <div class="xp-container"><div id="xp-bar"></div></div>
-                
-                <div class="game-canvas-area" onclick="tapGame(event)">
-                    <img id="game-char" src="https://i.postimg.cc/fRwWzXpX/nino-humilde.jpg">
-                </div>
-
-                <div style="font-size: 24px; font-weight: 900; margin-bottom: 5px;"><span id="gamePoints">0</span> 🦴</div>
-                <p style="font-size: 10px; color: #888;">Toca para ganar XP. ¡Evoluciona para ayudar más!</p>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <button class="btn" style="background:rgba(255,255,255,0.1); font-size: 10px; height: 50px;" onclick="upgradeChar(1500, 'ESTUDIANTE 📚', 'https://i.postimg.cc/B6fD0rY0/estudiante.jpg')">CURSO (1.5k)</button>
-                    <button class="btn" style="background:rgba(255,255,255,0.1); font-size: 10px; height: 50px;" onclick="upgradeChar(8000, 'EMPRESARIO 🎩', 'https://i.postimg.cc/6qH6P8S8/empresario.jpg')">FILÁNTROPO (8k)</button>
-                </div>
-
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
-            </div>
-        </div>
-
-        <div id="screenVideoList" class="screen">
-            <div class="panel">
-                <h3 style="color: var(--video); font-size: 16px;">BIBLIOTECA DE VIDEOS</h3>
-                <div id="videoListContainer" style="max-height: 250px; overflow-y: auto;"></div>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
-            </div>
-        </div>
-
-        <div id="screenMusicList" class="screen">
-            <div class="panel">
-                <h3 style="color: var(--music); font-size: 16px;">BIBLIOTECA MUSICAL</h3>
-                <div id="musicListContainer" style="max-height: 200px; overflow-y: auto;"></div>
-                <textarea id="musicComment" class="comment-box" rows="2" placeholder="¿Qué canción deseas?"></textarea>
-                <button id="btnSendMusic" onclick="sendMusicRequest()" class="btn btn-music" style="padding: 8px; font-size: 11px;">ENVIAR SUGERENCIA</button>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
-            </div>
-        </div>
-
-        <div id="screenSocial" class="screen">
-            <div class="panel">
-                <h3 style="font-size: 16px;">NUESTRAS REDES</h3>
-                <button onclick="window.open('https://t.me/TuCanal', '_blank')" class="btn btn-tg"><i class="fa-brands fa-telegram"></i> TELEGRAM</button>
-                <button onclick="window.open('https://facebook.com/TuPagina', '_blank')" class="btn btn-fb"><i class="fa-brands fa-facebook"></i> FACEBOOK</button>
-                <button onclick="window.open('https://tiktok.com/@TuUsuario', '_blank')" class="btn btn-tk"><i class="fa-brands fa-tiktok"></i> TIKTOK</button>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
-            </div>
-        </div>
-
-        <div id="screenPlayer" class="screen">
-            <div class="panel">
-                <h3 id="misionTitle" style="font-size: 15px;">---</h3>
-                <div id="video-placeholder"></div>
-                <button id="btnInteract" class="btn btn-yt-action">
-                    <span>ABRIR YOUTUBE</span>
-                </button>
-                <label for="fileProof" id="labelUpload" class="btn btn-upload"><i class="fa-solid fa-image"></i> CARGAR CAPTURA</label>
-                <input type="file" id="fileProof" accept="image/*" onchange="validarTodo()" style="display:none;">
-                <button onclick="pararMision()" class="btn btn-back">VOLVER</button>
+                <button onclick="location.reload()" class="btn btn-back">CANCELAR MISION</button>
             </div>
         </div>
     </div>
 
     <script>
-        const listadoVideos = [{ id: 'wC_sOpQjvWE', titulo: 'La Plena', artista: 'Beele', puntos: 10 }];
-        const listadoCanciones = [{ id: 'HL9VoQ-er_U', titulo: 'No tiene sentido', artista: 'Beele', puntos: 5 }];
+        const width = 7;
+        const candyIcons = ['₿', 'Ξ', 'Ð', '👛', '❤️'];
+        let squares = [];
+        let score = 0;
+        let moves = 20;
+        let firstSquare, secondSquare;
 
-        let player, currentPoints = 0, coins = 0, videoFin = false, xp = 0;
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSound(f) {
-            const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
-            osc.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-            osc.connect(g); g.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        function startGame() {
+            document.getElementById('screenStart').style.display = 'none';
+            document.getElementById('screenGame').style.display = 'flex';
+            createBoard();
         }
 
-        function nav(id) {
-            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'flex';
-            if(id === 'screenMusicList') renderList('musicListContainer', listadoCanciones);
-            if(id === 'screenVideoList') renderList('videoListContainer', listadoVideos);
-            updateUI();
-        }
+        function createBoard() {
+            const grid = document.getElementById('grid');
+            for (let i = 0; i < width * width; i++) {
+                const square = document.createElement('div');
+                square.className = 'cell';
+                square.setAttribute('id', i);
+                let randomIcon = candyIcons[Math.floor(Math.random() * candyIcons.length)];
+                square.innerHTML = randomIcon;
+                grid.appendChild(square);
+                squares.push(square);
 
-        function tapGame(e) {
-            coins += 2; xp += 5;
-            playSound(400 + xp);
-            for(let i=0; i<6; i++) {
-                let p = document.createElement('div'); p.className = 'particle';
-                p.style.left = e.clientX+'px'; p.style.top = e.clientY+'px';
-                p.style.setProperty('--tx', (Math.random()-0.5)*180+'px');
-                p.style.setProperty('--ty', (Math.random()-0.5)*180+'px');
-                document.body.appendChild(p); setTimeout(() => p.remove(), 600);
+                square.onclick = () => selectSquare(square);
             }
-            if(xp >= 100) xp = 100;
-            updateUI();
+            // Limpiar matches iniciales sin dar puntos
+            while(checkMatches(false)) { fillBoard(); }
         }
 
-        function upgradeChar(cost, name, img) {
-            if(coins >= cost) {
-                coins -= cost; xp = 0;
-                document.getElementById('gameRank').innerText = name;
-                document.getElementById('game-char').src = img;
-                playSound(800);
-                Swal.fire('¡Evolución!', 'Ahora eres ' + name, 'success');
+        function selectSquare(square) {
+            if (!firstSquare) {
+                firstSquare = square;
+                square.classList.add('selected');
             } else {
-                Swal.fire('Huesitos insuficientes', 'Mira videos para financiar tu carrera.', 'warning');
+                secondSquare = square;
+                let id1 = parseInt(firstSquare.id);
+                let id2 = parseInt(secondSquare.id);
+                
+                // Comprobar si son adyacentes
+                const validMoves = [id1 - 1, id1 + 1, id1 - width, id1 + width];
+                if (validMoves.includes(id2)) {
+                    swapSquares(id1, id2);
+                } else {
+                    firstSquare.classList.remove('selected');
+                    firstSquare = null;
+                }
             }
-            updateUI();
         }
 
-        function renderList(containerId, list) {
-            const container = document.getElementById(containerId); container.innerHTML = '';
-            list.forEach(item => {
-                const div = document.createElement('div');
-                div.style = "display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:12px; cursor:pointer;";
-                div.innerHTML = `<div><b>${item.titulo}</b></div><b>+${item.puntos} 🦴</b>`;
-                div.onclick = () => cargarMision(item.id, item.puntos, item.titulo);
-                container.appendChild(div);
+        function swapSquares(id1, id2) {
+            let temp = squares[id1].innerHTML;
+            squares[id1].innerHTML = squares[id2].innerHTML;
+            squares[id2].innerHTML = temp;
+            
+            if (checkMatches(true)) {
+                moves--;
+                document.getElementById('moves').innerText = moves;
+                firstSquare.classList.remove('selected');
+                firstSquare = null;
+                if(moves <= 0) endGame();
+            } else {
+                // Revertir si no hay match
+                setTimeout(() => {
+                    squares[id2].innerHTML = squares[id1].innerHTML;
+                    squares[id1].innerHTML = temp;
+                    firstSquare.classList.remove('selected');
+                    firstSquare = null;
+                }, 300);
+            }
+        }
+
+        function checkMatches(givePoints) {
+            let hasMatch = false;
+            // Filas
+            for (let i = 0; i < 49; i++) {
+                let rowOfThree = [i, i + 1, i + 2];
+                if (i % width < width - 2) {
+                    let icon = squares[i].innerHTML;
+                    if (icon !== '' && rowOfThree.every(idx => squares[idx].innerHTML === icon)) {
+                        if(givePoints) score += 100;
+                        rowOfThree.forEach(idx => squares[idx].classList.add('exploding'));
+                        hasMatch = true;
+                    }
+                }
+            }
+            // Columnas
+            for (let i = 0; i < 35; i++) {
+                let colOfThree = [i, i + width, i + width * 2];
+                let icon = squares[i].innerHTML;
+                if (icon !== '' && colOfThree.every(idx => squares[idx].innerHTML === icon)) {
+                    if(givePoints) score += 100;
+                    colOfThree.forEach(idx => squares[idx].classList.add('exploding'));
+                    hasMatch = true;
+                }
+            }
+
+            if (hasMatch) {
+                document.getElementById('score').innerText = score;
+                setTimeout(removeAndFill, 400);
+                return true;
+            }
+            return false;
+        }
+
+        function removeAndFill() {
+            squares.forEach(sq => {
+                if (sq.classList.contains('exploding')) {
+                    sq.innerHTML = '';
+                    sq.classList.remove('exploding');
+                }
             });
+            fillBoard();
         }
 
-        function cargarMision(videoId, pts, titulo) {
-            currentPoints = pts; videoFin = false;
-            document.getElementById('misionTitle').innerText = titulo;
-            document.getElementById('labelUpload').style.display = 'none';
-            document.getElementById('btnInteract').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-            nav('screenPlayer');
-            if (player) player.loadVideoById(videoId);
-            else player = new YT.Player('video-placeholder', {
-                height: '100%', width: '100%', videoId: videoId,
-                events: { 'onStateChange': (e) => { if (e.data === YT.PlayerState.ENDED) { 
-                    videoFin = true; document.getElementById('labelUpload').style.display = 'flex';
-                }}}
+        function fillBoard() {
+            squares.forEach(sq => {
+                if (sq.innerHTML === '') {
+                    sq.innerHTML = candyIcons[Math.floor(Math.random() * candyIcons.length)];
+                }
             });
+            setTimeout(() => checkMatches(true), 300);
         }
 
-        function validarTodo() {
-            if (!videoFin) return;
-            coins += currentPoints; updateUI(); nav('screenMenu');
+        function endGame() {
+            if (score >= 2000) {
+                Swal.fire('¡Nivel Completado!', `Ganaste ${score} puntos y 500 🦴 de recompensa.`, 'success')
+                .then(() => location.reload());
+            } else {
+                Swal.fire('Sin movimientos', 'No alcanzaste el objetivo. ¡Mira un video para reintentar!', 'error')
+                .then(() => location.reload());
+            }
         }
-
-        function updateUI() {
-            document.getElementById('coinCount').innerText = Math.floor(coins);
-            const gc = document.getElementById('gamePoints'); if(gc) gc.innerText = Math.floor(coins);
-            const xpB = document.getElementById('xp-bar'); if(xpB) xpB.style.width = xp + "%";
-        }
-
-        function mostrarMiLink() { navigator.clipboard.writeText(window.location.href); alert("Copiado"); }
-        function pararMision() { if(player) player.stopVideo(); nav('screenMenu'); }
     </script>
 </body>
 </html>
