@@ -4,22 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AXON IMPACT GLOBAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        :root { --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; --music: #8a2be2; --video: #1f6feb; --gold: #f1c40f; --red-yt: #ff0000; }
+        :root { --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; --music: #8a2be2; --video: #1f6feb; --gold: #f1c40f; --red-yt: #ff0000; --gray: #484f58; }
         body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1; }
         .container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 380px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 85vh; overflow-y: auto; }
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 11px; text-transform: uppercase; text-decoration: none; box-sizing: border-box; }
+        
+        .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
+        
+        .main-logo { width: 220px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); }
+
+        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 12px; text-transform: uppercase; text-decoration: none; box-sizing: border-box; }
+        .btn i { font-size: 16px; }
+        
         .btn-green { background: var(--primary); }
-        .btn-yt { background: var(--red-yt); font-size: 10px; line-height: 1.2; }
-        .btn-upload { background: var(--gold); color: #000; display: none; }
-        .btn-back { background: #333; font-size: 10px; }
+        .btn-video { background: var(--video); }
+        .btn-music { background: var(--music); }
+        .btn-tasks { background: var(--gray); }
+        .btn-social { background: #3a3a3a; }
+        
+        /* Redes Sociales específicas */
+        .btn-tg { background: #0088cc; }
+        .btn-ig { background: #e1306c; }
+        .btn-x { background: #000; }
+
+        .btn-yt { background: var(--red-yt); font-size: 10px; line-height: 1.2; padding: 12px; }
+        .btn-upload { background: var(--gold); color: #000; display: none; border: 2px solid #000; }
+        .btn-back { background: #111; font-size: 10px; }
+
         .screen { display: none; width: 100%; flex-direction: column; align-items: center; }
-        #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 15px; background: #000; margin-bottom: 10px; }
-        .balance-card { background: rgba(46, 204, 113, 0.1); border-radius: 15px; padding: 10px; margin-top: 10px; border: 1px dashed var(--primary); }
+        #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 15px; background: #000; margin-bottom: 10px; border: 1px solid var(--primary); }
+        
+        .balance-card { background: rgba(46, 204, 113, 0.1); border-radius: 15px; padding: 15px; margin-top: 15px; border: 1px dashed var(--primary); }
         input[type="file"] { display: none; }
     </style>
 </head>
@@ -28,40 +47,80 @@
     <div class="container">
         
         <div id="screenStart" class="screen" style="display: flex;">
-            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width:150px; border-radius:20px; margin-bottom:15px;">
+            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="main-logo">
             <div class="panel">
-                <h2 style="color: var(--primary);">AXON IMPACT</h2>
-                <p style="font-size: 13px;">Ayuda a personas y animales mediante misiones virales. 🐾✨</p>
-                <button onclick="nav('screenMenu')" class="btn btn-green">ENTRAR A MISIONES</button>
+                <h2 style="color: var(--primary); margin: 0;">AXON IMPACT GLOBAL</h2>
+                <p style="font-size: 14px; opacity: 0.8;">Misiones Blockchain para ayudar a personas y animales. 🐾</p>
+                <button onclick="nav('screenMenu')" class="btn btn-green">
+                    <i class="fa-solid fa-rocket"></i> ENTRAR A MISIONES
+                </button>
             </div>
         </div>
 
         <div id="screenMenu" class="screen">
             <div class="panel">
-                <h3>MISIONES ACTIVAS 🦴</h3>
-                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video Beele')" class="btn" style="background:var(--video)">📹 VIDEOS</button>
-                <button onclick="cargarMision('HL9VoQ-er_U', 5, 'Beele Música')" class="btn" style="background:var(--music)">🎵 MÚSICA</button>
+                <h3 style="margin-top: 0;">MISIONES ACTIVAS 🦴</h3>
+                
+                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video Viral')" class="btn btn-video">
+                    <i class="fa-solid fa-play"></i> VIDEOS
+                </button>
+                <button onclick="cargarMision('HL9VoQ-er_U', 5, 'Beele Música')" class="btn btn-music">
+                    <i class="fa-solid fa-music"></i> MÚSICA
+                </button>
+                <button onclick="nav('folderSocial')" class="btn btn-social">
+                    <i class="fa-solid fa-share-nodes"></i> REDES SOCIALES
+                </button>
+                
                 <div class="balance-card">
-                    <span style="font-size: 10px;">SALDO</span>
-                    <div style="font-size: 24px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
+                    <span style="font-size: 11px;">MI SALDO</span>
+                    <div style="font-size: 28px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
                 </div>
-                <button onclick="mostrarMiLink()" class="btn btn-back" style="margin-top:20px;">🔗 MI LINK DE INVITADO</button>
+
+                <button onclick="mostrarMiLink()" class="btn btn-back" style="margin-top:20px;">
+                    <i class="fa-solid fa-link"></i> MI LINK DE INVITADO
+                </button>
+            </div>
+        </div>
+
+        <div id="folderSocial" class="screen">
+            <div class="panel">
+                <h3>SÍGUENOS Y COMPARTE</h3>
+                <button onclick="window.open('https://t.me/TuCanal')" class="btn btn-tg">
+                    <i class="fa-brands fa-telegram"></i> TELEGRAM
+                </button>
+                <button onclick="window.open('https://instagram.com/TuUser')" class="btn btn-ig">
+                    <i class="fa-brands fa-instagram"></i> INSTAGRAM
+                </button>
+                <button onclick="window.open('https://x.com/TuUser')" class="btn btn-x">
+                    <i class="fa-brands fa-x-twitter"></i> TWITTER / X
+                </button>
+                <button onclick="nav('screenMenu')" class="btn btn-back">
+                    <i class="fa-solid fa-arrow-left"></i> VOLVER
+                </button>
             </div>
         </div>
 
         <div id="screenPlayer" class="screen">
             <div class="panel">
-                <h3 id="misionTitle">Validando...</h3>
+                <h3 id="misionTitle" style="color: var(--primary);">Validando...</h3>
                 <div id="video-placeholder"></div>
                 
-                <button id="btnInteract" class="btn btn-yt">ABRIR YOUTUBE PARA INTERACTUAR LUEGO DE VER EL VIDEO Y VUELVE</button>
+                <button id="btnInteract" class="btn btn-yt">
+                    <i class="fa-brands fa-youtube"></i> ABRIR YOUTUBE PARA INTERACTUAR LUEGO DE VER EL VIDEO Y VUELVE
+                </button>
                 
-                <p id="msgInstruccion" style="font-size: 10px; color: var(--gold);">⚠️ Mira el video completo. Al finalizar, podrás subir la captura de tu Like y Comentario.</p>
+                <p id="msgInstruccion" style="font-size: 11px; color: var(--gold); background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px;">
+                    ⚠️ Ve el video completo. Al finalizar, sube la captura de tu Like y Comentario.
+                </p>
 
-                <label for="fileProof" id="labelUpload" class="btn btn-upload">📸 CARGAR CAPTURA DE PANTALLA</label>
-                <input type="file" id="fileProof" accept="image/*" onchange="validarTodo()">
+                <label for="fileProof" id="labelUpload" class="btn btn-upload">
+                    <i class="fa-solid fa-camera"></i> SUBIR CAPTURA (LIKE Y COMENTARIO)
+                </label>
+                <input type="file" id="fileProof" accept="image/*" onchange="validarMisionCompleta()">
 
-                <button onclick="pararMision()" class="btn btn-back">CANCELAR Y VOLVER</button>
+                <button onclick="pararMision()" class="btn btn-back">
+                    <i class="fa-solid fa-xmark"></i> CANCELAR Y VOLVER
+                </button>
             </div>
         </div>
     </div>
@@ -71,7 +130,7 @@
         const SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let player, lastTime = 0, currentPoints = 0, coins = 0, videoFinalizado = false;
+        let player, lastTime = 0, currentPoints = 0, coins = 0, videoTerminado = false;
         const urlParams = new URLSearchParams(window.location.search);
         let telegramID = urlParams.get('ref') || "User_" + Math.floor(Math.random() * 9999);
 
@@ -82,11 +141,10 @@
 
         function cargarMision(videoId, pts, titulo) {
             currentPoints = pts;
-            videoFinalizado = false;
+            videoTerminado = false;
             document.getElementById('misionTitle').innerText = titulo;
             document.getElementById('labelUpload').style.display = 'none';
-            document.getElementById('btnInteract').style.display = 'block';
-            
+            document.getElementById('msgInstruccion').style.display = 'block';
             document.getElementById('btnInteract').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
 
             nav('screenPlayer');
@@ -97,55 +155,42 @@
                 events: { 'onStateChange': onPlayerStateChange }
             });
             lastTime = 0;
-            iniciarChequeoAntitrampa();
+            iniciarProteccion();
         }
 
-        function iniciarChequeoAntitrampa() {
-            const check = setInterval(() => {
+        function iniciarProteccion() {
+            const timer = setInterval(() => {
                 if (!player || player.getPlayerState() !== 1) return;
-                let cur = player.getCurrentTime();
-                if (cur > lastTime + 2.5) { 
-                    player.seekTo(lastTime); 
-                    alert("⚠️ No adelantes. Debes ver el contenido completo para ayudar a la causa."); 
-                }
-                lastTime = cur;
-                if (document.getElementById('screenPlayer').style.display === 'none') clearInterval(check);
+                let actual = player.getCurrentTime();
+                if (actual > lastTime + 2.5) { player.seekTo(lastTime); alert("⚠️ No puedes adelantar el video."); }
+                lastTime = actual;
+                if (document.getElementById('screenPlayer').style.display === 'none') clearInterval(timer);
             }, 1000);
         }
 
         function onPlayerStateChange(e) {
             if (e.data === YT.PlayerState.ENDED) {
-                videoFinalizado = true;
-                document.getElementById('labelUpload').style.display = 'block';
-                document.getElementById('msgInstruccion').innerText = "✅ ¡Video completado! Ahora sube la captura para recibir tus 🦴.";
-                alert("¡Excelente! Ahora sube la captura de pantalla de tu interacción en YouTube.");
+                videoTerminado = true;
+                document.getElementById('labelUpload').style.display = 'flex';
+                document.getElementById('msgInstruccion').innerHTML = "✅ ¡VIDEO COMPLETADO!<br>Sube la captura para recibir tus 🦴.";
             }
         }
 
-        async function validarTodo() {
-            const file = document.getElementById('fileProof').files[0];
-            if (!videoFinalizado) {
-                alert("⚠️ Primero debes terminar de ver el video por completo.");
-                return;
-            }
-            if (!file) return;
-
-            // Simulación de reconocimiento de sistema
-            alert("Analizando captura y tiempo de reproducción... ⏳");
-            
-            setTimeout(async () => {
+        function validarMisionCompleta() {
+            if (!videoTerminado) { alert("Termina el video primero."); return; }
+            alert("Verificando captura con el sistema...");
+            setTimeout(() => {
                 coins += currentPoints;
                 document.getElementById('coinCount').innerText = coins;
-                alert("¡Validado con éxito! +"+currentPoints+" 🦴 sumados para ayudar a animales y personas.");
+                alert("¡Felicidades! Recompensa sumada.");
                 nav('screenMenu');
-                // Aquí podrías subir la imagen a Supabase Storage si lo deseas en el futuro
             }, 2000);
         }
 
         function mostrarMiLink() {
-            const link = window.location.origin + window.location.pathname + "?ref=" + telegramID;
-            navigator.clipboard.writeText(link);
-            alert("Copiado: " + link);
+            const miLink = window.location.origin + window.location.pathname + "?ref=" + telegramID;
+            navigator.clipboard.writeText(miLink);
+            alert("Link copiado: " + miLink);
         }
 
         function pararMision() { if(player) player.stopVideo(); nav('screenMenu'); }
