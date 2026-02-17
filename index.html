@@ -30,59 +30,45 @@
         
         .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
         
-        /* ESTILO DE BOTONES SEGÚN TU IMAGEN */
+        /* IMAGEN PRINCIPAL RESALTADA */
+        .hero-img { 
+            width: 80%; 
+            max-width: 320px; 
+            border-radius: 40px; 
+            margin-bottom: -20px; /* Solape ligero con el panel */
+            z-index: 3;
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.5);
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 0 40px rgba(46, 204, 113, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); }
+        }
+
         .btn { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 12px; 
-            width: 100%; 
-            padding: 16px; /* Más robustos como en la foto */
-            margin: 12px 0; 
-            border: none; 
-            border-radius: 20px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            color: white; 
-            font-size: 14px; 
-            text-transform: uppercase; 
-            transition: transform 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 12px; 
+            width: 100%; padding: 16px; margin: 12px 0; border: none; border-radius: 20px; 
+            font-weight: bold; cursor: pointer; color: white; font-size: 14px; 
+            text-transform: uppercase; transition: transform 0.2s;
         }
         .btn:active { transform: scale(0.98); }
 
         .btn-video { background: var(--video); }
         .btn-music { background: var(--music); }
-        .btn-game { background: var(--game); }
-        .btn-task { background: var(--task); }
         .btn-social { background: var(--social); }
         .btn-wallet { background: var(--wallet); color: #000; }
         .btn-invite { background: var(--invite); }
         .btn-back { background: #1b1c1d; font-size: 11px; margin-top: 15px; }
         
-        /* Colores Redes Sociales Internas */
         .btn-tg { background: #0088cc; }
         .btn-fb { background: #1877f2; }
         .btn-tk { background: #000; border: 1px solid #fff; }
 
-        .balance-card { 
-            background: rgba(46, 204, 113, 0.05); 
-            border-radius: 20px; 
-            padding: 15px; 
-            margin-top: 20px; 
-            border: 1px dashed var(--primary); 
-        }
-
-        /* Buscador de Música */
-        .search-input { 
-            width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #444; 
-            background: #0d1117; color: white; margin-bottom: 10px; box-sizing: border-box; 
-        }
-        .music-item { 
-            background: rgba(163, 51, 200, 0.1); border: 1px solid var(--music); 
-            padding: 12px; margin: 8px 0; border-radius: 15px; cursor: pointer; 
-            display: flex; justify-content: space-between; align-items: center; 
-        }
-
+        .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 15px; margin-top: 20px; border: 1px dashed var(--primary); }
+        .search-input { width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #444; background: #0d1117; color: white; margin-bottom: 10px; box-sizing: border-box; }
+        .music-item { background: rgba(163, 51, 200, 0.1); border: 1px solid var(--music); padding: 12px; margin: 8px 0; border-radius: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
         .btn-yt-action { background: var(--red-yt); flex-direction: column; font-size: 12px; line-height: 1.4; }
@@ -94,46 +80,23 @@
     <div class="container">
         
         <div id="screenStart" class="screen" style="display: flex;">
-            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width:180px; border-radius:30px; margin-bottom:15px;">
-            <div class="panel">
+            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="hero-img">
+            <div class="panel" style="padding-top: 40px;">
                 <h2 style="color: var(--primary); margin: 0;">AXON IMPACT GLOBAL</h2>
-                <p style="font-size: 14px; margin: 15px 0;">Ayudando a personas y animales con Blockchain.</p>
-                <button onclick="nav('screenMenu')" class="btn btn-video" style="background: var(--primary);">ENTRAR A MISIONES</button>
+                <p style="font-size: 14px; line-height: 1.6; margin: 15px 0;">Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.</p>
+                <button onclick="nav('screenMenu')" class="btn" style="background: var(--primary); font-size: 16px;">ENTRAR A MISIONES</button>
             </div>
         </div>
 
         <div id="screenMenu" class="screen">
             <div class="panel">
                 <h3 style="margin-bottom: 20px;">MISIONES ACTIVAS 🦴</h3>
-                
-                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video')" class="btn btn-video">
-                    <i class="fa-solid fa-video"></i> VIDEOS
-                </button>
-                
-                <button onclick="nav('screenMusicList')" class="btn btn-music">
-                    <i class="fa-solid fa-music"></i> MÚSICA
-                </button>
-                
-                <button onclick="alert('Próximamente')" class="btn btn-game">
-                    <i class="fa-solid fa-gamepad"></i> JUEGOS
-                </button>
-                
-                <button onclick="alert('Próximamente')" class="btn btn-task">
-                    <i class="fa-solid fa-clipboard-list"></i> TAREAS
-                </button>
-                
-                <button onclick="nav('screenSocial')" class="btn btn-social">
-                    <i class="fa-solid fa-globe"></i> REDES SOCIALES
-                </button>
-                
-                <button onclick="alert('Vincula tu Wallet')" class="btn btn-wallet" style="margin-top: 25px;">
-                    <i class="fa-solid fa-gem"></i> VINCULAR WALLET
-                </button>
-                
-                <button onclick="mostrarMiLink()" class="btn btn-invite">
-                    <i class="fa-solid fa-link"></i> INVITAR AMIGOS
-                </button>
-                
+                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video')" class="btn btn-video"><i class="fa-solid fa-video"></i> VIDEOS</button>
+                <button onclick="nav('screenMusicList')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
+                <button onclick="alert('Próximamente')" class="btn btn-game" style="background:var(--game)"><i class="fa-solid fa-gamepad"></i> JUEGOS</button>
+                <button onclick="nav('screenSocial')" class="btn btn-social"><i class="fa-solid fa-globe"></i> REDES SOCIALES</button>
+                <button onclick="alert('Vincula tu Wallet')" class="btn btn-wallet" style="margin-top: 25px;"><i class="fa-solid fa-gem"></i> VINCULAR WALLET</button>
+                <button onclick="mostrarMiLink()" class="btn btn-invite"><i class="fa-solid fa-link"></i> INVITAR AMIGOS</button>
                 <div class="balance-card">
                     <span style="font-size: 12px; opacity: 0.8;">TU SALDO TOTAL</span>
                     <div style="font-size: 32px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
@@ -179,10 +142,7 @@
     </div>
 
     <script>
-        const listadoCanciones = [
-            { id: 'HL9VoQ-er_U', titulo: 'No tiene sentido', artista: 'Beele', puntos: 5 }
-        ];
-
+        const listadoCanciones = [{ id: 'HL9VoQ-er_U', titulo: 'No tiene sentido', artista: 'Beele', puntos: 5 }];
         let player, lastTime = 0, currentPoints = 0, coins = 0, videoFin = false;
 
         function nav(id) {
@@ -234,8 +194,7 @@
         }
 
         function mostrarMiLink() {
-            const link = window.location.href;
-            navigator.clipboard.writeText(link);
+            navigator.clipboard.writeText(window.location.href);
             alert("Link de invitación copiado.");
         }
 
