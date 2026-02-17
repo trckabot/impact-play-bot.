@@ -12,7 +12,7 @@
         .container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .app-logo { width: 70%; max-width: 220px; filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.5)); margin-bottom: 10px; border-radius: 20px; }
         .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 380px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 85vh; overflow-y: auto; }
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 13px; text-transform: uppercase; box-sizing: border-box; }
+        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-size: 13px; text-transform: uppercase; box-sizing: border-box; text-decoration: none; }
         .btn-green { background: var(--primary); }
         .btn-video { background: var(--video); }
         .btn-music { background: var(--music); }
@@ -21,10 +21,13 @@
         .btn-gold { background: var(--gold); color: #000; box-shadow: 0 0 10px rgba(241, 196, 15, 0.4); }
         .btn-orange { background: var(--orange); }
         .btn-back { background: #333; font-size: 11px; }
+        .btn-social-tg { background: #0088cc; }
+        .btn-social-ig { background: #e1306c; }
+        .btn-social-fb { background: #1877f2; }
+        .btn-social-x { background: #000000; border: 1px solid #333; }
         input { width: 100%; background: rgba(13, 17, 23, 0.8); color: white; border: 1px solid #30363d; border-radius: 10px; padding: 12px; margin: 8px 0; box-sizing: border-box; }
         .screen { display: none; width: 100%; flex-direction: column; align-items: center; }
         #screenStart { display: flex; }
-        .welcome-text { font-size: 17px; line-height: 1.4; margin: 15px 0; color: #fff; }
         .balance-card { background: rgba(46, 204, 113, 0.1); border-radius: 15px; padding: 15px; margin-top: 15px; border: 1px dashed var(--primary); }
     </style>
 </head>
@@ -36,10 +39,8 @@
             <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="app-logo">
             <div class="panel">
                 <h2 style="color: var(--primary); margin-top: 0;">AXON IMPACT</h2>
-                <p class="welcome-text">
-                    Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.
-                </p>
-                <button onclick="nav('screenMenu')" class="btn btn-green">COMENZAR A ACUMULAR</button>
+                <p>Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.</p>
+                <button onclick="nav('screenMenu')" class="btn btn-green">ENTRAR A MISIONES</button>
             </div>
         </div>
 
@@ -65,25 +66,37 @@
             </div>
         </div>
 
-        <div id="screenWallet" class="screen">
+        <div id="folderVideo" class="screen">
             <div class="panel">
-                <h2 style="color: var(--gold);">AIRDROP CONFIG</h2>
-                <p style="font-size: 12px; margin-bottom: 15px;">Vincula tus direcciones para recibir el token de AXON IMPACT.</p>
-                <input type="text" id="regName" placeholder="Crea un nombre de usuario">
-                <input type="text" id="regBTC" placeholder="Dirección BTC">
-                <input type="text" id="regUSDT" placeholder="Dirección USDT (TRC20)">
-                <button onclick="vincularWallet()" class="btn btn-green">CONFIRMAR VINCULACIÓN</button>
+                <h3>Videos</h3>
+                <button onclick="abrirVideo('https://youtu.be/wC_sOpQjvWE?si=A1bNeAi2Ji_vT0r3')" class="btn btn-video">VER VIDEO NUEVO (+10 🦴)</button>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
 
-        <div id="folderVideo" class="screen"><div class="panel"><h3>Videos</h3><button onclick="sumarPuntos(10)" class="btn btn-video">VER (+10 🦴)</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="folderMusic" class="screen"><div class="panel"><h3>Música</h3><button onclick="sumarPuntos(5)" class="btn btn-music">ESCUCHAR (+5 🦴)</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="folderGames" class="screen"><div class="panel"><h3>Juegos</h3><button onclick="sumarPuntos(15)" class="btn btn-game">JUGAR (+15 🦴)</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="folderTasks" class="screen"><div class="panel"><h3>Tareas</h3><button onclick="sumarPuntos(20)" class="btn btn-task">COMPLETAR (+20 🦴)</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="folderSocial" class="screen"><div class="panel"><h3>Social</h3><button onclick="window.open('https://t.me/TuCanal')" class="btn" style="background:#0088cc">TELEGRAM</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="screenDonar" class="screen"><div class="panel"><h3>Donaciones</h3><button onclick="donarSaldo()" class="btn btn-orange">DONAR SALDO</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
+        <div id="folderSocial" class="screen">
+            <div class="panel">
+                <h3>REDES SOCIALES</h3>
+                <button onclick="window.open('https://t.me/TuCanal')" class="btn btn-social-tg">TELEGRAM</button>
+                <button onclick="window.open('https://instagram.com/TuUsuario')" class="btn btn-social-ig">INSTAGRAM</button>
+                <button onclick="window.open('https://facebook.com/TuPagina')" class="btn btn-social-fb">FACEBOOK</button>
+                <button onclick="window.open('https://x.com/TuUsuario')" class="btn btn-social-x">X (TWITTER)</button>
+                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
+            </div>
+        </div>
 
+        <div id="screenWallet" class="screen">
+            <div class="panel">
+                <h2 style="color: var(--gold);">AIRDROP CONFIG</h2>
+                <input type="text" id="regName" placeholder="Nombre de Usuario">
+                <input type="text" id="regBTC" placeholder="Dirección BTC">
+                <input type="text" id="regUSDT" placeholder="Dirección USDT (TRC20)">
+                <button onclick="vincularWallet()" class="btn btn-green">VINCULAR AHORA</button>
+                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
+            </div>
+        </div>
+
+        <div id="screenDonar" class="screen"><div class="panel"><h3>Donaciones</h3><button onclick="donarSaldo()" class="btn btn-orange">DONAR SALDO</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
     </div>
 
     <script>
@@ -95,26 +108,30 @@
         let walletLinked = false;
         let userName = "";
         const urlParams = new URLSearchParams(window.location.search);
-        const refPor = urlParams.get('ref');
-        
-        // Detección automática de ID para referidos
-        let telegramID = urlParams.get('id') || "User_" + Math.floor(Math.random() * 9999);
+        let telegramID = urlParams.get('ref') || "User_" + Math.floor(Math.random() * 9999);
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
         }
 
+        function abrirVideo(url) {
+            window.open(url, '_blank');
+            sumarPuntos(10);
+        }
+
         function sumarPuntos(pts) {
             coins += pts;
             document.getElementById('coinCount').innerText = coins;
-            alert("¡Puntos acumulados!");
+            alert("¡Misión completada!");
             nav('screenMenu');
         }
 
-        function checkWalletNav() {
-            if (!walletLinked) nav('screenWallet');
-            else alert("Wallet vinculada correctamente.");
+        function mostrarMiLink() {
+            const idUsuario = userName || telegramID;
+            const link = window.location.origin + window.location.pathname + "?ref=" + idUsuario;
+            navigator.clipboard.writeText(link);
+            alert("Link de invitado copiado.");
         }
 
         async function vincularWallet() {
@@ -122,26 +139,33 @@
             const btc = document.getElementById('regBTC').value;
             const usdt = document.getElementById('regUSDT').value;
             if (n && btc && usdt) {
-                const { error } = await _supabase.from('usuarios_registrados').insert([{ nombre_usuario: n, documento_id: btc, pais: usdt, monedas: coins, referido_por: refPor }]);
-                if (error) alert("Este nombre ya está en uso.");
-                else { walletLinked = true; userName = n; telegramID = n; alert("¡Éxito! Wallet vinculada."); nav('screenMenu'); }
-            } else alert("Por favor, llena todos los campos.");
+                const { error } = await _supabase.from('usuarios_registrados').insert([{ 
+                    nombre_usuario: n, 
+                    documento_id: btc, 
+                    pais: usdt, 
+                    monedas: coins 
+                }]);
+                if (error) alert("Error: " + error.message);
+                else { 
+                    walletLinked = true; 
+                    userName = n; 
+                    alert("¡Wallet vinculada con éxito!"); 
+                    nav('screenMenu'); 
+                }
+            } else alert("Completa todos los campos.");
         }
 
-        function mostrarMiLink() {
-            // Se elimina el bloqueo de vinculación de wallet para generar el link
-            const idUsuario = userName || telegramID;
-            const link = window.location.origin + window.location.pathname + "?ref=" + idUsuario;
-            navigator.clipboard.writeText(link);
-            alert("Link de invitado copiado.");
+        function checkWalletNav() {
+            if (!walletLinked) nav('screenWallet');
+            else alert("Ya tienes una wallet vinculada.");
         }
 
-        async function donarSaldo() {
+        function donarSaldo() {
             if (coins <= 0) return;
-            await _supabase.from('historial_donaciones').insert([{ nombre_usuario: walletLinked ? userName : "Anónimo", monto: coins }]);
             coins = 0;
             document.getElementById('coinCount').innerText = "0";
-            alert("¡Gracias por donar a la causa!");
+            alert("¡Gracias por tu gran corazón!");
+            nav('screenMenu');
         }
     </script>
 </body>
