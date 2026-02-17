@@ -17,13 +17,14 @@
         .btn-video { background: var(--video); }
         .btn-music { background: var(--music); }
         .btn-gold { background: var(--gold); color: #000; }
-        .btn-yt-action { background: #ff0000; font-size: 11px; padding: 10px; margin: 5px 0; }
+        .btn-yt-interact { background: #ff0000; font-size: 15px; padding: 12px; margin-bottom: 15px; }
         .btn-back { background: #333; font-size: 11px; }
+        .btn-upload { background: #e67e22; }
         .screen { display: none; width: 100%; flex-direction: column; align-items: center; }
         #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 15px; background: #000; margin-bottom: 10px; }
         .balance-card { background: rgba(46, 204, 113, 0.1); border-radius: 15px; padding: 15px; margin-top: 15px; border: 1px dashed var(--primary); }
-        input { width: 100%; background: rgba(13, 17, 23, 0.8); color: white; border: 1px solid #30363d; border-radius: 10px; padding: 12px; margin: 8px 0; box-sizing: border-box; }
-        .yt-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        input[type="text"], input[type="file"] { width: 100%; background: rgba(13, 17, 23, 0.8); color: white; border: 1px solid #30363d; border-radius: 10px; padding: 12px; margin: 8px 0; box-sizing: border-box; }
+        input[type="file"] { padding: 8px; }
     </style>
 </head>
 <body>
@@ -51,7 +52,7 @@
                 <button onclick="checkWalletNav()" class="btn btn-gold">💎 VINCULAR WALLET</button>
                 <button onclick="mostrarMiLink()" class="btn" style="background:#34495e;">🔗 INVITAR AMIGOS</button>
                 <div class="balance-card">
-                    <span style="font-size: 12px;">SALDO</span>
+                    <span style="font-size: 12px;">TU SALDO</span>
                     <div style="font-size: 26px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
                 </div>
             </div>
@@ -62,15 +63,24 @@
                 <h3 id="misionTitle">Misión en curso</h3>
                 <div id="video-placeholder"></div>
                 
-                <div class="yt-actions-grid">
-                    <button id="btnLike" class="btn btn-yt-action">👍 LIKE</button>
-                    <button id="btnComment" class="btn btn-yt-action">💬 COMENTAR</button>
-                    <button id="btnShare" class="btn btn-yt-action">↗️ COMPARTIR</button>
-                    <button id="btnSub" class="btn btn-yt-action">🔔 SUSCRIBIRSE</button>
-                </div>
+                <button id="btnInteractYoutube" class="btn btn-yt-interact">ABRIR YOUTUBE PARA INTERACTUAR</button>
+                
+                <p style="font-size: 10px; color: var(--gold); margin-bottom: 15px;">⚠️ ¡Dale LIKE, COMENTA y COMPARTE en YouTube! Luego, sube una captura.</p>
+                
+                <button id="btnUploadProof" onclick="nav('screenUploadProof')" class="btn btn-upload" style="display:none;">SUBIR CAPTURA Y VALIDAR</button>
 
-                <p style="font-size: 10px; color: var(--gold);">⚠️ IMPORTANTE: Interactúa arriba para que el video se vuelva viral.</p>
+                <p style="font-size: 11px; margin-top: 10px;">Completadas: <span id="missionsCompletedCount">0</span></p>
                 <button onclick="pararMision()" class="btn btn-back">CANCELAR Y VOLVER</button>
+            </div>
+        </div>
+
+        <div id="screenUploadProof" class="screen">
+            <div class="panel">
+                <h3>Verificación de Tarea</h3>
+                <p style="font-size: 12px; margin-bottom: 15px;">Sube tu captura de pantalla de la interacción en YouTube. Nuestra IA la revisará.</p>
+                <input type="file" id="proofImage" accept="image/*">
+                <button onclick="validarCaptura()" class="btn btn-green">ENVIAR PARA VALIDAR</button>
+                <button onclick="nav('screenPlayer')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
 
@@ -80,15 +90,15 @@
                 <input type="text" id="musicSearch" placeholder="Nombre de la canción..." onkeyup="filtrarMusica()">
                 <div id="listaMusica">
                     <button onclick="cargarMision('HL9VoQ-er_U', 5, 'Beele Música')" class="btn btn-music">REPRODUCIR (+5 🦴)</button>
-                </div>
+                    </div>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
 
         <div id="folderVideo" class="screen"><div class="panel"><h3>Videos Virales</h3><button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video Beele')" class="btn btn-video">VER VIDEO (+10 🦴)</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
         <div id="folderSocial" class="screen"><div class="panel"><h3>Redes</h3><button onclick="window.open('https://t.me/TuCanal')" class="btn" style="background:#0088cc">Telegram</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="folderGames" class="screen"><div class="panel"><h3>Juegos</h3><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
-        <div id="folderTasks" class="screen"><div class="panel"><h3>Tareas</h3><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
+        <div id="folderGames" class="screen"><div class="panel"><h3>Juegos</h3><p>Próximamente...</p><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
+        <div id="folderTasks" class="screen"><div class="panel"><h3>Tareas</h3><p>Próximamente...</p><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
         <div id="screenWallet" class="screen"><div class="panel"><h3>Vincular</h3><input type="text" id="regName" placeholder="Usuario"><button onclick="vincularWallet()" class="btn btn-green">VINCULAR</button><button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button></div></div>
 
     </div>
@@ -99,31 +109,37 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let player, lastTime = 0, currentPoints = 0, coins = 0, walletLinked = false, userName = "";
+        let currentVideoId = ""; // Para guardar el ID del video actual
+        let missionsCompleted = 0; // Contador de misiones completadas
+        
         const urlParams = new URLSearchParams(window.location.search);
         let telegramID = urlParams.get('ref') || "User_" + Math.floor(Math.random() * 9999);
 
-        const msgs = ["¡Increíble! Cada huesito ayuda a un animal y personas necesitadas.", "¡Misión cumplida! Tu apoyo nos ayuda a seguir impactando vidas."];
+        const msgs = [
+            "¡Increíble! Cada huesito ayuda a un animal sin hogar y personas necesitadas.",
+            "¡Misión cumplida! Tu apoyo nos ayuda a seguir impactando vidas."
+        ];
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
         }
 
+        // LÓGICA DE YOUTUBE ANTITRAMPA Y CARGA DE MISIÓN
         function cargarMision(videoId, pts, titulo) {
+            currentVideoId = videoId; // Guardar el ID del video actual
             currentPoints = pts;
             document.getElementById('misionTitle').innerText = titulo;
             
-            // Configurar botones de interacción de YouTube
-            document.getElementById('btnLike').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-            document.getElementById('btnComment').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-            document.getElementById('btnShare').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-            document.getElementById('btnSub').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+            // Configurar botón "INTERACTÚA EN YOUTUBE"
+            document.getElementById('btnInteractYoutube').onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+            document.getElementById('btnUploadProof').style.display = 'none'; // Ocultar el botón de subir captura al inicio
 
             nav('screenPlayer');
             if (player) player.loadVideoById(videoId);
             else player = new YT.Player('video-placeholder', {
                 height: '100%', width: '100%', videoId: videoId,
-                playerVars: { 'autoplay': 1, 'controls': 1 },
+                playerVars: { 'autoplay': 1, 'controls': 1, 'rel': 0 },
                 events: { 'onStateChange': onPlayerStateChange }
             });
             lastTime = 0;
@@ -132,21 +148,58 @@
 
         function iniciarChequeo() {
             const check = setInterval(() => {
-                if (!player || player.getPlayerState() !== 1) return;
+                if (!player || player.getPlayerState() !== 1) return; // Si no está reproduciendo, no hacer nada
                 let cur = player.getCurrentTime();
-                if (cur > lastTime + 2.5) { player.seekTo(lastTime); alert("⚠️ No adelantes el video."); }
-                else lastTime = cur;
+                if (cur > lastTime + 2.5) { 
+                    player.seekTo(lastTime); 
+                    alert("⚠️ No adelantes el video. Debes verlo completo para que tu ayuda cuente."); 
+                }
+                lastTime = cur;
                 if (document.getElementById('screenPlayer').style.display === 'none') clearInterval(check);
             }, 1000);
         }
 
         function onPlayerStateChange(e) {
             if (e.data === YT.PlayerState.ENDED) {
+                document.getElementById('btnInteractYoutube').style.display = 'none'; // Ocultar interactuar
+                document.getElementById('btnUploadProof').style.display = 'block'; // Mostrar botón de subir captura
+                alert("¡Video visto! Ahora, sube la captura de tus interacciones en YouTube.");
+            }
+        }
+
+        // SIMULACIÓN DE VALIDACIÓN POR IA (requiere backend real para IA)
+        async function validarCaptura() {
+            const fileInput = document.getElementById('proofImage');
+            if (fileInput.files.length === 0) {
+                alert("Por favor, selecciona una imagen.");
+                return;
+            }
+
+            // Aquí iría la lógica real para enviar la imagen a un servidor con IA
+            // Por ahora, simularemos una validación exitosa.
+            alert("Subiendo captura para validación... (Esto es una simulación)");
+
+            // Simular un tiempo de procesamiento de IA
+            await new Promise(resolve => setTimeout(resolve, 3000)); 
+
+            // Simular resultado de IA
+            const iaApproved = Math.random() > 0.2; // 80% de chance de aprobación en la simulación
+
+            if (iaApproved) {
                 coins += currentPoints;
                 document.getElementById('coinCount').innerText = coins;
+                missionsCompleted++;
+                document.getElementById('missionsCompletedCount').innerText = missionsCompleted;
                 alert(msgs[Math.floor(Math.random() * msgs.length)]);
                 nav('screenMenu');
+                document.getElementById('btnUploadProof').style.display = 'none'; // Ocultar de nuevo
+                document.getElementById('btnInteractYoutube').style.display = 'block'; // Mostrar de nuevo
+            } else {
+                alert("La IA no pudo verificar las interacciones. Por favor, asegúrate de dar Like, Comentar y Compartir, y sube una captura clara. Intenta de nuevo.");
+                nav('screenPlayer'); // Volver a la pantalla del reproductor
+                document.getElementById('btnUploadProof').style.display = 'block'; // Mantener botón visible
             }
+            fileInput.value = ''; // Limpiar el input de archivo
         }
 
         function filtrarMusica() {
@@ -164,10 +217,18 @@
 
         async function vincularWallet() {
             const n = document.getElementById('regName').value;
-            if (n) { walletLinked = true; userName = n; alert("¡Éxito! Wallet vinculada."); nav('screenMenu'); }
+            if (n) { 
+                const { error } = await _supabase.from('usuarios_registrados').insert([{ nombre_usuario: n, monedas: coins }]);
+                if (!error) { 
+                    walletLinked = true; 
+                    userName = n; 
+                    alert("¡Éxito! Wallet vinculada."); 
+                    nav('screenMenu'); 
+                } else alert("Error al vincular: " + error.message);
+            } else alert("Por favor, ingresa un nombre de usuario.");
         }
 
-        function checkWalletNav() { if (!walletLinked) nav('screenWallet'); else alert("Ya vinculada."); }
+        function checkWalletNav() { if (!walletLinked) nav('screenWallet'); else alert("Ya tienes una wallet vinculada."); }
         function pararMision() { if(player) player.stopVideo(); nav('screenMenu'); }
     </script>
 </body>
