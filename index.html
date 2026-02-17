@@ -8,12 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        :root { --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; --music: #a333c8; --video: #2185d0; --gold: #fbbd08; --red-yt: #ff0000; --game: #db2828; --task: #3498db; --social: #767676; }
+        :root { --primary: #2ecc71; --bg-dark: rgba(13, 17, 23, 0.9); --panel: rgba(22, 27, 34, 0.98); --text: #e6edf3; --music: #a333c8; --video: #2185d0; --gold: #fbbd08; --red-yt: #ff0000; --game: #db2828; --task: #3498db; --social: #767676; --wallet: #fbbd08; --invite: #34495e; }
         body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1; }
         .container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
         .main-logo { width: 180px; border-radius: 30px; margin-bottom: 15px; }
+        
+        /* Estructura de Botones igual a la Imagen 1000297899.jpg */
         .btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; font-size: 13px; text-transform: uppercase; text-decoration: none; box-sizing: border-box; }
         .btn-green { background: var(--primary); }
         .btn-video { background: var(--video); }
@@ -21,11 +23,13 @@
         .btn-game { background: var(--game); }
         .btn-task { background: var(--task); }
         .btn-social { background: var(--social); }
-        .btn-wallet { background: var(--gold); color: #000; }
-        .btn-invite { background: #34495e; }
-        .btn-yt { background: var(--red-yt); font-size: 11px; flex-direction: column; height: auto; padding: 12px; }
-        .btn-upload { background: var(--gold); color: #000; display: none; margin-top: 15px; }
+        .btn-wallet { background: var(--wallet); color: #000; }
+        .btn-invite { background: var(--invite); }
+        
+        .btn-yt { background: var(--red-yt); font-size: 11px; flex-direction: column; padding: 12px; line-height: 1.2; }
+        .btn-upload { background: var(--gold); color: #000; display: none; margin-top: 15px; border: 2px solid #000; }
         .btn-back { background: #1b1c1d; font-size: 11px; margin-top: 15px; }
+
         .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 15px; margin-top: 20px; border: 1px dashed var(--primary); }
         #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; border: 1px solid #333; }
         input[type="file"] { display: none; }
@@ -35,41 +39,42 @@
     <div class="overlay-bg"></div>
     <div class="container">
         
-        <div id="screenStart" class="screen" style="display: flex;">
+        <div id="screenStart" class="screen" style="display: flex; flex-direction: column; align-items: center;">
             <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" class="main-logo">
             <div class="panel">
-                <h2 style="color: var(--primary); margin-bottom: 10px;">AXON IMPACT GLOBAL</h2>
-                <p style="font-size: 14px; line-height: 1.4;">Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.</p>
+                <h2 style="color: var(--primary); margin: 0;">AXON IMPACT GLOBAL</h2>
+                <p style="font-size: 14px; line-height: 1.5; margin: 15px 0;">Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.</p>
                 <button onclick="nav('screenMenu')" class="btn btn-green">ENTRAR A MISIONES</button>
             </div>
         </div>
 
-        <div id="screenMenu" class="screen">
+        <div id="screenMenu" class="screen" style="display: none; flex-direction: column; align-items: center;">
             <div class="panel">
                 <h3 style="margin-bottom: 20px;">MISIONES ACTIVAS 🦴</h3>
-                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Video Beele')" class="btn btn-video"><i class="fa-solid fa-camera-retro"></i> VIDEOS</button>
-                <button onclick="cargarMision('HL9VoQ-er_U', 5, 'Beele Música')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
+                <button onclick="cargarMision('wC_sOpQjvWE', 10, 'Videos')" class="btn btn-video"><i class="fa-solid fa-camera-retro"></i> VIDEOS</button>
+                <button onclick="cargarMision('HL9VoQ-er_U', 5, 'Música')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
                 <button onclick="alert('Próximamente')" class="btn btn-game"><i class="fa-solid fa-gamepad"></i> JUEGOS</button>
                 <button onclick="alert('Próximamente')" class="btn btn-task"><i class="fa-solid fa-clipboard-list"></i> TAREAS</button>
                 <button onclick="nav('folderSocial')" class="btn btn-social"><i class="fa-solid fa-globe"></i> REDES SOCIALES</button>
-                <button onclick="alert('Vincula tu Wallet')" class="btn btn-wallet"><i class="fa-solid fa-gem"></i> VINCULAR WALLET</button>
+                
+                <button onclick="alert('Vincula tu Wallet')" class="btn btn-wallet" style="margin-top: 20px;"><i class="fa-solid fa-gem"></i> VINCULAR WALLET</button>
                 <button onclick="mostrarMiLink()" class="btn btn-invite"><i class="fa-solid fa-link"></i> INVITAR AMIGOS</button>
                 
                 <div class="balance-card">
-                    <span style="font-size: 11px; opacity: 0.7;">TU SALDO TOTAL</span>
+                    <span style="font-size: 11px; opacity: 0.8;">TU SALDO TOTAL</span>
                     <div style="font-size: 28px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
                 </div>
             </div>
         </div>
 
-        <div id="screenPlayer" class="screen">
+        <div id="screenPlayer" class="screen" style="display: none; flex-direction: column; align-items: center;">
             <div class="panel">
                 <h3 id="misionTitle">Video Beele</h3>
                 <div id="video-placeholder"></div>
                 
                 <button id="btnInteract" class="btn btn-yt">
                     <span>ABRIR YOUTUBE PARA INTERACTUAR</span>
-                    <span style="font-size: 9px; opacity: 0.8;">LUEGO DE VER EL VIDEO Y VUELVE</span>
+                    <span>LUEGO DE VER EL VIDEO Y VUELVE</span>
                 </button>
                 
                 <p id="msgInstruccion" style="font-size: 11px; color: var(--gold); padding: 10px;">
@@ -80,15 +85,6 @@
                 <input type="file" id="fileProof" accept="image/*" onchange="validarTodo()">
 
                 <button onclick="pararMision()" class="btn btn-back">CANCELAR Y VOLVER</button>
-            </div>
-        </div>
-
-        <div id="folderSocial" class="screen">
-            <div class="panel">
-                <h3>REDES SOCIALES</h3>
-                <button onclick="window.open('https://t.me/TuCanal')" class="btn" style="background:#0088cc"><i class="fa-brands fa-telegram"></i> TELEGRAM</button>
-                <button onclick="window.open('https://instagram.com/TuUser')" class="btn" style="background:#e1306c"><i class="fa-brands fa-instagram"></i> INSTAGRAM</button>
-                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER</button>
             </div>
         </div>
     </div>
@@ -116,7 +112,7 @@
             if (player) player.loadVideoById(videoId);
             else player = new YT.Player('video-placeholder', {
                 height: '100%', width: '100%', videoId: videoId,
-                playerVars: { 'autoplay': 1, 'controls': 1, 'rel': 0 },
+                playerVars: { 'autoplay': 1, 'controls': 1 },
                 events: { 'onStateChange': onPlayerStateChange }
             });
             lastTime = 0;
@@ -132,7 +128,7 @@
             if (e.data === YT.PlayerState.ENDED) {
                 videoFin = true;
                 document.getElementById('labelUpload').style.display = 'flex';
-                document.getElementById('msgInstruccion').innerHTML = "✅ ¡Video terminado! Sube tu captura para cobrar.";
+                document.getElementById('msgInstruccion').innerHTML = "✅ ¡Video terminado! Ahora carga la captura para recibir tus puntos.";
             }
         }
 
@@ -142,7 +138,7 @@
             setTimeout(() => {
                 coins += currentPoints;
                 document.getElementById('coinCount').innerText = coins;
-                alert("¡Puntos sumados con éxito!");
+                alert("¡Felicidades! Recompensa sumada.");
                 nav('screenMenu');
             }, 2000);
         }
@@ -150,7 +146,7 @@
         function mostrarMiLink() {
             const link = window.location.origin + window.location.pathname + "?ref=" + telegramID;
             navigator.clipboard.writeText(link);
-            alert("Link de invitado copiado.");
+            alert("Link copiado: " + link);
         }
 
         function pararMision() { if(player) player.stopVideo(); nav('screenMenu'); }
