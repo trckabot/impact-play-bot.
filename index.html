@@ -17,6 +17,14 @@
             background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; 
             background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; 
         }
+        /* Clase para fondos de alertas con la imagen del proyecto */
+        .swal-custom-bg {
+            background: linear-gradient(rgba(22, 27, 34, 0.85), rgba(22, 27, 34, 0.85)), 
+                        url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') !important;
+            background-size: cover !important;
+            border: 2px solid var(--primary) !important;
+        }
+        
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1; }
         .container { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
         
@@ -106,6 +114,7 @@
                 <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
                 <textarea id="requestMusic" placeholder="Escribe el nombre de la canción..."></textarea>
                 <button onclick="enviarPeticion()" class="btn" style="background:var(--music);"><i class="fa-solid fa-paper-plane"></i> ENVIAR PETICIÓN</button>
+                <div id="misPeticionesActuales" style="margin-top: 10px; max-height: 150px; overflow-y: auto;"></div>
                 <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
             </div>
         </div>
@@ -137,7 +146,7 @@
                 <h3 style="color:var(--donar)">DONAR MIS 🦴</h3>
                 <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; border: 1px solid var(--donar); margin-bottom: 15px;">
                     <div style="font-size:11px; color:#aaa;">SALDO DISPONIBLE</div>
-                    <div style="font-size:28px; font-weight:bold; color:var(--primary);"><span id="totalCoinsDonar">0</span> 🦴</div>
+                    <div style="font-size:28px; font-weight:bold; color:var(--primary);"><span id="totalCoinsDonar">0</span> 0</div>
                 </div>
                 <input type="number" id="cantidadADonar" class="input-registro" placeholder="Cantidad a donar" style="background:#000 !important; color:#fff !important; text-align:center;">
                 <button onclick="ejecutarDonacionInterna()" class="btn" style="background:var(--donar);">CONFIRMAR DONACIÓN</button>
@@ -149,10 +158,10 @@
     <script>
         let coinsMisiones = 0, coinsReferidos = 0, player = null, currentPoints = 0, clickCount = 0;
         let listaPeticiones = [], blockEnvio = false;
+        let pendingReferralPoints = 0; // Puntos de referido en espera
         let miIDUnico = "AX-" + Math.floor(Math.random()*900000 + 100000);
         let CLAVE_ADMIN = localStorage.getItem('adminPass') || "1234";
 
-        // NAVEGACIÓN SEGURA
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             const target = document.getElementById(id);
@@ -160,7 +169,10 @@
                 target.style.display = 'flex';
                 if(id === 'screenDonar') document.getElementById('totalCoinsDonar').innerText = coinsMisiones + coinsReferidos;
                 if(id === 'screenVideoList') renderList('videoListContainer', [{id:'wC_sOpQjvWE', t:'Rescate Animal', s:300}, {id:'dQw4w9WgXcQ', t:'Misión Calle', s:400}]);
-                if(id === 'screenMusicList') renderList('musicListContainer', [{id:'HL9VoQ-er_U', t:'Música Social', s:200}]);
+                if(id === 'screenMusicList') {
+                    renderList('musicListContainer', [{id:'HL9VoQ-er_U', t:'Música Social', s:200}]);
+                    actualizarMisPeticiones();
+                }
                 if(id === 'screenGames') actualizarTablonPeticiones();
             }
         }
@@ -170,6 +182,7 @@
                 title: 'REGISTRO HÉROE',
                 html: `<input type="text" id="regName" class="input-registro" placeholder="Tu Nombre"><br><label style="font-size:10px; color:#fff;"><input type="checkbox" id="regCheck"> Acepto Misión Social y RGPD</label>`,
                 confirmButtonText: 'ENTRAR',
+                customClass: { popup: 'swal-custom-bg' },
                 background: '#161b22', color: '#fff',
                 preConfirm: () => {
                     const n = document.getElementById('regName').value;
@@ -183,38 +196,24 @@
             }});
         }
 
-        // YOUTUBE API FIX
         function cargarVideo(id, t) {
             document.getElementById('misionTitle').innerText = t;
             document.getElementById('labelUpload').style.display = 'none';
             nav('screenPlayer');
-            
-            if (player) {
-                player.destroy();
-                player = null;
-            }
-            
+            if (player) { player.destroy(); player = null; }
             player = new YT.Player('video-placeholder', {
                 videoId: id,
-                events: { 
-                    'onStateChange': (e) => { if(e.data === 0) document.getElementById('labelUpload').style.display='flex'; } 
-                }
+                events: { 'onStateChange': (e) => { if(e.data === 0) document.getElementById('labelUpload').style.display='flex'; } }
             });
         }
 
-        function volverDePlayer() {
-            if(player) { player.stopVideo(); }
-            nav('screenMenu');
-        }
-
+        function volverDePlayer() { if(player) { player.stopVideo(); } nav('screenMenu'); }
         function abrirYoutube() { if(player) window.open('https://www.youtube.com/watch?v=' + player.getVideoData().video_id, '_blank'); }
 
-        // PETICIONES CON FILTRO
         function enviarPeticion() {
             if(blockEnvio) { Swal.fire('Bloqueo', 'Espera 1 min por spam.', 'error'); return; }
             const txt = document.getElementById('requestMusic').value.trim();
             if(txt.length < 3) return;
-            
             const prohibited = ["mierda", "puto", "estafa", "sexo"];
             if(prohibited.some(p => txt.toLowerCase().includes(p))) {
                 blockEnvio = true;
@@ -222,10 +221,22 @@
                 setTimeout(() => blockEnvio = false, 60000);
                 return;
             }
-
             listaPeticiones.push({ u: document.getElementById('miNombre').innerText, t: txt, f: new Date().toLocaleTimeString() });
             document.getElementById('requestMusic').value = "";
-            Swal.fire('Éxito', 'Petición enviada al tablón.', 'success');
+            actualizarMisPeticiones();
+            Swal.fire({ title: 'Éxito', text: 'Petición enviada. Puedes editarla abajo.', icon: 'success', customClass: { popup: 'swal-custom-bg' } });
+        }
+
+        function actualizarMisPeticiones() {
+            const container = document.getElementById('misPeticionesActuales');
+            container.innerHTML = "";
+            const miNombre = document.getElementById('miNombre').innerText;
+            listaPeticiones.filter(p => p.u === miNombre).forEach((p, i) => {
+                container.innerHTML += `<div class="peticion-card" style="border-left-color: var(--gold);">
+                    <div style="font-size:9px; color:#aaa;">Editar canción:</div>
+                    <input type="text" class="peticion-input-edit" value="${p.t}" onchange="p.t = this.value; actualizarTablonPeticiones();">
+                </div>`;
+            });
         }
 
         function actualizarTablonPeticiones() {
@@ -234,24 +245,21 @@
             listaPeticiones.forEach((p, i) => {
                 container.innerHTML += `<div class="peticion-card">
                     <div style="font-size:9px; color:#888;">${p.u} - ${p.f}</div>
-                    <input type="text" class="peticion-input-edit" value="${p.t}" onchange="listaPeticiones[${i}].t = this.value">
+                    <div style="font-size:12px; color:var(--gold);">${p.t}</div>
                 </div>`;
             });
         }
 
-        // DONACIONES E INTERFAZ
         function ejecutarDonacionInterna() {
             const cant = parseInt(document.getElementById('cantidadADonar').value);
             const total = coinsMisiones + coinsReferidos;
             if(isNaN(cant) || cant <= 0 || cant > total) { Swal.fire('Error', 'Cantidad no válida', 'error'); return; }
-            
             if(cant <= coinsMisiones) { coinsMisiones -= cant; } 
             else { let r = cant - coinsMisiones; coinsMisiones = 0; coinsReferidos -= r; }
-            
             updateUI();
             document.getElementById('totalCoinsDonar').innerText = coinsMisiones + coinsReferidos;
             document.getElementById('cantidadADonar').value = "";
-            Swal.fire('¡Gracias!', `Donaste ${cant} 🦴 a la causa.`, 'success');
+            Swal.fire({ title: '¡Gracias!', text: `Donaste ${cant} 🦴 a la causa.`, icon: 'success', customClass: { popup: 'swal-custom-bg' } });
         }
 
         function updateUI() {
@@ -265,10 +273,10 @@
             const url = window.location.href + "?ref=" + miIDUnico;
             const msg = encodeURIComponent("¡Ayúdame en AXON IMPACT! Usa mi código " + miIDUnico + " para rescatar animales: " + url);
             window.open(`https://api.whatsapp.com/send?text=${msg}`);
-            coinsReferidos += 1000; updateUI();
+            // Ya no suma puntos aquí. Se activan en verificarIA.
+            pendingReferralPoints += 1000; 
         }
 
-        // ADMIN FUNCTIONS
         document.getElementById('axonTitle').onclick = () => {
             clickCount++;
             if(clickCount >= 5) {
@@ -290,29 +298,4 @@
         }
 
         function cambiarClaveAdmin() {
-            Swal.fire({ title: 'Nueva Clave', input: 'password' }).then(r => { if(r.value) { CLAVE_ADMIN = r.value; localStorage.setItem('adminPass', r.value); }});
-        }
-
-        function renderList(cid, list) {
-            const c = document.getElementById(cid); c.innerHTML = '';
-            list.forEach(i => {
-                const div = document.createElement('div'); div.className = "list-item";
-                div.innerHTML = `<span>${i.t}</span> <b>${Math.floor(i.s/60*100)} 🦴</b>`;
-                div.onclick = () => { currentPoints = Math.floor(i.s/60*100); cargarVideo(i.id, i.t); };
-                c.appendChild(div);
-            });
-        }
-
-        function verificarIA() {
-            Swal.fire({ title: 'Analizando...', didOpen: () => Swal.showLoading() });
-            setTimeout(() => {
-                coinsMisiones += currentPoints; updateUI();
-                Swal.fire('Misión Exitosa', 'Puntos sumados.', 'success');
-                nav('screenMenu');
-            }, 2000);
-        }
-
-        function verDocumentos() { Swal.fire('Legal', 'Empresa en Estonia. Misión Social. Datos RGPD.', 'info'); }
-    </script>
-</body>
-</html>
+            Swal.fire({ title: 'Nueva Clave', input: 'password' }).then(r => { if(r.value) { 
