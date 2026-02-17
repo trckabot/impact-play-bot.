@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root { 
             --primary: #2ecc71; 
@@ -24,7 +25,6 @@
             --invite: #34495e; 
             --airdrop: #f39c12;
             --donate: #e74c3c;
-            /* COLORES REDES SOCIALES */
             --tg-color: #0088cc;
             --fb-color: #1877f2;
             --tk-color: #000000;
@@ -57,7 +57,6 @@
         .btn-airdrop { background: linear-gradient(145deg, #f39c12, #e67e22); border-bottom: 3px solid #d35400; height: 60px; }
         .btn-donate { background: linear-gradient(145deg, #e74c3c, #c0392b); border-bottom: 3px solid #962d22; height: 60px; }
         
-        /* BOTONES REDES SOCIALES CON COLORES ESPECÍFICOS */
         .btn-tg { background: var(--tg-color); }
         .btn-fb { background: var(--fb-color); }
         .btn-tk { background: var(--tk-color); border: 1px solid rgba(255,255,255,0.2); }
@@ -74,6 +73,15 @@
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
         .btn-yt-action { background: var(--red-yt); flex-direction: column; font-size: 11px; line-height: 1.3; }
         .btn-upload { background: var(--gold); color: #000; display: none; border: 2px solid #000; }
+
+        /* ESTILOS EXCLUSIVOS DEL JUEGO ADICTIVO */
+        .game-canvas-area { width: 220px; height: 220px; margin: 15px auto; position: relative; cursor: pointer; }
+        #game-char { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 15px var(--gold)); transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .game-canvas-area:active #game-char { transform: scale(0.85); }
+        .xp-container { width: 100%; height: 12px; background: #000; border-radius: 10px; margin: 10px 0; border: 1px solid var(--primary); overflow: hidden; }
+        #xp-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), #fff); transition: width 0.3s; }
+        .particle { position: absolute; pointer-events: none; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; z-index: 100; animation: explode 0.6s forwards; }
+        @keyframes explode { 0% { opacity: 1; transform: translate(0,0); } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)); } }
     </style>
 </head>
 <body>
@@ -102,6 +110,10 @@
             <div class="panel">
                 <h3 style="margin-bottom: 15px; font-size: 16px;">MISIONES ACTIVAS 🦴</h3>
                 
+                <button onclick="nav('screenGame')" class="btn" style="background: linear-gradient(45deg, #f1c40f, #d35400); border: 2px solid white; box-shadow: 0 0 15px var(--gold);">
+                    <i class="fa-solid fa-gamepad"></i> JUEGO: EVOLUCIÓN BITCOIN
+                </button>
+
                 <button onclick="alert('Próximamente: Cobro de Airdrop')" class="btn btn-airdrop">
                     <i class="fa-solid fa-coins"></i> COBRAR AIRDROP
                 </button>
@@ -113,7 +125,6 @@
                     <div style="font-weight: bold; margin-bottom: 5px; color: var(--primary); text-align: center; font-size: 11px;">ÚLTIMAS DONACIONES (TG)</div>
                     <div class="donor-row"><span>@User_Telegram1</span> <span>150 🦴</span></div>
                     <div class="donor-row"><span>@CryptoHelp</span> <span>500 🦴</span></div>
-                    <div class="donor-row"><span>@AxonPlayer</span> <span>20 🦴</span></div>
                 </div>
 
                 <div style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
@@ -131,6 +142,27 @@
             </div>
         </div>
 
+        <div id="screenGame" class="screen">
+            <div class="panel">
+                <h3 id="gameRank" style="color: var(--gold); margin: 0; font-size: 14px;">NIÑO HUMILDE 🧒</h3>
+                <div class="xp-container"><div id="xp-bar"></div></div>
+                
+                <div class="game-canvas-area" onclick="tapGame(event)">
+                    <img id="game-char" src="https://i.postimg.cc/fRwWzXpX/nino-humilde.jpg">
+                </div>
+
+                <div style="font-size: 24px; font-weight: 900; margin-bottom: 5px;"><span id="gamePoints">0</span> 🦴</div>
+                <p style="font-size: 10px; color: #888;">Toca para ganar XP. ¡Evoluciona para ayudar más!</p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button class="btn" style="background:rgba(255,255,255,0.1); font-size: 10px; height: 50px;" onclick="upgradeChar(1500, 'ESTUDIANTE 📚', 'https://i.postimg.cc/B6fD0rY0/estudiante.jpg')">CURSO (1.5k)</button>
+                    <button class="btn" style="background:rgba(255,255,255,0.1); font-size: 10px; height: 50px;" onclick="upgradeChar(8000, 'EMPRESARIO 🎩', 'https://i.postimg.cc/6qH6P8S8/empresario.jpg')">FILÁNTROPO (8k)</button>
+                </div>
+
+                <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
+            </div>
+        </div>
+
         <div id="screenVideoList" class="screen">
             <div class="panel">
                 <h3 style="color: var(--video); font-size: 16px;">BIBLIOTECA DE VIDEOS</h3>
@@ -142,18 +174,9 @@
         <div id="screenMusicList" class="screen">
             <div class="panel">
                 <h3 style="color: var(--music); font-size: 16px;">BIBLIOTECA MUSICAL</h3>
-                <input type="text" class="search-input" style="padding: 10px; border-radius: 12px;" placeholder="Buscar canción..." onkeyup="filterMusic(this.value)">
                 <div id="musicListContainer" style="max-height: 200px; overflow-y: auto;"></div>
-                
-                <textarea id="musicComment" class="comment-box" rows="2" placeholder="¿Qué canción deseas? Ej: La Player - Tego Calderón"></textarea>
-                
-                <div id="myMusicRequest" class="my-request">
-                    <b>Tu pedido:</b> <span id="requestText"></span>
-                    <i class="fa-solid fa-pen-to-square" onclick="editRequest()" style="float:right; cursor:pointer; color: var(--gold);"></i>
-                </div>
-
-                <button id="btnSendMusic" onclick="sendMusicRequest()" class="btn btn-music" style="padding: 8px; font-size: 11px; margin-top: 5px;">ENVIAR SUGERENCIA</button>
-                
+                <textarea id="musicComment" class="comment-box" rows="2" placeholder="¿Qué canción deseas?"></textarea>
+                <button id="btnSendMusic" onclick="sendMusicRequest()" class="btn btn-music" style="padding: 8px; font-size: 11px;">ENVIAR SUGERENCIA</button>
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
             </div>
         </div>
@@ -173,15 +196,11 @@
                 <h3 id="misionTitle" style="font-size: 15px;">---</h3>
                 <div id="video-placeholder"></div>
                 <button id="btnInteract" class="btn btn-yt-action">
-                    <span>ABRIR YOUTUBE PARA INTERACTUAR</span>
-                    <span style="font-size: 9px;">LUEGO DE VER EL VIDEO Y VUELVE</span>
+                    <span>ABRIR YOUTUBE</span>
                 </button>
-                <p id="msgInstruccion" style="font-size: 10px; color: var(--gold); padding: 5px; font-weight: bold;">
-                    ⚠️ ¡LIKE, COMENTA y COMPARTE! Ve a Youtube toma screenshot y cargalo al finalizar el vídeo en la app.
-                </p>
                 <label for="fileProof" id="labelUpload" class="btn btn-upload"><i class="fa-solid fa-image"></i> CARGAR CAPTURA</label>
                 <input type="file" id="fileProof" accept="image/*" onchange="validarTodo()" style="display:none;">
-                <button onclick="pararMision()" class="btn btn-back">CANCELAR Y VOLVER</button>
+                <button onclick="pararMision()" class="btn btn-back">VOLVER</button>
             </div>
         </div>
     </div>
@@ -190,51 +209,58 @@
         const listadoVideos = [{ id: 'wC_sOpQjvWE', titulo: 'La Plena', artista: 'Beele', puntos: 10 }];
         const listadoCanciones = [{ id: 'HL9VoQ-er_U', titulo: 'No tiene sentido', artista: 'Beele', puntos: 5 }];
 
-        let player, currentPoints = 0, coins = 0, videoFin = false;
+        let player, currentPoints = 0, coins = 0, videoFin = false, xp = 0;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(f) {
+            const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
+            osc.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            osc.connect(g); g.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        }
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
-            if(id === 'screenMusicList') renderList('musicListContainer', listadoCanciones, 'item-music');
-            if(id === 'screenVideoList') renderList('videoListContainer', listadoVideos, 'item-video');
+            if(id === 'screenMusicList') renderList('musicListContainer', listadoCanciones);
+            if(id === 'screenVideoList') renderList('videoListContainer', listadoVideos);
+            updateUI();
         }
 
-        function renderList(containerId, list, extraClass) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
+        function tapGame(e) {
+            coins += 2; xp += 5;
+            playSound(400 + xp);
+            for(let i=0; i<6; i++) {
+                let p = document.createElement('div'); p.className = 'particle';
+                p.style.left = e.clientX+'px'; p.style.top = e.clientY+'px';
+                p.style.setProperty('--tx', (Math.random()-0.5)*180+'px');
+                p.style.setProperty('--ty', (Math.random()-0.5)*180+'px');
+                document.body.appendChild(p); setTimeout(() => p.remove(), 600);
+            }
+            if(xp >= 100) xp = 100;
+            updateUI();
+        }
+
+        function upgradeChar(cost, name, img) {
+            if(coins >= cost) {
+                coins -= cost; xp = 0;
+                document.getElementById('gameRank').innerText = name;
+                document.getElementById('game-char').src = img;
+                playSound(800);
+                Swal.fire('¡Evolución!', 'Ahora eres ' + name, 'success');
+            } else {
+                Swal.fire('Huesitos insuficientes', 'Mira videos para financiar tu carrera.', 'warning');
+            }
+            updateUI();
+        }
+
+        function renderList(containerId, list) {
+            const container = document.getElementById(containerId); container.innerHTML = '';
             list.forEach(item => {
                 const div = document.createElement('div');
-                div.className = `list-item ${extraClass}`;
-                div.style.padding = '8px';
-                div.style.fontSize = '12px';
-                div.innerHTML = `<div><b>${item.titulo}</b><br><small>${item.artista}</small></div><b>+${item.puntos} 🦴</b>`;
-                div.onclick = () => cargarMision(item.id, item.puntos, `${item.artista} - ${item.titulo}`);
+                div.style = "display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:12px; cursor:pointer;";
+                div.innerHTML = `<div><b>${item.titulo}</b></div><b>+${item.puntos} 🦴</b>`;
+                div.onclick = () => cargarMision(item.id, item.puntos, item.titulo);
                 container.appendChild(div);
-            });
-        }
-
-        function sendMusicRequest() {
-            const input = document.getElementById('musicComment');
-            const display = document.getElementById('myMusicRequest');
-            const text = document.getElementById('requestText');
-            if(input.value.trim() === "") return alert("Escribe el nombre de la canción.");
-            
-            text.innerText = input.value;
-            display.style.display = 'block';
-            input.style.display = 'none';
-            document.getElementById('btnSendMusic').style.display = 'none';
-        }
-
-        function editRequest() {
-            document.getElementById('musicComment').style.display = 'block';
-            document.getElementById('btnSendMusic').style.display = 'flex';
-            document.getElementById('myMusicRequest').style.display = 'none';
-        }
-
-        function filterMusic(query) {
-            const items = document.getElementById('musicListContainer').querySelectorAll('.list-item');
-            items.forEach(item => {
-                item.style.display = item.innerText.toLowerCase().includes(query.toLowerCase()) ? 'flex' : 'none';
             });
         }
 
@@ -248,24 +274,23 @@
             else player = new YT.Player('video-placeholder', {
                 height: '100%', width: '100%', videoId: videoId,
                 events: { 'onStateChange': (e) => { if (e.data === YT.PlayerState.ENDED) { 
-                    videoFin = true; 
-                    document.getElementById('labelUpload').style.display = 'flex';
-                    document.getElementById('msgInstruccion').innerHTML = "✅ ¡Video terminado! Sube tu captura.";
+                    videoFin = true; document.getElementById('labelUpload').style.display = 'flex';
                 }}}
             });
         }
 
         function validarTodo() {
             if (!videoFin) return;
-            alert("Validando captura... 🦴");
-            setTimeout(() => { coins += currentPoints; document.getElementById('coinCount').innerText = coins; nav('screenMenu'); }, 2000);
+            coins += currentPoints; updateUI(); nav('screenMenu');
         }
 
-        function mostrarMiLink() {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link de invitación copiado.");
+        function updateUI() {
+            document.getElementById('coinCount').innerText = Math.floor(coins);
+            const gc = document.getElementById('gamePoints'); if(gc) gc.innerText = Math.floor(coins);
+            const xpB = document.getElementById('xp-bar'); if(xpB) xpB.style.width = xp + "%";
         }
 
+        function mostrarMiLink() { navigator.clipboard.writeText(window.location.href); alert("Copiado"); }
         function pararMision() { if(player) player.stopVideo(); nav('screenMenu'); }
     </script>
 </body>
