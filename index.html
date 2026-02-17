@@ -22,6 +22,8 @@
             --social: #767676; 
             --wallet: #fbbd08; 
             --invite: #34495e; 
+            --airdrop: #f39c12;
+            --donate: #e74c3c;
         }
 
         body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
@@ -30,31 +32,11 @@
         
         .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
         
-        /* IMAGEN PRINCIPAL ALTA */
-        .hero-img { 
-            width: 85%; 
-            max-width: 320px; 
-            height: 380px; 
-            object-fit: cover;
-            border-radius: 40px; 
-            margin-bottom: -30px; 
-            z-index: 3;
-            box-shadow: 0 0 35px rgba(46, 204, 113, 0.6);
-            animation: pulse 3s infinite ease-in-out;
-        }
+        .hero-img { width: 85%; max-width: 320px; height: 380px; object-fit: cover; border-radius: 40px; margin-bottom: -30px; z-index: 3; box-shadow: 0 0 35px rgba(46, 204, 113, 0.6); animation: pulse 3s infinite ease-in-out; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        .btn { 
-            display: flex; align-items: center; justify-content: center; gap: 12px; 
-            width: 100%; padding: 16px; margin: 12px 0; border: none; border-radius: 20px; 
-            font-weight: bold; cursor: pointer; color: white; font-size: 14px; 
-            text-transform: uppercase; transition: transform 0.2s;
-        }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 16px; margin: 12px 0; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; text-transform: uppercase; transition: transform 0.2s; }
         .btn:active { transform: scale(0.98); }
 
         .btn-video { background: var(--video); }
@@ -63,6 +45,10 @@
         .btn-wallet { background: var(--wallet); color: #000; }
         .btn-invite { background: var(--invite); }
         .btn-back { background: #1b1c1d; font-size: 11px; margin-top: 15px; }
+
+        /* NUEVOS BOTONES ESTILO AIRDROP/HAMSTER */
+        .btn-airdrop { background: linear-gradient(145deg, #f39c12, #e67e22); border-bottom: 4px solid #d35400; font-size: 16px; height: 70px; }
+        .btn-donate { background: linear-gradient(145deg, #e74c3c, #c0392b); border-bottom: 4px solid #962d22; font-size: 16px; height: 70px; }
         
         .btn-tg { background: #0088cc; }
         .btn-fb { background: #1877f2; }
@@ -71,13 +57,16 @@
         .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 15px; margin-top: 20px; border: 1px dashed var(--primary); }
         .search-input { width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #444; background: #0d1117; color: white; margin-bottom: 10px; box-sizing: border-box; }
         
-        .list-item { 
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-            padding: 12px; margin: 8px 0; border-radius: 15px; cursor: pointer; 
-            display: flex; justify-content: space-between; align-items: center; 
-        }
+        /* COMENTARIOS MUSICA */
+        .comment-box { width: 100%; padding: 12px; border-radius: 15px; border: 1px solid var(--music); background: rgba(163, 51, 200, 0.1); color: white; margin-top: 15px; font-family: inherit; resize: none; box-sizing: border-box; }
+
+        .list-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; margin: 8px 0; border-radius: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .item-video { border-color: var(--video); }
         .item-music { border-color: var(--music); }
+        
+        /* LISTA DONADORES */
+        .donors-list { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 10px; margin-top: 10px; text-align: left; font-size: 13px; }
+        .donor-row { display: flex; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
         #video-placeholder { width: 100%; aspect-ratio: 16/9; border-radius: 20px; background: #000; margin-bottom: 10px; }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
@@ -101,12 +90,29 @@
         <div id="screenMenu" class="screen">
             <div class="panel">
                 <h3 style="margin-bottom: 20px;">MISIONES ACTIVAS 🦴</h3>
+                
+                <button onclick="alert('Próximamente: Cobro de Airdrop')" class="btn btn-airdrop">
+                    <i class="fa-solid fa-coins"></i> COBRAR AIRDROP
+                </button>
+                <button onclick="alert('¡Gracias por tu apoyo!')" class="btn btn-donate">
+                    <i class="fa-solid fa-heart"></i> DONAR GANANCIAS
+                </button>
+
+                <div class="donors-list">
+                    <div style="font-weight: bold; margin-bottom: 5px; color: var(--primary); text-align: center;">ÚLTIMAS DONACIONES (TG)</div>
+                    <div class="donor-row"><span>@User_Telegram1</span> <span>150 🦴</span></div>
+                    <div class="donor-row"><span>@CryptoHelp</span> <span>500 🦴</span></div>
+                    <div class="donor-row"><span>@AxonPlayer</span> <span>20 🦴</span></div>
+                </div>
+
+                <div style="margin: 20px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
+
                 <button onclick="nav('screenVideoList')" class="btn btn-video"><i class="fa-solid fa-video"></i> VIDEOS</button>
                 <button onclick="nav('screenMusicList')" class="btn btn-music"><i class="fa-solid fa-music"></i> MÚSICA</button>
-                <button onclick="alert('Próximamente')" class="btn btn-game" style="background:var(--game)"><i class="fa-solid fa-gamepad"></i> JUEGOS</button>
                 <button onclick="nav('screenSocial')" class="btn btn-social"><i class="fa-solid fa-globe"></i> REDES SOCIALES</button>
                 <button onclick="alert('Vincula tu Wallet')" class="btn btn-wallet" style="margin-top: 25px;"><i class="fa-solid fa-gem"></i> VINCULAR WALLET</button>
                 <button onclick="mostrarMiLink()" class="btn btn-invite"><i class="fa-solid fa-link"></i> INVITAR AMIGOS</button>
+                
                 <div class="balance-card">
                     <span style="font-size: 12px; opacity: 0.8;">TU SALDO TOTAL</span>
                     <div style="font-size: 32px; font-weight: bold; color: var(--primary);"><span id="coinCount">0</span> 🦴</div>
@@ -127,6 +133,10 @@
                 <h3 style="color: var(--music);">BIBLIOTECA MUSICAL</h3>
                 <input type="text" class="search-input" placeholder="Buscar canción..." onkeyup="filterMusic(this.value)">
                 <div id="musicListContainer" style="max-height: 250px; overflow-y: auto;"></div>
+                
+                <textarea class="comment-box" rows="3" placeholder="¿Qué canción deseas que subamos para que escuches y ganes?"></textarea>
+                <button onclick="alert('¡Sugerencia enviada!')" class="btn btn-music" style="padding: 10px; font-size: 11px;">ENVIAR SUGERENCIA</button>
+                
                 <button onclick="nav('screenMenu')" class="btn btn-back">VOLVER AL MENÚ</button>
             </div>
         </div>
