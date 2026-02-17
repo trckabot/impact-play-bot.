@@ -24,6 +24,10 @@
             --invite: #34495e; 
             --airdrop: #f39c12;
             --donate: #e74c3c;
+            /* COLORES REDES SOCIALES */
+            --tg-color: #0088cc;
+            --fb-color: #1877f2;
+            --tk-color: #000000;
         }
 
         body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
@@ -32,7 +36,6 @@
         
         .panel { background: var(--panel); padding: 15px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); backdrop-filter: blur(10px); max-height: 92vh; overflow-y: auto; }
         
-        /* CUADRO DE USUARIOS POR PAÍS */
         .country-stats { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 8px; border-radius: 12px; font-size: 10px; border: 1px solid var(--primary); z-index: 10; pointer-events: none; }
         .country-stats div { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 2px; }
 
@@ -40,7 +43,6 @@
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        /* ICONOS Y BOTONES MÁS PEQUEÑOS */
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: transform 0.2s; }
         .btn i { font-size: 14px; }
         .btn:active { transform: scale(0.98); }
@@ -55,9 +57,13 @@
         .btn-airdrop { background: linear-gradient(145deg, #f39c12, #e67e22); border-bottom: 3px solid #d35400; height: 60px; }
         .btn-donate { background: linear-gradient(145deg, #e74c3c, #c0392b); border-bottom: 3px solid #962d22; height: 60px; }
         
+        /* BOTONES REDES SOCIALES CON COLORES ESPECÍFICOS */
+        .btn-tg { background: var(--tg-color); }
+        .btn-fb { background: var(--fb-color); }
+        .btn-tk { background: var(--tk-color); border: 1px solid rgba(255,255,255,0.2); }
+
         .balance-card { background: rgba(46, 204, 113, 0.05); border-radius: 20px; padding: 10px; margin-top: 15px; border: 1px dashed var(--primary); }
         
-        /* GESTIÓN DE SUGERENCIAS */
         .comment-box { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--music); background: rgba(0,0,0,0.3); color: white; margin-top: 10px; font-size: 12px; font-family: inherit; resize: none; box-sizing: border-box; }
         .my-request { background: rgba(163, 51, 200, 0.2); padding: 8px; border-radius: 10px; margin-top: 5px; font-size: 11px; display: none; border: 1px solid var(--music); text-align: left; }
 
@@ -171,7 +177,7 @@
                     <span style="font-size: 9px;">LUEGO DE VER EL VIDEO Y VUELVE</span>
                 </button>
                 <p id="msgInstruccion" style="font-size: 10px; color: var(--gold); padding: 5px; font-weight: bold;">
-                    ⚠️ ¡LIKE, COMENTA y COMPARTE en YT! No adelantes el video.
+                    ⚠️ ¡LIKE, COMENTA y COMPARTE! Ve a Youtube toma screenshot y cargalo al finalizar el vídeo en la app.
                 </p>
                 <label for="fileProof" id="labelUpload" class="btn btn-upload"><i class="fa-solid fa-image"></i> CARGAR CAPTURA</label>
                 <input type="file" id="fileProof" accept="image/*" onchange="validarTodo()" style="display:none;">
@@ -207,7 +213,6 @@
             });
         }
 
-        /* GESTIÓN DE SUGERENCIA MUSICAL */
         function sendMusicRequest() {
             const input = document.getElementById('musicComment');
             const display = document.getElementById('myMusicRequest');
