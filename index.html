@@ -1,197 +1,332 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AXON IMPACT GLOBAL</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root { 
-            --primary: #2ecc71; --panel: #161b22; --text: #e6edf3; 
-            --video: #2185d0; --music: #a333c8; --peticiones: #e91e63; 
-            --donar: #e67e22; --whatsapp: #25d366; --info: #444; --gold: #fbbd08; 
-        }
-        body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1; }
-        .container { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        .panel { background: var(--panel); padding: 20px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 2px solid var(--primary); box-shadow: 0 0 25px rgba(46, 204, 113, 0.5); max-height: 85vh; overflow-y: auto; }
-        
-        /* Botones idénticos a tus fotos */
-        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; text-transform: uppercase; transition: 0.2s; }
-        .btn i { font-size: 18px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AXON IMPACT GLOBAL</title>
 
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 
-        .user-card { background: rgba(255,255,255,0.07); padding: 15px; border-radius: 20px; text-align: left; border: 1px solid var(--primary); margin-bottom: 10px; position: relative; }
-        .rango-tag { font-size: 10px; background: var(--primary); color: black; padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-left: 5px; }
-        
-        #requestMusic { width: 90%; padding: 12px; border-radius: 12px; border: 1px solid var(--peticiones); background: rgba(0,0,0,0.3); color: #fff; height: 60px; margin-bottom: 10px; }
-        .peticion-card { background: rgba(255,255,255,0.05); margin: 8px 0; padding: 10px; border-radius: 12px; text-align: left; border-left: 4px solid var(--peticiones); }
-    </style>
+<style>
+:root{
+ --primary:#2ecc71;
+ --panel:#161b22;
+ --text:#e6edf3;
+ --video:#2185d0;
+ --music:#a333c8;
+ --peticiones:#e91e63;
+ --donar:#e67e22;
+ --gold:#fbbd08;
+}
+
+body,html{
+ height:100%;
+ margin:0;
+ font-family:'Segoe UI',sans-serif;
+ color:var(--text);
+ background:url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed;
+ background-size:cover;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ overflow:hidden;
+}
+
+.overlay-bg{
+ position:fixed;
+ width:100%;
+ height:100%;
+ background:rgba(0,0,0,0.6);
+}
+
+.container{
+ position:relative;
+ z-index:2;
+ width:100%;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+}
+
+.panel{
+ background:var(--panel);
+ padding:20px;
+ border-radius:30px;
+ width:85%;
+ max-width:420px;
+ border:2px solid var(--primary);
+ box-shadow:0 0 25px rgba(46,204,113,0.5);
+ max-height:85vh;
+ overflow-y:auto;
+}
+
+.btn{
+ width:100%;
+ padding:14px;
+ margin:8px 0;
+ border:none;
+ border-radius:20px;
+ font-weight:bold;
+ cursor:pointer;
+ color:white;
+ text-transform:uppercase;
+}
+
+.screen{display:none; width:100%; justify-content:center;}
+
+.admin-floating{
+ position:fixed;
+ right:15px;
+ bottom:15px;
+ background:#161b22;
+ padding:15px;
+ border-radius:20px;
+ box-shadow:0 0 20px var(--primary);
+ font-size:12px;
+}
+</style>
 </head>
+
 <body>
-    <div class="overlay-bg"></div>
-    <div class="container">
-        
-        <div id="screenStart" class="screen" style="display: flex;">
-            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width: 70%; border-radius: 30px; margin-bottom: -20px; z-index: 3;">
-            <div class="panel" style="padding-top: 35px;">
-                <h2 id="axonTitle" style="color: var(--primary); cursor: pointer;">AXON IMPACT GLOBAL</h2>
-                <button onclick="solicitarRegistro()" class="btn" style="background: var(--primary);">UNIRSE A LA CAUSA</button>
-            </div>
-        </div>
+<div class="overlay-bg"></div>
+<div class="container">
 
-        <div id="screenMenu" class="screen">
-            <div class="panel">
-                <div class="user-card">
-                    <div style="font-size:14px;"><b>Héroe:</b> <span id="miNombre">---</span> <span id="rangoTag" class="rango-tag">VOLUNTARIO</span></div>
-                    <div style="font-size:11px; margin-top:5px; color: var(--gold);"><i class="fa-solid fa-heart"></i> Donado: <span id="ptsDonados">0</span> 🦴</div>
-                    <div style="font-size:11px; color: var(--primary);"><i class="fa-solid fa-wallet"></i> Saldo: <span id="totalCoins">0</span> 🦴</div>
-                    <button id="btnCertificado" onclick="generarCertificado()" style="display:none; position:absolute; right:10px; top:15px; background:var(--gold); border:none; border-radius:50%; width:35px; height:35px; color:black; cursor:pointer; box-shadow: 0 0 10px var(--gold);"><i class="fa-solid fa-award"></i></button>
-                </div>
+<!-- INICIO -->
+<div id="screenStart" class="screen" style="display:flex;">
+<div class="panel">
+<h2 id="axonTitle" style="color:var(--primary);cursor:pointer;">AXON IMPACT GLOBAL</h2>
+<button onclick="registrar()" class="btn" style="background:var(--primary);">UNIRSE</button>
+</div>
+</div>
 
-                <button onclick="nav('screenVideoList')" class="btn" style="background: var(--video);"><i class="fa-solid fa-video"></i> CARPETA VÍDEOS</button>
-                <button onclick="Swal.fire('Carpeta Música', 'Contenido exclusivo en preparación para monetización.', 'info')" class="btn" style="background: var(--music);"><i class="fa-solid fa-music"></i> CARPETA MÚSICA</button>
-                <button onclick="nav('screenMusicList')" class="btn" style="background: var(--peticiones);"><i class="fa-solid fa-comments"></i> PETICIONES MÚSICA</button>
-                <button onclick="nav('screenDonar')" class="btn" style="background: var(--donar);"><i class="fa-solid fa-heart"></i> DONAR MIS 🦴</button>
-                <button onclick="compartirWhatsApp()" class="btn" style="background: var(--whatsapp);"><i class="fa-brands fa-whatsapp"></i> INVITAR AMIGOS</button>
-                <button onclick="Swal.fire('Info Legal', 'Proyecto AXON IMPACT GLOBAL - Ayuda a animales y personas sin hogar (Estonia).', 'info')" class="btn" style="background: var(--info);"><i class="fa-solid fa-circle-info"></i> INFO LEGAL (ESTONIA)</button>
-            </div>
-        </div>
+<!-- MENU -->
+<div id="screenMenu" class="screen">
+<div class="panel">
+<h3 id="userName"></h3>
+<div>Saldo: <span id="coins">0</span> 🦴</div>
+<button onclick="nav('screenVideos')" class="btn" style="background:var(--video);">CARPETA VIDEOS</button>
+<button onclick="nav('screenMusic')" class="btn" style="background:var(--music);">CARPETA MUSICA</button>
+</div>
+</div>
 
-        <div id="screenMusicList" class="screen">
-            <div class="panel">
-                <h3 style="color:var(--peticiones)">PETICIONES MÚSICA</h3>
-                <textarea id="requestMusic" placeholder="Nombre de la canción..."></textarea>
-                <button onclick="enviarPeticion()" class="btn" style="background:var(--peticiones);">ENVIAR PEDIDO</button>
-                <div id="peticionesContainer" style="max-height: 150px; overflow-y: auto;"></div>
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
-            </div>
-        </div>
+<!-- VIDEOS -->
+<div id="screenVideos" class="screen">
+<div class="panel">
+<h3>Misiones</h3>
+<div id="videoList"></div>
+<button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+</div>
+</div>
 
-        <div id="screenDonar" class="screen">
-            <div class="panel">
-                <h3 style="color:var(--donar)">CENTRO DE DONACIÓN</h3>
-                <div style="font-size: 32px; font-weight: bold; color: var(--primary); margin: 10px 0;"><span id="totalDonarDisp">0</span> 🦴</div>
-                <input type="number" id="cantDonar" style="width:80%; padding:10px; border-radius:10px; border:1px solid var(--donar);" placeholder="Cantidad">
-                <button onclick="procesarDonacion()" class="btn" style="background: var(--donar); margin-top:15px;">CONFIRMAR DONACIÓN</button>
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333;">VOLVER</button>
-            </div>
-        </div>
+<!-- PLAYER -->
+<div id="screenPlayer" class="screen">
+<div class="panel">
+<h4 id="missionTitle"></h4>
+<div id="video-placeholder" style="width:100%;aspect-ratio:16/9;background:black;border-radius:15px;"></div>
 
-        <div id="screenVideoList" class="screen"><div class="panel"><h3>CARPETA VÍDEOS</h3><div id="videoListContainer"></div><button onclick="nav('screenMenu')" class="btn">VOLVER</button></div></div>
-        
-        <div id="screenPlayer" class="screen">
-            <div class="panel">
-                <h3 id="misionTitle" style="font-size:14px; color:var(--gold);">---</h3>
-                <div id="video-placeholder" style="width:100%; aspect-ratio:16/9; border-radius:15px; background:#000;"></div>
-                <label for="fileProof" id="labelUpload" class="btn" style="background:var(--gold); color:black; display:none; margin-top:15px;"><i class="fa-solid fa-camera"></i> SUBIR CAPTURA</label>
-                <input type="file" id="fileProof" accept="image/*" onchange="verificarIA()" style="display:none;">
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
-            </div>
-        </div>
+<button onclick="abrirYoutube()" class="btn" style="background:red;">ABRIR YOUTUBE</button>
 
-        <div id="screenAdmin" class="screen">
-            <div class="panel">
-                <h3 style="color:var(--gold)">ADMINISTRACIÓN</h3>
-                <div id="adminData"></div>
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
-            </div>
-        </div>
+<button id="btnReward" onclick="recompensa()" class="btn" style="background:var(--gold);color:black;" disabled>SUBIR SCREENSHOT</button>
 
-    </div>
+<div style="font-size:11px;margin-top:6px;color:#ccc;">
+Abre YouTube, dale like y comenta.  
+Sube screenshot, una IA verificará la imagen.
+</div>
 
-    <script>
-        const SUPABASE_URL = 'https://ywkcnxhlptqagwxjnygx.supabase.co', SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        let coins = 0, donados = 0, player = null, currentPts = 0, clickCount = 0;
-        let miID = localStorage.getItem('miID') || "AX-" + Math.floor(Math.random()*900000);
-        let nombre = localStorage.getItem('axon_nombre') || "---";
+<button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+</div>
+</div>
 
-        async function guardar() {
-            const d = { usuario_id: miID, nombre: nombre, puntos_misiones: coins, puntos_donados: donados };
-            localStorage.setItem('miID', miID); localStorage.setItem('axon_nombre', nombre);
-            localStorage.setItem('axon_coins', coins); localStorage.setItem('axon_donados', donados);
-            try { await supabaseClient.from('usuarios').upsert(d, { onConflict: 'usuario_id' }); } catch(e){}
-            updateUI();
-        }
+<!-- MUSICA -->
+<div id="screenMusic" class="screen">
+<div class="panel">
+<h3>Carpeta Música</h3>
 
-        function updateUI() {
-            document.getElementById('miNombre').innerText = nombre;
-            document.getElementById('totalCoins').innerText = coins;
-            document.getElementById('ptsDonados').innerText = donados;
-            document.getElementById('totalDonarDisp').innerText = coins;
-            let r = "VOLUNTARIO", c = "#2ecc71";
-            if(donados >= 5000) { r = "GUARDIÁN"; c = "#2185d0"; document.getElementById('btnCertificado').style.display='block'; }
-            if(donados >= 20000) { r = "HÉROE AXON"; c = "#fbbd08"; }
-            const t = document.getElementById('rangoTag'); t.innerText = r; t.style.background = c;
-        }
+<input type="text" id="searchMusic" placeholder="Buscar..." onkeyup="filtrarMusica()" style="width:100%;padding:8px;border-radius:10px;margin-bottom:8px;">
 
-        function nav(id) {
-            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'flex';
-            if(id === 'screenVideoList') renderVideos();
-        }
+<div id="musicList" style="max-height:120px;overflow:auto;"></div>
 
-        function solicitarRegistro() {
-            Swal.fire({ title: 'TU NOMBRE HÉROE', input: 'text', background: '#161b22', color: '#fff' }).then(r => {
-                if(r.value) { nombre = r.value; guardar(); nav('screenMenu'); }
-            });
-        }
+<textarea id="musicRequest" placeholder="Ejemplo: Artista - Canción" style="width:100%;margin-top:8px;height:60px;"></textarea>
+<button onclick="enviarPeticion()" class="btn" style="background:var(--peticiones);">ENVIAR</button>
 
-        function renderVideos() {
-            const c = document.getElementById('videoListContainer'); c.innerHTML = '';
-            [{id:'wC_sOpQjvWE', t:'Rescate Animal', s:500}, {id:'HL9VoQ-er_U', t:'Misión Social', s:300}].forEach(i => {
-                const d = document.createElement('div'); d.style = "padding:15px; border-bottom:1px solid #333; cursor:pointer; display:flex; justify-content:space-between; background:rgba(255,255,255,0.02);";
-                d.innerHTML = `<span>${i.t}</span> <b>${i.s} 🦴</b>`;
-                d.onclick = () => { 
-                    currentPts = i.s; document.getElementById('misionTitle').innerText = i.t; nav('screenPlayer');
-                    if(player) player.destroy();
-                    player = new YT.Player('video-placeholder', { videoId: i.id, events: { 'onStateChange': (e) => { if(e.data === 0) document.getElementById('labelUpload').style.display='flex'; } } });
-                };
-                c.appendChild(d);
-            });
-        }
+<button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+</div>
+</div>
 
-        function verificarIA() {
-            Swal.fire({ title: 'ANALIZANDO...', didOpen: () => Swal.showLoading() });
-            setTimeout(() => { coins += currentPts; guardar(); Swal.fire('ÉXITO', '+'+currentPts+' 🦴', 'success'); nav('screenMenu'); }, 2000);
-        }
+<!-- ADMIN -->
+<div id="screenAdmin" class="screen">
+<div class="panel">
+<h3>ADMINISTRACION</h3>
+<div id="adminData"></div>
+<button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+</div>
+</div>
 
-        function procesarDonacion() {
-            let v = parseInt(document.getElementById('cantDonar').value);
-            if(v > 0 && v <= coins) { coins -= v; donados += v; guardar(); Swal.fire('GRACIAS', 'Ayuda enviada.', 'success'); nav('screenMenu'); }
-        }
+</div>
 
-        function enviarPeticion() {
-            const txt = document.getElementById('requestMusic').value.trim();
-            if(txt.length < 3) return;
-            document.getElementById('peticionesContainer').innerHTML += `<div class="peticion-card"><b>${nombre}:</b> ${txt}</div>`;
-            document.getElementById('requestMusic').value = "";
-            Swal.fire('Enviado', 'Petición recibida.', 'success');
-        }
+<script>
+let coins=0;
+let nombre="";
+let pais="Desconocido";
+let player=null;
+let currentVideo="";
+let currentReward=0;
+let lastTime=0;
+let ultimaPeticion=0;
 
-        function generarCertificado() {
-            const w = window.open("", "_blank");
-            w.document.write(`<html><body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#111; font-family:serif; margin:0;">
-                <div style="width:650px; padding:50px; text-align:center; border:15px double #fbbd08; background:#fff;">
-                    <h1 style="font-size:40px;">CERTIFICADO DE IMPACTO</h1>
-                    <p style="font-size:20px;">AXON IMPACT GLOBAL otorga este reconocimiento a:</p>
-                    <h2 style="color:#2ecc71; font-size:35px; border-bottom:2px solid #333; display:inline-block; padding:0 20px;">${nombre}</h2>
-                    <p style="font-size:22px; margin-top:30px;">Por donar <b>${donados} 🦴</b> a la causa social.</p>
-                </div></body></html>`);
-        }
+// ECUACION EDITABLE
+let CPM=2.5;
+let FACTOR_PAIS=1;
+let FACTOR_DONACION=0.1;
 
-        function compartirWhatsApp() { window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent("¡Únete a AXON IMPACT GLOBAL y ayuda viendo vídeos!")); }
+function calcularPago(vistas,donacion){
+ return ((vistas/1000)*CPM)*FACTOR_PAIS+(donacion*FACTOR_DONACION);
+}
 
-        document.getElementById('axonTitle').onclick = () => { clickCount++; if(clickCount >= 5) { clickCount = 0; Swal.fire({ title: 'ADMIN', input: 'password' }).then(r => { if(r.value === "1234") nav('screenAdmin'); }); } };
+// DETECTAR PAIS
+fetch("https://ipapi.co/json/")
+.then(r=>r.json())
+.then(d=>pais=d.country_name);
 
-        window.onload = () => { if(localStorage.getItem('axon_coins')) { coins = parseInt(localStorage.getItem('axon_coins')); donados = parseInt(localStorage.getItem('axon_donados')) || 0; nombre = localStorage.getItem('axon_nombre'); updateUI(); nav('screenMenu'); } };
-    </script>
+// REGISTRO
+function registrar(){
+ Swal.fire({title:"Tu nombre",input:"text"}).then(r=>{
+   if(r.value){
+     nombre=r.value;
+     localStorage.setItem("nombre",nombre);
+     iniciar();
+   }
+ });
+}
+
+function iniciar(){
+ nombre=localStorage.getItem("nombre");
+ document.getElementById("userName").innerText="Héroe: "+nombre;
+ nav("screenMenu");
+}
+
+// NAVEGACION
+function nav(id){
+ document.querySelectorAll(".screen").forEach(s=>s.style.display="none");
+ document.getElementById(id).style.display="flex";
+ if(id==="screenVideos") renderVideos();
+ if(id==="screenMusic") renderMusica();
+ if(id==="screenAdmin") cargarAdmin();
+}
+
+// VIDEOS
+let misiones=[
+{id:"wC_sOpQjvWE",titulo:"Rescate Animal",reward:500},
+{id:"HL9VoQ-er_U",titulo:"Misión Social",reward:300}
+];
+
+function renderVideos(){
+ let c=document.getElementById("videoList");
+ c.innerHTML="";
+ misiones.forEach(m=>{
+  c.innerHTML+=`<div style="padding:10px;border-bottom:1px solid #333;cursor:pointer;"
+  onclick="abrirMision('${m.id}',${m.reward},'${m.titulo}')">
+  ${m.titulo} - <b>${m.reward} 🦴</b></div>`;
+ });
+}
+
+function abrirMision(id,reward,title){
+ currentVideo=id;
+ currentReward=reward;
+ document.getElementById("missionTitle").innerText=title;
+ nav("screenPlayer");
+ if(player) player.destroy();
+ player=new YT.Player('video-placeholder',{
+  videoId:id,
+  events:{onStateChange:onPlayerStateChange}
+ });
+}
+
+// ANTI ADELANTO
+function onPlayerStateChange(e){
+ if(e.data==YT.PlayerState.PLAYING){
+  setInterval(()=>{
+   let t=player.getCurrentTime();
+   if(t-lastTime>2){player.seekTo(lastTime);}
+   lastTime=t;
+  },1000);
+ }
+ if(e.data===0){
+  document.getElementById("btnReward").disabled=false;
+ }
+}
+
+function abrirYoutube(){
+ window.open("https://youtube.com/watch?v="+currentVideo);
+}
+
+function recompensa(){
+ coins+=currentReward;
+ document.getElementById("coins").innerText=coins;
+ Swal.fire("Recompensa recibida","+ "+currentReward+" 🦴","success");
+ nav("screenMenu");
+}
+
+// MUSICA
+let musica=[
+{artista:"Imagine Dragons",nombre:"Believer",link:"https://youtube.com/"},
+{artista:"Karol G",nombre:"Provenza",link:"https://youtube.com/"}
+];
+
+function renderMusica(){
+ let c=document.getElementById("musicList");
+ c.innerHTML="";
+ musica.forEach(m=>{
+  c.innerHTML+=`<div style="padding:6px;border-bottom:1px solid #333;">
+  ${m.artista} - ${m.nombre}
+  <button onclick="window.open('${m.link}')">▶</button></div>`;
+ });
+}
+
+function filtrarMusica(){
+ let v=document.getElementById("searchMusic").value.toLowerCase();
+ let c=document.getElementById("musicList");
+ c.innerHTML="";
+ musica.filter(m=>(m.artista+m.nombre).toLowerCase().includes(v))
+ .forEach(m=>{
+  c.innerHTML+=`${m.artista} - ${m.nombre}<br>`;
+ });
+}
+
+// ANTI SPAM
+function enviarPeticion(){
+ let ahora=Date.now();
+ if(ahora-ultimaPeticion<60000){
+  Swal.fire("Espera 1 minuto");
+  return;
+ }
+ ultimaPeticion=ahora;
+ Swal.fire("Enviado","Petición guardada","success");
+}
+
+// ADMIN
+let clickCount=0;
+document.getElementById("axonTitle").onclick=()=>{
+ clickCount++;
+ if(clickCount>=5){
+  Swal.fire({title:"Password",input:"password"}).then(r=>{
+   if(r.value==="1234"){nav("screenAdmin");}
+  });
+  clickCount=0;
+ }
+};
+
+function cargarAdmin(){
+ document.getElementById("adminData").innerHTML=
+ `País actual usuario: ${pais}<br>Total Coins entregadas: ${coins}`;
+}
+
+window.onload=()=>{
+ if(localStorage.getItem("nombre")) iniciar();
+};
+</script>
+
 </body>
-    </html>
-    
+</html>
