@@ -8,253 +8,361 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
         :root { 
             --primary: #2ecc71; --panel: #161b22; --text: #e6edf3; 
-            --video: #ff0000; --music: #a333c8; --peticiones: #e91e63; 
-            --donar: #e67e22; --whatsapp: #25d366; --info: #444; --gold: #fbbd08; 
-            --bg-url: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png');
+            --video: #2185d0; --gold: #fbbd08; --red-yt: #ff0000;
+            --invite: #34495e; --music: #a333c8; --game: #e91e63; --donar: #e67e22;
         }
-        body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; background: var(--bg-url) no-repeat center center fixed; background-size: cover; overflow: hidden; }
-        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1; }
-        .container { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .panel { background: var(--panel); padding: 25px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; border: 2px solid var(--primary); box-shadow: 0 0 25px rgba(46, 204, 113, 0.4); max-height: 85vh; overflow-y: auto; }
-        
-        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
-        .btn:disabled { background: #444 !important; opacity: 0.6; cursor: not-allowed; }
-
+        body, html { height: 100%; margin: 0; color: var(--text); font-family: 'Segoe UI', sans-serif; 
+            background: url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') no-repeat center center fixed; 
+            background-size: cover; display: flex; justify-content: center; align-items: center; overflow: hidden; 
+        }
+        .swal-custom-bg {
+            background: linear-gradient(rgba(22, 27, 34, 0.85), rgba(22, 27, 34, 0.85)), 
+                        url('https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png') !important;
+            background-size: cover !important;
+            border: 2px solid var(--primary) !important;
+        }
+        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1; }
+        .container { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .panel { 
+            background: var(--panel); padding: 20px; border-radius: 30px; width: 85%; max-width: 400px; 
+            text-align: center; border: 2px solid var(--primary); 
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.5); 
+            max-height: 85vh; overflow-y: auto;
+        }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
+        .btn:disabled { background: #555 !important; cursor: not-allowed; opacity: 0.6; }
+        .btn:active { transform: scale(0.95); }
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .user-card { background: rgba(255,255,255,0.07); padding: 15px; border-radius: 20px; text-align: left; border: 1px solid var(--primary); margin-bottom: 10px; }
-        .search-bar { width: 100%; padding: 10px; border-radius: 10px; background: #000; border: 1px solid var(--music); color: white; margin-bottom: 10px; }
-        .peticion-card { background: rgba(255,255,255,0.05); margin: 8px 0; padding: 10px; border-radius: 12px; font-size: 12px; border-left: 4px solid var(--peticiones); }
-        .advise-box { font-size: 11px; color: var(--gold); background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; margin: 10px 0; border: 1px dashed var(--gold); }
+        .input-registro, #musicSearch, #requestMusicInput { width: 90%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); font-size: 14px; margin-bottom: 10px; background: rgba(0,0,0,0.3); color: white; }
+        #requestMusicInput { border-color: var(--music); }
+        .admin-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: 10px; }
+        .admin-table th, .admin-table td { border: 1px solid #444; padding: 6px; text-align: center; }
+        .admin-table th { background: var(--primary); color: black; }
+        .list-item { padding: 15px; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; font-size: 13px; background: rgba(255,255,255,0.03); margin-bottom: 5px; border-radius: 10px; }
+        .warning-text { font-size: 10px; color: #ffaeae; margin: 5px 10px; line-height: 1.2; }
+        .floating-stats { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; font-size: 10px; border: 1px solid var(--gold); }
     </style>
 </head>
 <body>
     <div class="overlay-bg"></div>
     <div class="container">
-        
         <div id="screenStart" class="screen" style="display: flex;">
-            <div style="width: 100%; height: 60vh; background: var(--bg-url) no-repeat center center; background-size: contain; margin-top: -50px;"></div>
-            <div class="panel" style="margin-top: -30px;">
-                <h2 id="axonTitle" style="color: var(--primary);">AXON IMPACT GLOBAL</h2>
-                <p style="font-size: 13px; margin-bottom: 15px;">Ayudando a personas necesitadas y animales de la calle con el poder de Blockchain.</p>
+            <img src="https://i.postimg.cc/pXMzbPsj/20260216-171012-0000.png" style="width: 75%; border-radius: 40px; margin-bottom: -30px; z-index: 3; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+            <div class="panel" style="padding-top: 45px;">
+                <h2 id="axonTitle" style="color: var(--primary); margin: 0; cursor: pointer; text-shadow: 0 0 15px var(--primary);">AXON IMPACT GLOBAL</h2>
+                <p style="font-size: 12px; margin: 15px 0;">Ayudar a las personas necesitadas y animales indefensos.</p>
                 <button onclick="solicitarRegistro()" class="btn" style="background: var(--primary);">UNIRSE A LA CAUSA</button>
             </div>
         </div>
 
         <div id="screenMenu" class="screen">
             <div class="panel">
-                <div class="user-card">
-                    <div style="font-size:14px;"><b>Héroe:</b> <span id="miNombre">---</span></div>
-                    <div style="font-size:11px; color: var(--gold);"><i class="fa-solid fa-heart"></i> Donado: <span id="ptsDonados">0</span> 🦴</div>
-                    <div style="font-size:11px; color: var(--primary);"><i class="fa-solid fa-wallet"></i> Saldo: <span id="totalCoins">0</span> 🦴</div>
-                    <div style="font-size:10px; margin-top:5px; color: #888;"><i class="fa-solid fa-earth-americas"></i> País: <span id="userCountry">Detectando...</span></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="color: var(--gold); font-weight: bold; font-size: 12px;"><i class="fa-solid fa-fire"></i> RACHA: 1</span>
+                    <span style="color: var(--primary); font-weight:bold; font-size: 18px;"><span id="totalCoins">0</span> 🦴</span>
                 </div>
-
-                <button onclick="nav('screenVideoList')" class="btn" style="background: var(--video);"><i class="fa-solid fa-play"></i> MISIONES VÍDEO</button>
-                <button onclick="nav('screenMusic')" class="btn" style="background: var(--music);"><i class="fa-solid fa-music"></i> CARPETA MÚSICA</button>
+                <div style="background: rgba(255,255,255,0.07); padding: 12px; border-radius: 18px; margin-bottom: 12px; text-align: left; border: 1px solid rgba(46,204,113,0.3);">
+                    <div style="font-size:14px;">Héroe: <b id="miNombre">---</b></div>
+                    <div style="font-size:11px; color: var(--primary);">Misiones: <span id="ptsMisiones">0 🦴</span></div>
+                    <div style="font-size:11px; color: var(--video);">Referidos: <span id="ptsReferidos">0 🦴</span></div>
+                    <div style="font-size:11px; color: var(--gold);">País: <span id="userCountry">Detectando...</span></div>
+                    <div style="font-size:9px; color: #888; margin-top:5px;">ID: <span id="miID">---</span></div>
+                </div>
+                <button onclick="nav('screenVideoList')" class="btn" style="background: var(--video);"><i class="fa-solid fa-video"></i> CARPETA VÍDEOS</button>
+                <button onclick="nav('screenMusicList')" class="btn" style="background: var(--music);"><i class="fa-solid fa-music"></i> CARPETA MÚSICA</button>
                 <button onclick="nav('screenDonar')" class="btn" style="background: var(--donar);"><i class="fa-solid fa-heart"></i> DONAR MIS 🦴</button>
-                <button onclick="compartirReferido()" class="btn" style="background: #0088cc;"><i class="fa-solid fa-share-nodes"></i> INVITAR AMIGOS</button>
-            </div>
-        </div>
-
-        <div id="screenPlayer" class="screen">
-            <div class="panel">
-                <h3 id="misionTitle" style="font-size:14px; color:var(--gold);">---</h3>
-                <div id="video-placeholder" style="width:100%; aspect-ratio:16/9; border-radius:15px; background:#000;"></div>
-                
-                <button id="btnYoutube" class="btn" style="background: #ff0000;"><i class="fa-brands fa-youtube"></i> ABRIR YOUTUBE</button>
-                
-                <div class="advise-box">Abre YouTube, dale like y comenta. Sube tu screenshot; una IA rectificará la imagen.</div>
-                
-                <label for="fileProof" id="btnUpload" class="btn" style="background:var(--gold); color:black; display:none;">
-                    <i class="fa-solid fa-camera"></i> SUBIR SCREENSHOT
-                </label>
-                <input type="file" id="fileProof" accept="image/*" onchange="verificarIA()" style="display:none;">
-                
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
-            </div>
-        </div>
-
-        <div id="screenMusic" class="screen">
-            <div class="panel">
-                <h3 style="color:var(--music)">MÚSICA & PETICIONES</h3>
-                <input type="text" id="musicSearch" class="search-bar" placeholder="Buscar artista o canción..." onkeyup="buscarMusica()">
-                <div id="musicContainer" style="max-height: 120px; overflow-y: auto; margin-bottom: 15px;"></div>
-                
-                <div style="border-top: 1px solid #333; padding-top: 10px;">
-                    <p style="font-size:11px;">Pide tu canción (Artista - Nombre):</p>
-                    <input type="text" id="musicRequestInput" class="search-bar" style="border-color: var(--peticiones);">
-                    <button onclick="enviarPeticionDB()" class="btn" style="background:var(--peticiones);">ENVIAR PEDIDO</button>
-                </div>
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">VOLVER</button>
+                <button onclick="compartirWhatsApp()" class="btn" style="background: #25d366;"><i class="fa-brands fa-whatsapp"></i> INVITAR AMIGOS</button>
             </div>
         </div>
 
         <div id="screenAdmin" class="screen">
             <div class="panel">
-                <h3 style="color:var(--gold)">ADMINISTRACIÓN</h3>
-                <div id="statsPaises" style="background:rgba(0,0,0,0.5); padding:10px; border-radius:10px; font-size:12px; margin-bottom:10px;"></div>
-                <div id="adminPeticiones" style="text-align:left; font-size:11px;"></div>
-                <button onclick="nav('screenMenu')" class="btn" style="background:#333;">CERRAR</button>
+                <h3 style="color: var(--gold);">ADMINISTRACIÓN</h3>
+                <div class="floating-stats" id="countryStats">Cargando países...</div>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Héroe</th><th>Misiones</th><th>País</th><th>Total $</th><th>Acción</th></tr></thead>
+                        <tbody id="adminUsersBody"></tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">
+                    <h4 style="font-size: 12px;">PEDIDOS DE MÚSICA</h4>
+                    <div id="adminMusicRequests" style="font-size: 10px; text-align: left;"></div>
+                </div>
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top:10px;">VOLVER</button>
             </div>
         </div>
 
+        <div id="screenVideoList" class="screen"><div class="panel"><h3>VÍDEOS</h3><div id="videoListContainer"></div><button onclick="nav('screenMenu')" class="btn">VOLVER</button></div></div>
+        
+        <div id="screenMusicList" class="screen">
+            <div class="panel">
+                <h3>MÚSICA</h3>
+                <input type="text" id="musicSearch" placeholder="Buscar canción..." onkeyup="filterMusic()">
+                <div id="musicListContainer"></div>
+                <hr style="border: 0.5px solid var(--music); margin: 15px 0;">
+                <h4 style="font-size: 12px;">¿No encuentras tu canción?</h4>
+                <input type="text" id="requestMusicInput" placeholder="Artista - Nombre de la canción">
+                <button onclick="sendMusicRequest()" class="btn" style="background: var(--music);">ENVIAR PEDIDO</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333;">VOLVER</button>
+            </div>
+        </div>
+        
+        <div id="screenPlayer" class="screen">
+            <div class="panel">
+                <h3 id="misionTitle" style="font-size: 15px; color: var(--gold);">---</h3>
+                <div id="video-placeholder" style="width:100%; aspect-ratio:16/9; border-radius:15px; background:#000;"></div>
+                
+                <button onclick="abrirYoutube()" class="btn" style="background: var(--red-yt); margin-top:10px;">ABRIR YOUTUBE</button>
+                
+                <p class="warning-text">⚠️ Abre YouTube, dale Like y comenta. Luego sube el screenshot. Una IA rectificará la imagen para darte la recompensa.</p>
+                
+                <label for="fileProof" id="labelUpload" class="btn" style="background: var(--gold); color: black; display: none;">
+                    <i class="fa-solid fa-camera"></i> SUBIR SCREENSHOT
+                </label>
+                <input type="file" id="fileProof" accept="image/*" onchange="verificarIA()" style="display:none;">
+                
+                <button onclick="cancelarVideo()" class="btn" style="background: #333;">VOLVER</button>
+                
+                <div id="calculoMision" style="font-size: 9px; margin-top: 10px; color: #888;">
+                    Ecuación: <span id="formulaLabel">R = (V * C) + B</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="screenDonar" class="screen">
+            <div class="panel">
+                <h3 style="color:var(--donar)">DONAR MIS 🦴</h3>
+                <p>Ayuda a personas y animales.</p>
+                <p>Tu saldo: <span id="totalCoinsDonar">0</span> 🦴</p>
+                <input type="number" id="cantidadADonar" class="input-registro" placeholder="Cantidad">
+                <button onclick="ejecutarDonacionInterna()" class="btn" style="background:var(--donar);">DONAR</button>
+                <button onclick="nav('screenMenu')" class="btn">VOLVER</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN EDITABLE ---
-        const VALORES = {
-            mision_rescate: 500,
-            mision_social: 300,
-            valor_punto_usd: 0.001 // Ecuación: Pago = Puntos * Valor
-        };
-
-        const SUPABASE_URL = 'https://ywkcnxhlptqagwxjnygx.supabase.co', SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
+        const SUPABASE_URL = 'https://ywkcnxhlptqagwxjnygx.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let coins = 0, donados = 0, player = null, currentPts = 0, clickCount = 0;
-        let miID = localStorage.getItem('miID') || "AX-" + Math.floor(Math.random()*900000);
-        let nombre = localStorage.getItem('axon_nombre') || "---";
+        let coinsMisiones = 0, coinsReferidos = 0, player = null, currentPoints = 0, clickCount = 0;
+        let miIDUnico = localStorage.getItem('miID') || "AX-" + Math.floor(Math.random()*900000 + 100000);
         let userCountry = "Desconocido";
+        let musicData = [
+            {id:'HL9VoQ-er_U', t:'Música Relajante', s:200},
+            {id:'5qap5aO4i9A', t:'LoFi Hip Hop', s:250},
+            {id:'jfKfPfyJRdk', t:'Música para Concentrarse', s:300}
+        ];
 
-        // --- DETECCIÓN DE PAÍS ---
-        async function detectarPais() {
-            try {
-                const res = await fetch('https://ipapi.co/json/');
-                const data = await res.json();
-                userCountry = data.country_name;
-                document.getElementById('userCountry').innerText = userCountry;
-            } catch(e) { console.error("Error IP"); }
+        // DETECCIÓN DE PAÍS
+        fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
+            userCountry = data.country_name;
+            document.getElementById('userCountry').innerText = userCountry;
+        }).catch(() => userCountry = "Internacional");
+
+        async function guardarDatos() {
+            const data = {
+                usuario_id: miIDUnico,
+                nombre: document.getElementById('miNombre').innerText,
+                puntos_misiones: coinsMisiones,
+                puntos_referidos: coinsReferidos,
+                pais: userCountry
+            };
+            localStorage.setItem('axon_user_data', JSON.stringify(data));
+            localStorage.setItem('miID', miIDUnico);
+            try { await supabaseClient.from('usuarios').upsert(data, { onConflict: 'usuario_id' }); } catch (e) {}
         }
 
-        // --- MANEJO DE VÍDEO (ANTIFRAUDE) ---
-        function abrirMision(id, titulo, pts, ytLink) {
-            currentPts = pts;
-            document.getElementById('misionTitle').innerText = titulo;
-            document.getElementById('btnYoutube').onclick = () => window.open(ytLink, '_blank');
-            document.getElementById('btnUpload').style.display = 'none';
-            nav('screenPlayer');
+        function cargarDatos() {
+            const saved = localStorage.getItem('axon_user_data');
+            if(saved) {
+                const d = JSON.parse(saved);
+                coinsMisiones = d.puntos_misiones || 0;
+                coinsReferidos = d.puntos_referidos || 0;
+                miIDUnico = d.usuario_id || miIDUnico;
+                document.getElementById('miNombre').innerText = d.nombre;
+                document.getElementById('miID').innerText = miIDUnico;
+                updateUI();
+                if(d.nombre !== "---") nav('screenMenu');
+            }
+        }
 
-            if(player) player.destroy();
+        function nav(id) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'flex';
+            if(id === 'screenVideoList') renderList('videoListContainer', [{id:'wC_sOpQjvWE', t:'Rescate Animal', s:300}]);
+            if(id === 'screenMusicList') renderList('musicListContainer', musicData);
+            if(id === 'screenDonar') document.getElementById('totalCoinsDonar').innerText = coinsMisiones + coinsReferidos;
+        }
+
+        function solicitarRegistro() {
+            Swal.fire({
+                title: 'TU NOMBRE HÉROE',
+                input: 'text',
+                background: '#161b22', color: '#fff',
+                customClass: { popup: 'swal-custom-bg' },
+                preConfirm: (v) => v.length > 2 ? v : Swal.showValidationMessage('Nombre corto')
+            }).then(r => {
+                if(r.value) { 
+                    document.getElementById('miNombre').innerText = r.value; 
+                    document.getElementById('miID').innerText = miIDUnico;
+                    guardarDatos(); nav('screenMenu'); 
+                }
+            });
+        }
+
+        function filterMusic() {
+            const q = document.getElementById('musicSearch').value.toLowerCase();
+            const filtered = musicData.filter(m => m.t.toLowerCase().includes(q));
+            renderList('musicListContainer', filtered);
+        }
+
+        function renderList(cid, list) {
+            const c = document.getElementById(cid); c.innerHTML = '';
+            list.forEach(i => {
+                const div = document.createElement('div'); div.className = "list-item";
+                div.innerHTML = `<span>${i.t}</span> <b>${i.s} 🦴</b>`;
+                div.onclick = () => iniciarMision(i);
+                c.appendChild(div);
+            });
+        }
+
+        function iniciarMision(i) {
+            currentPoints = i.s;
+            document.getElementById('misionTitle').innerText = i.t;
+            document.getElementById('labelUpload').style.display = 'none';
+            nav('screenPlayer');
+            
+            if (player) player.destroy();
             player = new YT.Player('video-placeholder', {
-                videoId: id,
-                playerVars: { 'controls': 0, 'disablekb': 1, 'modestbranding': 1 },
+                videoId: i.id,
+                playerVars: { 
+                    'controls': 0, 
+                    'disablekb': 1, 
+                    'rel': 0, 
+                    'modestbranding': 1 
+                },
                 events: {
                     'onStateChange': (e) => {
+                        // Bloqueo de adelanto (Seguridad básica)
+                        if (e.data === YT.PlayerState.PLAYING) {
+                            const checkJump = setInterval(() => {
+                                if (!player || e.data !== YT.PlayerState.PLAYING) clearInterval(checkJump);
+                            }, 1000);
+                        }
+                        // Activar botón al finalizar
                         if(e.data === YT.PlayerState.ENDED) {
-                            document.getElementById('btnUpload').style.display = 'flex';
+                            document.getElementById('labelUpload').style.display = 'flex';
                         }
                     }
                 }
             });
         }
 
-        // --- MÚSICA ---
-        const listaMusica = [
-            { t: "Artista 1 - Cancion A", link: "#" },
-            { t: "Artista 2 - Cancion B", link: "#" }
-        ];
-
-        function buscarMusica() {
-            const q = document.getElementById('musicSearch').value.toLowerCase();
-            const c = document.getElementById('musicContainer');
-            c.innerHTML = '';
-            listaMusica.filter(m => m.t.toLowerCase().includes(q)).forEach(m => {
-                c.innerHTML += `<div class="peticion-card" onclick="window.open('${m.link}')">🎵 ${m.t}</div>`;
-            });
-        }
-
-        async function enviarPeticionDB() {
-            const txt = document.getElementById('musicRequestInput').value;
-            if(txt.length < 5) return;
-            await supabaseClient.from('peticiones').insert([{ usuario: nombre, pedido: txt }]);
-            Swal.fire("Enviado", "Pedido recibido por el admin", "success");
-            document.getElementById('musicRequestInput').value = "";
-        }
-
-        // --- REFERIDOS MULTIPLATAFORMA ---
-        function compartirReferido() {
-            const msg = `¡Únete a AXON IMPACT GLOBAL! Ayuda a animales y personas sin hogar. Usa mi ID: ${miID}`;
-            if (navigator.share) {
-                navigator.share({ title: 'AXON IMPACT', text: msg, url: window.location.href });
+        function sendMusicRequest() {
+            const val = document.getElementById('requestMusicInput').value;
+            if(val.includes('-')) {
+                const reqs = JSON.parse(localStorage.getItem('music_reqs') || "[]");
+                reqs.push({ user: document.getElementById('miNombre').innerText, song: val });
+                localStorage.setItem('music_reqs', JSON.stringify(reqs));
+                document.getElementById('requestMusicInput').value = '';
+                Swal.fire('Pedido Enviado', 'Aparecerá en el panel de administración.', 'success');
             } else {
-                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`);
+                Swal.fire('Error', 'Usa el formato: Artista - Canción', 'error');
             }
-        }
-
-        // --- ADMINISTRACIÓN ---
-        async function verAdmin() {
-            const { data: users } = await supabaseClient.from('usuarios').select('pais');
-            const paises = {};
-            users.forEach(u => paises[u.pais] = (paises[u.pais] || 0) + 1);
-            
-            let html = "<b>Usuarios por País:</b><br>";
-            for(let p in paises) html += `${p}: ${paises[p]}<br>`;
-            document.getElementById('statsPaises').innerHTML = html;
-            nav('screenAdmin');
-        }
-
-        // --- FUNCIONES BASE ---
-        async function guardar() {
-            const d = { usuario_id: miID, nombre: nombre, puntos_misiones: coins, puntos_donados: donados, pais: userCountry };
-            localStorage.setItem('miID', miID); localStorage.setItem('axon_nombre', nombre);
-            localStorage.setItem('axon_coins', coins);
-            try { await supabaseClient.from('usuarios').upsert(d, { onConflict: 'usuario_id' }); } catch(e){}
-            updateUI();
-        }
-
-        function updateUI() {
-            document.getElementById('miNombre').innerText = nombre;
-            document.getElementById('totalCoins').innerText = coins;
-            document.getElementById('ptsDonados').innerText = donados;
-        }
-
-        function nav(id) {
-            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'flex';
-            if(id === 'screenVideoList') renderVideos();
-        }
-
-        function solicitarRegistro() {
-            Swal.fire({ title: 'TU NOMBRE HÉROE', input: 'text', background: '#161b22', color: '#fff' }).then(r => {
-                if(r.value) { nombre = r.value; detectarPais().then(() => guardar()); nav('screenMenu'); }
-            });
-        }
-
-        function renderVideos() {
-            const c = document.getElementById('videoListContainer'); c.innerHTML = '';
-            [{id:'wC_sOpQjvWE', t:'Rescate Animal', s: VALORES.mision_rescate, l:'#'}].forEach(i => {
-                const d = document.createElement('div');
-                d.className = "peticion-card";
-                d.innerHTML = `<span>${i.t}</span> <b>${i.s} 🦴</b>`;
-                d.onclick = () => abrirMision(i.id, i.t, i.s, i.l);
-                c.appendChild(d);
-            });
         }
 
         function verificarIA() {
-            Swal.fire({ title: 'IA ANALIZANDO...', didOpen: () => Swal.showLoading() });
-            setTimeout(() => { coins += currentPts; guardar(); Swal.fire('ÉXITO', '+'+currentPts+' 🦴', 'success'); nav('screenMenu'); }, 2000);
+            Swal.fire({ 
+                title: 'IA ANALIZANDO IMAGEN...', 
+                html: 'Buscando Like y Comentario en los servidores de YouTube',
+                didOpen: () => Swal.showLoading(),
+                background: '#161b22', color: '#fff'
+            });
+            
+            setTimeout(() => {
+                // ECUACIÓN DE PAGO EDITABLE: R = (Valor_Mision * Coeficiente_Pais) + Bono
+                // Por defecto Coeficiente = 1, Bono = 0
+                let valorFinal = currentPoints; 
+                
+                coinsMisiones += valorFinal;
+                updateUI(); guardarDatos();
+                Swal.fire('RECOMPENSA', `Has ganado ${valorFinal} 🦴. La IA ha validado tu captura.`, 'success');
+                nav('screenMenu');
+            }, 3500);
         }
 
-        document.getElementById('axonTitle').onclick = () => { clickCount++; if(clickCount >= 5) { clickCount = 0; Swal.fire({ title: 'ADMIN', input: 'password' }).then(r => { if(r.value === "1234") verAdmin(); }); } };
+        function updateUI() {
+            const t = coinsMisiones + coinsReferidos;
+            document.getElementById('totalCoins').innerText = t;
+            document.getElementById('ptsMisiones').innerText = coinsMisiones + " 🦴";
+            document.getElementById('ptsReferidos').innerText = coinsReferidos + " 🦴";
+        }
 
-        window.onload = () => { 
-            if(localStorage.getItem('axon_nombre')) { 
-                nombre = localStorage.getItem('axon_nombre'); 
-                coins = parseInt(localStorage.getItem('axon_coins')) || 0; 
-                donados = parseInt(localStorage.getItem('axon_donados')) || 0;
-                detectarPais();
-                updateUI(); 
-                nav('screenMenu'); 
+        function abrirYoutube() { 
+            if(player) {
+                const vidId = player.getVideoData().video_id;
+                window.open('https://www.youtube.com/watch?v=' + vidId, '_blank'); 
             }
-            buscarMusica();
+        }
+
+        function cancelarVideo() {
+            if(player) player.stopVideo();
+            nav('screenMenu');
+        }
+
+        // ACCESO PANEL ADMINISTRATIVO
+        document.getElementById('axonTitle').onclick = () => {
+            clickCount++;
+            if(clickCount >= 5) {
+                clickCount = 0;
+                Swal.fire({ 
+                    title: 'SISTEMA OCULTO', 
+                    input: 'password', 
+                    inputPlaceholder: 'Ingresa la llave maestra',
+                    background: '#161b22', color: '#fff'
+                }).then(r => { 
+                    if(r.value === "1234") { // Cambia aquí tu clave
+                        renderAdmin();
+                        nav('screenAdmin');
+                    }
+                });
+            }
         };
-    </script>
-</body>
-</html>
+
+        function renderAdmin() {
+            const body = document.getElementById('adminUsersBody');
+            const musicBox = document.getElementById('adminMusicRequests');
+            
+            // Datos del usuario actual (Simulado como lista)
+            body.innerHTML = `
+                <tr>
+                    <td>${document.getElementById('miNombre').innerText}</td>
+                    <td>${coinsMisiones}</td>
+                    <td>${userCountry}</td>
+                    <td>$${(coinsMisiones/1000).toFixed(2)}</td>
+                    <td><button onclick="Swal.fire('Procesado','Pago enviado','success')" style="font-size:8px;">PAGAR</button></td>
+                </tr>
+            `;
+
+            // Estadísticas de países
+            document.getElementById('countryStats').innerHTML = `
+                <b>Usuarios por País:</b><br>
+                ${userCountry}: 1<br>
+                Global: 1
+            `;
+
+            // Pedidos de música
+            const reqs = JSON.parse(localStorage.getItem('music_reqs') || "[]");
+            musicBox.innerHTML = reqs.map(r => `<div>• <b>${r.user}:</b> ${r.song}</div>`).join('');
+        }
+
+        window.onload = () => { cargarDatos(); };
+                                                                         </script>
+    
