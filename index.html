@@ -70,8 +70,8 @@
             <div class="content-wrap">
                 <h1 id="axonTitle" style="color: white; font-size: 28px; text-shadow: 2px 2px 10px #000; margin-bottom: 20px; text-align: center;">AXON IMPACT GLOBAL</h1>
                 <div class="panel">
-                    <p data-i18n="app_desc" style="font-size: 14px; margin: 10px 0; line-height: 1.5;">Comprometidos con la ayuda social para personas sin hogar y el rescate de animales indefensos.</p>
-                    <button data-i18n="btn_join" onclick="solicitarRegistro()" class="btn" style="background: var(--primary);">UNIRSE A LA CAUSA</button>
+                    <p style="font-size: 14px; margin: 10px 0; line-height: 1.5;">Comprometidos con la ayuda social para personas sin hogar y el rescate de animales indefensos.</p>
+                    <button onclick="solicitarRegistro()" class="btn" style="background: var(--primary);">UNIRSE A LA CAUSA</button>
                 </div>
             </div>
         </div>
@@ -80,49 +80,49 @@
             <div class="panel">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <span id="clickRacha" onclick="handleAdminAccess()" style="color: var(--gold); font-weight: bold; font-size: 14px; cursor: pointer; padding: 5px; border: 1px solid rgba(251,189,8,0.3); border-radius: 10px;">
-                        <i class="fa-solid fa-fire"></i> <span data-i18n="racha_label">RACHA</span>: 1
+                        <i class="fa-solid fa-fire"></i> RACHA: 1
                     </span>
                     <span style="color: var(--primary); font-weight:bold; font-size: 20px;"><span id="totalCoins">0</span> 🦴</span>
                 </div>
                 
                 <div style="background: rgba(255,255,255,0.07); padding: 15px; border-radius: 20px; margin-bottom: 15px; text-align: left; border: 1px solid rgba(46,204,113,0.3);">
-                    <div style="font-size:15px;"><span data-i18n="hero_label">Héroe</span>: <b id="miNombre">---</b></div>
-                    <div style="font-size:12px; color: var(--primary);"><span data-i18n="missions_pts">Misiones</span>: <span id="ptsMisiones">0 🦴</span></div>
-                    <div style="font-size:12px; color: var(--video);"><span data-i18n="refer_pts">Referidos</span>: <span id="ptsReferidos">0 🦴</span></div>
-                    <div style="font-size:12px; color: var(--gold);"><span data-i18n="country_label">País</span>: <span id="userCountry">Detectando...</span></div>
+                    <div style="font-size:15px;">Héroe: <b id="miNombre">---</b></div>
+                    <div style="font-size:12px; color: var(--primary);">Misiones: <span id="ptsMisiones">0 🦴</span></div>
+                    <div style="font-size:12px; color: var(--video);">Referidos: <span id="ptsReferidos">0 🦴</span></div>
+                    <div style="font-size:12px; color: var(--gold);">País: <span id="userCountry">Detectando...</span></div>
                     <div style="font-size:10px; color: #888; margin-top:5px;">ID: <span id="miID">---</span></div>
                 </div>
 
-                <button onclick="nav('screenVideoList')" class="btn" style="background: var(--video);"><i class="fa-solid fa-video"></i> <span data-i18n="btn_videos">CARPETA VÍDEOS</span></button>
-                <button onclick="nav('screenMusicList')" class="btn" style="background: var(--music);"><i class="fa-solid fa-music"></i> <span data-i18n="btn_music">CARPETA MÚSICA</span></button>
-                <button onclick="nav('screenAirdrops')" class="btn" style="background: var(--airdrop); box-shadow: 0 0 15px var(--airdrop);"><i class="fa-solid fa-parachute-box"></i> <span data-i18n="btn_airdrop">COBRAR AIRDROPS</span></button>
-                <button onclick="nav('screenSocial')" class="btn" style="background: var(--invite);"><i class="fa-solid fa-users"></i> <span data-i18n="btn_community">NUESTRA COMUNIDAD</span></button>
-                <button onclick="nav('screenDonar')" class="btn" style="background: var(--donar);"><i class="fa-solid fa-heart"></i> <span data-i18n="btn_donate">DONAR MIS 🦴</span></button>
-                <button onclick="sistemaCompartir()" class="btn" style="background: #25d366;"><i class="fa-solid fa-share-nodes"></i> <span data-i18n="btn_invite">INVITAR AMIGOS</span></button>
+                <button onclick="nav('screenVideoList')" class="btn" style="background: var(--video);"><i class="fa-solid fa-video"></i> CARPETA VÍDEOS</button>
+                <button onclick="nav('screenMusicList')" class="btn" style="background: var(--music);"><i class="fa-solid fa-music"></i> CARPETA MÚSICA</button>
+                <button onclick="nav('screenAirdrops')" class="btn" style="background: var(--airdrop); box-shadow: 0 0 15px var(--airdrop);"><i class="fa-solid fa-parachute-box"></i> COBRAR AIRDROPS</button>
+                <button onclick="nav('screenSocial')" class="btn" style="background: var(--invite);"><i class="fa-solid fa-users"></i> NUESTRA COMUNIDAD</button>
+                <button onclick="nav('screenDonar')" class="btn" style="background: var(--donar);"><i class="fa-solid fa-heart"></i> DONAR MIS 🦴</button>
+                <button onclick="sistemaCompartir()" class="btn" style="background: #25d366;"><i class="fa-solid fa-share-nodes"></i> INVITAR AMIGOS</button>
             </div>
         </div>
 
         <div id="screenAirdrops" class="screen">
             <div class="panel">
-                <h3 data-i18n="airdrop_title" style="color: var(--airdrop); text-shadow: 0 0 10px var(--airdrop);">SISTEMA DE AIRDROPS</h3>
-                <p data-i18n="airdrop_desc" style="font-size: 12px; margin-bottom: 20px;">Vincula tu wallet para recibir recompensas en la fase de distribución.</p>
+                <h3 style="color: var(--airdrop); text-shadow: 0 0 10px var(--airdrop);">SISTEMA DE AIRDROPS</h3>
+                <p style="font-size: 12px; margin-bottom: 20px;">Vincula tu wallet para recibir recompensas en la fase de distribución.</p>
                 
-                <input type="text" class="input-neón" data-i18n-placeholder="wallet_placeholder" placeholder="0x... Dirección de Wallet" disabled>
-                <button class="btn" style="background: #333;" disabled data-i18n="btn_link_wallet">VINCULAR WALLET</button>
-                <button class="btn" style="background: #222; border: 1px solid var(--airdrop);" disabled data-i18n="btn_send_req">ENVIAR SOLICITUD</button>
+                <input type="text" class="input-neón" placeholder="0x... Dirección de Wallet" disabled>
+                <button class="btn" style="background: #333;" disabled>VINCULAR WALLET</button>
+                <button class="btn" style="background: #222; border: 1px solid var(--airdrop);" disabled>ENVIAR SOLICITUD</button>
                 
-                <p data-i18n="coming_soon" style="color: var(--airdrop); font-size: 11px; margin-top: 15px; font-weight: bold;">
+                <p style="color: var(--airdrop); font-size: 11px; margin-top: 15px; font-weight: bold; animation: pulse 2s infinite;">
                     Próximamente disponible: Fase de verificación activa
                 </p>
                 
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top: 20px;" data-i18n="btn_back">VOLVER AL MENÚ</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top: 20px;">VOLVER AL MENÚ</button>
             </div>
         </div>
 
         <div id="screenSocial" class="screen">
             <div class="panel">
-                <h3 data-i18n="social_title" style="color: var(--text);">NUESTRA COMUNIDAD</h3>
-                <p data-i18n="social_desc" style="font-size: 12px;">Síguenos para estar al tanto de los rescates y ayudas sociales.</p>
+                <h3 style="color: var(--text);">NUESTRA COMUNIDAD</h3>
+                <p style="font-size: 12px;">Síguenos para estar al tanto de los rescates y ayudas sociales.</p>
                 
                 <div class="social-grid">
                     <div class="social-item" style="color: var(--tiktok); border-color: var(--tiktok);">
@@ -143,45 +143,50 @@
                     </div>
                 </div>
                 
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top: 25px;" data-i18n="btn_back">VOLVER</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top: 25px;">VOLVER</button>
             </div>
         </div>
 
         <div id="screenAdmin" class="screen">
             <div class="panel" style="max-width: 500px; width: 95%;">
-                <h3 data-i18n="admin_title" style="color: var(--gold); margin: 5px;">ADMINISTRACIÓN GLOBAL</h3>
+                <h3 style="color: var(--gold); margin: 5px;">ADMINISTRACIÓN GLOBAL</h3>
                 
                 <div class="formula-editor">
-                    <span style="font-size: 11px; color: #aaa;" data-i18n="admin_formula">CONFIGURAR PAGO: R = (V × C) + B</span><br>
+                    <span style="font-size: 11px; color: #aaa;">CONFIGURAR PAGO: R = (V × C) + B</span><br>
                     C: <input type="number" id="cfgCoef" value="1.0" step="0.1" onchange="actualizarFormula()"> 
                     B: <input type="number" id="cfgBono" value="0" onchange="actualizarFormula()">
                 </div>
 
                 <div style="overflow-x: auto;">
                     <table class="admin-table">
-                        <thead><tr><th data-i18n="th_hero">Héroe</th><th data-i18n="th_country">País</th><th data-i18n="missions_pts">Misión</th><th>Total $</th><th data-i18n="th_action">Acción</th></tr></thead>
+                        <thead><tr><th>Héroe</th><th>País</th><th>Misión</th><th>Total $</th><th>Acción</th></tr></thead>
                         <tbody id="adminUsersBody"></tbody>
                     </table>
                 </div>
 
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top:10px;" data-i18n="btn_close">CERRAR PANEL</button>
+                <div style="margin-top: 15px; border-top: 1px solid #444; padding-top: 10px; text-align: left;">
+                    <h4 style="font-size: 12px; color: var(--music);">PEDIDOS DE MÚSICA</h4>
+                    <div id="adminMusicRequests" style="font-size: 10px; max-height: 100px; overflow-y: auto;"></div>
+                </div>
+                
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top:10px;">CERRAR PANEL</button>
             </div>
         </div>
 
         <div id="screenVideoList" class="screen">
             <div class="panel">
-                <h3 data-i18n="video_mission_title" style="color: var(--video);">MISIONES DE VÍDEO</h3>
+                <h3 style="color: var(--video);">MISIONES DE VÍDEO</h3>
                 <div id="videoListContainer"></div>
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top:10px;" data-i18n="btn_back">VOLVER</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top:10px;">VOLVER</button>
             </div>
         </div>
 
         <div id="screenMusicList" class="screen">
             <div class="panel">
-                <h3 data-i18n="music_mission_title" style="color: var(--music);">MÚSICA & PETICIONES</h3>
-                <input type="text" id="musicSearch" data-i18n-placeholder="search_music" placeholder="Buscar artista o canción..." onkeyup="filterMusic()" style="width: 90%; padding: 10px; border-radius: 10px; background: #000; color: white; border: 1px solid var(--music); margin-bottom: 10px;">
+                <h3 style="color: var(--music);">MÚSICA & PETICIONES</h3>
+                <input type="text" id="musicSearch" placeholder="Buscar artista o canción..." onkeyup="filterMusic()" style="width: 90%; padding: 10px; border-radius: 10px; background: #000; color: white; border: 1px solid var(--music); margin-bottom: 10px;">
                 <div id="musicListContainer" style="max-height: 200px; overflow-y: auto;"></div>
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top:10px;" data-i18n="btn_back">VOLVER</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333; margin-top:10px;">VOLVER</button>
             </div>
         </div>
 
@@ -189,102 +194,50 @@
             <div class="panel">
                 <h3 id="misionTitle" style="font-size: 16px; color: var(--gold);">---</h3>
                 <div id="video-placeholder" style="width:100%; aspect-ratio:16/9; border-radius:15px; background:#000;"></div>
-                <button onclick="abrirYoutube()" class="btn" style="background: var(--red-yt); margin-top:15px;"><i class="fa-brands fa-youtube"></i> <span data-i18n="btn_open_yt">ABRIR YOUTUBE</span></button>
-                <label for="fileProof" id="labelUpload" class="btn" style="background: var(--gold); color: black; display: none;"><i class="fa-solid fa-camera"></i> <span data-i18n="btn_upload">SUBIR SCREENSHOT</span></label>
+                <button onclick="abrirYoutube()" class="btn" style="background: var(--red-yt); margin-top:15px;"><i class="fa-brands fa-youtube"></i> ABRIR YOUTUBE</button>
+                <label for="fileProof" id="labelUpload" class="btn" style="background: var(--gold); color: black; display: none;"><i class="fa-solid fa-camera"></i> SUBIR SCREENSHOT</label>
                 <input type="file" id="fileProof" accept="image/*" onchange="verificarIA()" style="display:none;">
-                <button onclick="cancelarVideo()" class="btn" style="background: #333;" data-i18n="btn_back">VOLVER</button>
-                <div style="font-size: 9px; margin-top: 10px; color: #888;"><span data-i18n="formula_label">Ecuación</span>: <span id="formulaLabel">R = (V * 1.0) + 0</span></div>
+                <button onclick="cancelarVideo()" class="btn" style="background: #333;">VOLVER</button>
+                <div style="font-size: 9px; margin-top: 10px; color: #888;">Ecuación: <span id="formulaLabel">R = (V * 1.0) + 0</span></div>
             </div>
         </div>
 
         <div id="screenDonar" class="screen">
             <div class="panel">
-                <h3 data-i18n="btn_donate" style="color:var(--donar)">DONAR MIS 🦴</h3>
-                <p data-i18n="donate_desc" style="font-size: 12px;">Tu aporte ayuda directamente a refugios y comedores sociales.</p>
-                <p><span data-i18n="balance_label">Saldo</span>: <b id="totalCoinsDonar" style="color: var(--primary);">0</b> 🦴</p>
-                <button onclick="ejecutarDonacionInterna()" class="btn" style="background:var(--donar);" data-i18n="btn_confirm_donate">DONAR TODO</button>
-                <button onclick="nav('screenMenu')" class="btn" style="background: #333;" data-i18n="btn_back">VOLVER</button>
+                <h3 style="color:var(--donar)">DONAR MIS 🦴</h3>
+                <p style="font-size: 12px;">Tu aporte ayuda directamente a refugios y comedores sociales.</p>
+                <p>Saldo: <b id="totalCoinsDonar" style="color: var(--primary);">0</b> 🦴</p>
+                <button onclick="ejecutarDonacionInterna()" class="btn" style="background:var(--donar);">DONAR TODO</button>
+                <button onclick="nav('screenMenu')" class="btn" style="background: #333;">VOLVER</button>
             </div>
         </div>
 
     </div>
-        <script>
-        // --- DICCIONARIO DINÁMICO MULTILENGUAJE ---
-        const translations = {
-            es: {
-                app_desc: "Comprometidos con la ayuda social para personas sin hogar y el rescate de animales indefensos.",
-                btn_join: "UNIRSE A LA CAUSA", racha_label: "RACHA", hero_label: "Héroe", missions_pts: "Misiones", refer_pts: "Referidos", country_label: "País",
-                btn_videos: "CARPETA VÍDEOS", btn_music: "CARPETA MÚSICA", btn_airdrop: "COBRAR AIRDROPS", btn_community: "NUESTRA COMUNIDAD", btn_donate: "DONAR MIS 🦴", btn_invite: "INVITAR AMIGOS",
-                airdrop_title: "SISTEMA DE AIRDROPS", airdrop_desc: "Vincula tu wallet para recibir recompensas.", wallet_placeholder: "Dirección de Wallet", btn_link_wallet: "VINCULAR WALLET", btn_send_req: "ENVIAR SOLICITUD", coming_soon: "Próximamente disponible", btn_back: "VOLVER", social_title: "COMUNIDAD", social_desc: "Síguenos para más ayuda social.",
-                admin_title: "ADMINISTRACIÓN", admin_formula: "PAGO: R = (V × C) + B", th_hero: "Héroe", th_country: "País", th_action: "Acción", btn_close: "CERRAR",
-                video_mission_title: "MISIONES VÍDEO", music_mission_title: "MÚSICA", search_music: "Buscar...", btn_open_yt: "ABRIR YOUTUBE", btn_upload: "SUBIR SCREENSHOT", formula_label: "Ecuación", donate_desc: "Ayuda a refugios.", balance_label: "Saldo", btn_confirm_donate: "DONAR TODO", swal_name_title: "NOMBRE HÉROE", swal_ia_title: "IA ANALIZANDO...", swal_valid_title: "¡VALIDADO!", swal_valid_text: "Ganaste {pts} huesos.", swal_admin_title: "ACCESO ADMIN"
-            },
-            en: {
-                app_desc: "Committed to social aid for homeless and animal rescue.", btn_join: "JOIN THE CAUSE", racha_label: "STREAK", hero_label: "Hero", missions_pts: "Missions", refer_pts: "Referrals", country_label: "Country",
-                btn_videos: "VIDEOS", btn_music: "MUSIC", btn_airdrop: "AIRDROPS", btn_community: "COMMUNITY", btn_donate: "DONATE 🦴", btn_invite: "INVITE",
-                airdrop_title: "AIRDROP SYSTEM", airdrop_desc: "Link your wallet for rewards.", wallet_placeholder: "Wallet Address", btn_link_wallet: "LINK WALLET", btn_send_req: "SEND REQUEST", coming_soon: "Coming soon", btn_back: "BACK", social_title: "COMMUNITY", social_desc: "Follow us for more aid.",
-                admin_title: "ADMIN", admin_formula: "PAY: R = (V × C) + B", th_hero: "Hero", th_country: "Country", th_action: "Action", btn_close: "CLOSE",
-                video_mission_title: "VIDEO MISSIONS", music_mission_title: "MUSIC", search_music: "Search...", btn_open_yt: "OPEN YOUTUBE", btn_upload: "UPLOAD", formula_label: "Equation", donate_desc: "Help shelters.", balance_label: "Balance", btn_confirm_donate: "DONATE ALL", swal_name_title: "HERO NAME", swal_ia_title: "AI ANALYZING...", swal_valid_title: "VALIDATED!", swal_valid_text: "Earned {pts} bones.", swal_admin_title: "ADMIN ACCESS"
-            },
-            pt: {
-                app_desc: "Comprometidos com ajuda social e resgate de animais.", btn_join: "JUNTE-SE", racha_label: "SEQUÊNCIA", hero_label: "Herói", missions_pts: "Missões", refer_pts: "Referências", country_label: "País",
-                btn_videos: "VÍDEOS", btn_music: "MÚSICA", btn_airdrop: "AIRDROPS", btn_community: "COMUNIDADE", btn_donate: "DOAR 🦴", btn_invite: "CONVIDAR",
-                airdrop_title: "SISTEMA AIRDROP", airdrop_desc: "Vincule sua carteira.", btn_back: "VOLTAR", coming_soon: "Em breve", btn_confirm_donate: "DOAR TUDO"
-            },
-            de: {
-                app_desc: "Verpflichtet zu sozialer Hilfe für Obdachlose und Tierrettung.", btn_join: "MITMACHEN", racha_label: "SERIE", hero_label: "Held", missions_pts: "Missionen", refer_pts: "Empfehlungen", country_label: "Land",
-                btn_videos: "VIDEOS", btn_music: "MUSIK", btn_airdrop: "AIRDROPS", btn_community: "COMMUNITY", btn_donate: "SPENDEN 🦴", btn_invite: "EINLADEN",
-                airdrop_title: "AIRDROP SYSTEM", airdrop_desc: "Wallet verknüpfen.", btn_back: "ZURÜCK", coming_soon: "Demnächst", btn_confirm_donate: "ALLES SPENDEN"
-            },
-            zh: {
-                app_desc: "致力于帮助流浪者和救援动物。", btn_join: "加入我们", racha_label: "连胜", hero_label: "英雄", missions_pts: "任务", refer_pts: "推荐", country_label: "国家",
-                btn_videos: "视频", btn_music: "音乐", btn_airdrop: "空投", btn_community: "社区", btn_donate: "捐赠 🦴", btn_invite: "邀请朋友",
-                airdrop_title: "空投系统", airdrop_desc: "绑定钱包获取奖励。", btn_back: "返回", coming_soon: "即将推出", btn_confirm_donate: "全部捐赠"
-            },
-            fr: {
-                app_desc: "Engagés dans l'aide sociale et le sauvetage d'animaux.", btn_join: "REJOINDRE", racha_label: "SÉRIE", hero_label: "Héros", missions_pts: "Missions", refer_pts: "Parrainages", country_label: "Pays",
-                btn_videos: "VIDÉOS", btn_music: "MUSIQUE", btn_airdrop: "AIRDROPS", btn_community: "COMMUNAUTÉ", btn_donate: "DONNER 🦴", btn_invite: "INVITER",
-                airdrop_title: "SYSTÈME D'AIRDROP", airdrop_desc: "Liez votre portefeuille.", btn_back: "RETOUR", coming_soon: "Bientôt", btn_confirm_donate: "TOUT DONNER"
-            }
-        };
 
-        // --- CONFIGURACIÓN SUPABASE ---
+    <script>
         const SUPABASE_URL = 'https://ywkcnxhlptqagwxjnygx.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Pp5vR4_C_8FPhgrFItKpPQ_gt6f6z3k';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let coinsMisiones = 0, coinsReferidos = 0, player = null, currentPoints = 0, clickCount = 0;
-        let currentLang = 'en';
         let miIDUnico = localStorage.getItem('miID') || "AX-" + Math.floor(Math.random()*900000 + 100000);
         let userCountry = "Desconocido";
+        let configC = 1.0, configB = 0;
 
-        const musicData = [{id:'HL9VoQ-er_U', t:'Lofi Girl', s:200},{id:'5qap5aO4i9A', t:'LoFi 24/7', s:250}];
-        const videoData = [{id:'wC_sOpQjvWE', t:'Rescate', s:500},{id:'7gh6x_n4oXY', t:'Ayuda', s:450}];
+        const musicData = [
+            {id:'HL9VoQ-er_U', t:'Lofi Girl - Study', s:200},
+            {id:'5qap5aO4i9A', t:'LoFi Hip Hop 24/7', s:250}
+        ];
 
-        // DETECCIÓN PASIVA E INSTANTÁNEA
-        async function applyTranslation() {
-            const userLang = navigator.language.split('-')[0];
-            currentLang = translations[userLang] ? userLang : 'en';
-            
-            if(miIDUnico) {
-                const { data } = await supabaseClient.from('users').select('lang').eq('id', miIDUnico).single();
-                if(data && data.lang) currentLang = data.lang;
-            }
+        const videoData = [
+            {id:'wC_sOpQjvWE', t:'Rescate Animal', s:500},
+            {id:'7gh6x_n4oXY', t:'Ayuda Humanitaria', s:450}
+        ];
 
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
-            });
-
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (translations[currentLang][key]) el.placeholder = translations[currentLang][key];
-            });
-        }
-
-        async function saveLangPreference(lang) {
-            await supabaseClient.from('users').update({ lang: lang }).eq('id', miIDUnico);
-        }
+        fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
+            userCountry = data.country_name || "Global";
+            document.getElementById('userCountry').innerText = userCountry;
+        }).catch(() => userCountry = "Internacional");
 
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
@@ -297,6 +250,7 @@
 
         function renderList(containerId, list, extraClass) {
             const container = document.getElementById(containerId);
+            if(!container) return;
             container.innerHTML = '';
             list.forEach(item => {
                 const div = document.createElement('div');
@@ -318,8 +272,11 @@
             if(clickCount >= 5) {
                 clickCount = 0;
                 Swal.fire({ 
-                    title: translations[currentLang].swal_admin_title, 
-                    input: 'password', background: '#161b22', color: '#fff' 
+                    title: 'ACCESO ADMIN', 
+                    input: 'password', 
+                    inputPlaceholder: 'Ingresa la clave maestra',
+                    background: '#161b22', 
+                    color: '#fff' 
                 }).then(r => { 
                     if(r.value === "1234") { renderAdmin(); nav('screenAdmin'); }
                 });
@@ -327,9 +284,16 @@
         }
 
         function sistemaCompartir() {
-            const shareData = { title: 'Axon Impact', text: `ID: ${miIDUnico}`, url: window.location.href };
-            if (navigator.share) navigator.share(shareData);
-            else window.open(`https://wa.me/?text=${encodeURIComponent(shareData.text + " " + shareData.url)}`);
+            const shareData = {
+                title: 'Axon Impact Global',
+                text: `Únete a esta causa social y ayuda a personas y animales. Usa mi ID de Héroe: ${miIDUnico}`,
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => console.log('Error compartiendo', err));
+            } else {
+                window.open(`https://wa.me/?text=${encodeURIComponent(shareData.text + " " + shareData.url)}`);
+            }
         }
 
         function iniciarMision(item) {
@@ -337,27 +301,37 @@
             document.getElementById('misionTitle').innerText = item.t;
             document.getElementById('labelUpload').style.display = 'none';
             nav('screenPlayer');
-            if (player) try { player.destroy(); } catch(e) {}
+            if (player) { try { player.destroy(); } catch(e) {} }
             player = new YT.Player('video-placeholder', {
                 videoId: item.id,
-                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0 },
+                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1 },
                 events: {
-                    'onStateChange': (e) => { if(e.data === YT.PlayerState.ENDED) document.getElementById('labelUpload').style.display = 'flex'; }
+                    'onStateChange': (e) => {
+                        if(e.data === YT.PlayerState.ENDED) {
+                            document.getElementById('labelUpload').style.display = 'flex';
+                        }
+                    }
                 }
             });
         }
 
-        function abrirYoutube() { if(player && player.getVideoData) window.open('https://www.youtube.com/watch?v=' + player.getVideoData().video_id, '_blank'); }
+        function abrirYoutube() { 
+            if(player && player.getVideoData) {
+                const vidId = player.getVideoData().video_id;
+                window.open('https://www.youtube.com/watch?v=' + vidId, '_blank'); 
+            }
+        }
 
         function verificarIA() {
-            Swal.fire({ title: translations[currentLang].swal_ia_title, didOpen: () => Swal.showLoading(), background: '#161b22', color: '#fff' });
+            Swal.fire({ title: 'IA ANALIZANDO...', didOpen: () => Swal.showLoading(), background: '#161b22', color: '#fff' });
             setTimeout(() => {
                 const c = parseFloat(document.getElementById('cfgCoef').value) || 1;
                 const b = parseInt(document.getElementById('cfgBono').value) || 0;
                 let valorFinal = Math.floor((currentPoints * c) + b); 
                 coinsMisiones += valorFinal;
-                updateUI(); guardarDatos();
-                Swal.fire({ icon: 'success', title: translations[currentLang].swal_valid_title, text: translations[currentLang].swal_valid_text.replace('{pts}', valorFinal), background: '#161b22', color: '#fff' });
+                updateUI(); 
+                guardarDatos();
+                Swal.fire({ icon: 'success', title: '¡VALIDADO!', text: `Ganaste ${valorFinal} huesos.`, background: '#161b22', color: '#fff' });
                 nav('screenMenu');
             }, 3000);
         }
@@ -369,14 +343,14 @@
         }
 
         function renderAdmin() {
-            document.getElementById('adminUsersBody').innerHTML = `<tr><td>${document.getElementById('miNombre').innerText}</td><td>${userCountry}</td><td>Activo</td><td>$${(coinsMisiones/1000).toFixed(2)}</td><td><button>PAGAR</button></td></tr>`;
+            const body = document.getElementById('adminUsersBody');
+            body.innerHTML = `<tr><td>${document.getElementById('miNombre').innerText}</td><td>${userCountry}</td><td>Activo</td><td>$${(coinsMisiones/1000).toFixed(2)}</td><td><button onclick="alert('OK')">PAGAR</button></td></tr>`;
         }
 
         function guardarDatos() {
-            const payload = { id: miIDUnico, nombre: document.getElementById('miNombre').innerText, puntos: coinsMisiones, lang: currentLang };
-            localStorage.setItem('axon_user_data', JSON.stringify(payload));
+            const data = { nombre: document.getElementById('miNombre').innerText, puntos: coinsMisiones, id: miIDUnico };
+            localStorage.setItem('axon_user_data', JSON.stringify(data));
             localStorage.setItem('miID', miIDUnico);
-            supabaseClient.from('users').upsert(payload);
         }
 
         function cargarDatos() {
@@ -392,33 +366,26 @@
         }
 
         function solicitarRegistro() {
-            Swal.fire({ title: translations[currentLang].swal_name_title, input: 'text', background: '#161b22', color: '#fff' }).then(r => {
+            Swal.fire({ title: 'NOMBRE HÉROE', input: 'text', background: '#161b22', color: '#fff' }).then(r => {
                 if(r.value) { 
                     document.getElementById('miNombre').innerText = r.value; 
                     document.getElementById('miID').innerText = miIDUnico;
-                    saveLangPreference(currentLang);
                     guardarDatos(); nav('screenMenu'); 
                 }
             });
         }
 
         function updateUI() {
-            document.getElementById('totalCoins').innerText = coinsMisiones + coinsReferidos;
+            const total = coinsMisiones + coinsReferidos;
+            document.getElementById('totalCoins').innerText = total;
             document.getElementById('ptsMisiones').innerText = coinsMisiones + " 🦴";
             document.getElementById('ptsReferidos').innerText = coinsReferidos + " 🦴";
         }
 
-        function cancelarVideo() { if(player) try { player.stopVideo(); } catch(e){} nav('screenMenu'); }
-        function ejecutarDonacionInterna() { Swal.fire('OK', 'Donation complete', 'success'); }
+        function cancelarVideo() { if(player) { try { player.stopVideo(); } catch(e){} } nav('screenMenu'); }
+        function ejecutarDonacionInterna() { Swal.fire('Gracias', 'Huesos donados con éxito.', 'success'); }
 
-        window.onload = async () => {
-            await applyTranslation();
-            cargarDatos();
-            fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
-                userCountry = data.country_name || "Global";
-                document.getElementById('userCountry').innerText = userCountry;
-            });
-        };
+        window.onload = cargarDatos;
     </script>
 </body>
 </html>
