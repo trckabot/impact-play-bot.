@@ -221,22 +221,21 @@
         const musicData = [
             {id:'HL9VoQ-er_U', t:'Lofi Girl - Study Beat', s:200},
             {id:'5qap5aO4i9A', t:'LoFi Hip Hop 24/7', s:250},
-            {id:'jfKfPfyJRdk', t:'Chill Step Radio', s:300},
-            {id:'DWcJFNfaw9c', t:'Deep Focus Music', s:150}
+            {id:'jfKfPfyJRdk', t:'Chill Step Radio', s:300}
         ];
 
         const videoData = [
-            {id:'wC_sOpQjvWE', t:'Misión: Rescate en el Refugio', s:500},
-            {id:'7gh6x_n4oXY', t:'Misión: Comedor Social', s:450}
+            {id:'wC_sOpQjvWE', t:'Misión: Rescate Animal', s:500},
+            {id:'7gh6x_n4oXY', t:'Misión: Ayuda Humanitaria', s:450}
         ];
 
-        // DETECCIÓN DE PAÍS REAL
+        // PAÍS REAL
         fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
             userCountry = data.country_name || "Global";
             document.getElementById('userCountry').innerText = userCountry;
         }).catch(() => userCountry = "Internacional");
 
-        // GESTIÓN DE NAVEGACIÓN
+        // NAVEGACIÓN
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
@@ -257,14 +256,13 @@
             });
         }
 
-        // BUSCADOR DE MÚSICA
         function filterMusic() {
             const q = document.getElementById('musicSearch').value.toLowerCase();
             const filtered = musicData.filter(m => m.t.toLowerCase().includes(q));
             renderList('musicListContainer', filtered, 'music-item');
         }
 
-        // LÓGICA DE VIDEO Y SEGURIDAD
+        // VIDEO Y SEGURIDAD
         function iniciarMision(item) {
             currentPoints = item.s;
             document.getElementById('misionTitle').innerText = item.t;
@@ -274,7 +272,7 @@
             if (player) player.destroy();
             player = new YT.Player('video-placeholder', {
                 videoId: item.id,
-                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'showinfo': 0 },
+                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1 },
                 events: {
                     'onStateChange': (e) => {
                         if(e.data === YT.PlayerState.ENDED) {
@@ -292,17 +290,14 @@
             }
         }
 
-        // VERIFICACIÓN CON IA (SIMULADA) Y ECUACIÓN EDITABLE
         function verificarIA() {
             Swal.fire({ 
                 title: 'IA ANALIZANDO...', 
-                html: 'Validando Like, Comentario y Suscripción',
                 didOpen: () => Swal.showLoading(),
-                background: '#161b22', color: '#fff', customClass: { popup: 'swal-custom-bg' }
+                background: '#161b22', color: '#fff'
             });
             
             setTimeout(() => {
-                // APLICAR ECUACIÓN: R = (V * C) + B
                 const c = parseFloat(document.getElementById('cfgCoef').value) || 1;
                 const b = parseInt(document.getElementById('cfgBono').value) || 0;
                 let valorFinal = Math.floor((currentPoints * c) + b); 
@@ -311,45 +306,28 @@
                 updateUI(); 
                 guardarDatos();
                 
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡RECOMPENSA VALIDADA!',
-                    text: `La IA confirmó la acción. Ganaste ${valorFinal} huesos.`,
-                    background: '#161b22', color: '#fff'
-                });
+                Swal.fire({ icon: 'success', title: '¡VALIDADO!', text: `Ganaste ${valorFinal} huesos.`, background: '#161b22', color: '#fff' });
                 nav('screenMenu');
             }, 3000);
         }
 
-        // PETICIONES DE MÚSICA (ANTI-SPAM AL ADMIN)
         function sendMusicRequest() {
             const val = document.getElementById('requestMusicInput').value;
-            if(val.length < 5 || !val.includes('-')) {
-                return Swal.fire('Error', 'Usa: Artista - Nombre de canción', 'error');
-            }
+            if(!val.includes('-')) return Swal.fire('Error', 'Usa Artista - Canción', 'error');
             const reqs = JSON.parse(localStorage.getItem('music_reqs') || "[]");
             reqs.push({ user: document.getElementById('miNombre').innerText, song: val, date: new Date().toLocaleString() });
             localStorage.setItem('music_reqs', JSON.stringify(reqs));
             document.getElementById('requestMusicInput').value = '';
-            Swal.fire('¡Recibido!', 'Tu pedido ha sido enviado al panel de administración.', 'success');
+            Swal.fire('Enviado', 'Tu pedido llegó al admin.', 'success');
         }
 
-        // PANEL ADMINISTRATIVO Y LLAVE
+        // PANEL ADMIN
         document.getElementById('axonTitle').onclick = () => {
             clickCount++;
             if(clickCount >= 5) {
                 clickCount = 0;
-                Swal.fire({ 
-                    title: 'ACCESO RESTRINGIDO', 
-                    input: 'password', 
-                    inputPlaceholder: 'Llave Maestra',
-                    background: '#161b22', color: '#fff',
-                    customClass: { popup: 'swal-custom-bg' }
-                }).then(r => { 
-                    if(r.value === "1234") { // CLAVE POR DEFECTO
-                        renderAdmin();
-                        nav('screenAdmin');
-                    }
+                Swal.fire({ title: 'LLAVE MAESTRA', input: 'password', background: '#161b22', color: '#fff' }).then(r => { 
+                    if(r.value === "1234") { renderAdmin(); nav('screenAdmin'); }
                 });
             }
         };
@@ -364,6 +342,26 @@
             const body = document.getElementById('adminUsersBody');
             const musicBox = document.getElementById('adminMusicRequests');
             
-            // Render de usuarios (Simulación de lista)
-            body.innerHTML = `
-                <
+            body.innerHTML = `<tr>
+                <td>${document.getElementById('miNombre').innerText}</td>
+                <td>${userCountry}</td>
+                <td>Sesión Actual</td>
+                <td>$${((coinsMisiones)/1000).toFixed(2)}</td>
+                <td><button onclick="alert('Pago Procesado')" style="font-size:9px;">PAGAR</button></td>
+            </tr>`;
+
+            document.getElementById('countryListStats').innerHTML = `${userCountry}: 1 usuario`;
+
+            const reqs = JSON.parse(localStorage.getItem('music_reqs') || "[]");
+            musicBox.innerHTML = reqs.map(r => `<div><b>${r.user}:</b> ${r.song}</div>`).join('');
+        }
+
+        async function guardarDatos() {
+            const data = {
+                usuario_id: miIDUnico,
+                nombre: document.getElementById('miNombre').innerText,
+                puntos_misiones: coinsMisiones,
+                puntos_referidos: coinsReferidos,
+                pais: userCountry
+            };
+            localStorage.setItem('axon_user_data', JSON.stringify(
