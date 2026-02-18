@@ -221,7 +221,8 @@
         const musicData = [
             {id:'HL9VoQ-er_U', t:'Lofi Girl - Study Beat', s:200},
             {id:'5qap5aO4i9A', t:'LoFi Hip Hop 24/7', s:250},
-            {id:'jfKfPfyJRdk', t:'Chill Step Radio', s:300}
+            {id:'jfKfPfyJRdk', t:'Chill Step Radio', s:300},
+            {id:'DWcJFNfaw9c', t:'Deep Focus Music', s:150}
         ];
 
         const videoData = [
@@ -229,16 +230,18 @@
             {id:'7gh6x_n4oXY', t:'Misión: Ayuda Humanitaria', s:450}
         ];
 
-        // PAÍS REAL
+        // DETECCIÓN DE PAÍS REAL
         fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
             userCountry = data.country_name || "Global";
             document.getElementById('userCountry').innerText = userCountry;
         }).catch(() => userCountry = "Internacional");
 
-        // NAVEGACIÓN
+        // GESTIÓN DE NAVEGACIÓN
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'flex';
+            const target = document.getElementById(id);
+            if(target) target.style.display = 'flex';
+            
             if(id === 'screenVideoList') renderList('videoListContainer', videoData, 'video-item');
             if(id === 'screenMusicList') renderList('musicListContainer', musicData, 'music-item');
             if(id === 'screenDonar') document.getElementById('totalCoinsDonar').innerText = coinsMisiones + coinsReferidos;
@@ -246,6 +249,7 @@
 
         function renderList(containerId, list, extraClass) {
             const container = document.getElementById(containerId);
+            if(!container) return;
             container.innerHTML = '';
             list.forEach(item => {
                 const div = document.createElement('div');
@@ -256,20 +260,21 @@
             });
         }
 
+        // BUSCADOR DE MÚSICA
         function filterMusic() {
             const q = document.getElementById('musicSearch').value.toLowerCase();
             const filtered = musicData.filter(m => m.t.toLowerCase().includes(q));
             renderList('musicListContainer', filtered, 'music-item');
         }
 
-        // VIDEO Y SEGURIDAD
+        // LÓGICA DE VIDEO Y SEGURIDAD
         function iniciarMision(item) {
             currentPoints = item.s;
             document.getElementById('misionTitle').innerText = item.t;
             document.getElementById('labelUpload').style.display = 'none';
             nav('screenPlayer');
             
-            if (player) player.destroy();
+            if (player) { try { player.destroy(); } catch(e) {} }
             player = new YT.Player('video-placeholder', {
                 videoId: item.id,
                 playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1 },
@@ -284,7 +289,7 @@
         }
 
         function abrirYoutube() { 
-            if(player) {
+            if(player && player.getVideoData) {
                 const vidId = player.getVideoData().video_id;
                 window.open('https://www.youtube.com/watch?v=' + vidId, '_blank'); 
             }
@@ -294,11 +299,11 @@
             Swal.fire({ 
                 title: 'IA ANALIZANDO...', 
                 didOpen: () => Swal.showLoading(),
-                background: '#161b22', color: '#fff'
+                background: '#161b22', color: '#fff', customClass: { popup: 'swal-custom-bg' }
             });
             
             setTimeout(() => {
-                const c = parseFloat(document.getElementById('cfgCoef').value) || 1;
+                const c = parseFloat(document.getElementById('cfgCoef').value) || 1.0;
                 const b = parseInt(document.getElementById('cfgBono').value) || 0;
                 let valorFinal = Math.floor((currentPoints * c) + b); 
                 
@@ -306,28 +311,41 @@
                 updateUI(); 
                 guardarDatos();
                 
-                Swal.fire({ icon: 'success', title: '¡VALIDADO!', text: `Ganaste ${valorFinal} huesos.`, background: '#161b22', color: '#fff' });
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡VALIDADO!',
+                    text: `La IA confirmó la acción. Ganaste ${valorFinal} huesos.`,
+                    background: '#161b22', color: '#fff'
+                });
                 nav('screenMenu');
             }, 3000);
         }
 
         function sendMusicRequest() {
             const val = document.getElementById('requestMusicInput').value;
-            if(!val.includes('-')) return Swal.fire('Error', 'Usa Artista - Canción', 'error');
+            if(!val.includes('-')) return Swal.fire('Error', 'Usa: Artista - Canción', 'error');
             const reqs = JSON.parse(localStorage.getItem('music_reqs') || "[]");
             reqs.push({ user: document.getElementById('miNombre').innerText, song: val, date: new Date().toLocaleString() });
             localStorage.setItem('music_reqs', JSON.stringify(reqs));
             document.getElementById('requestMusicInput').value = '';
-            Swal.fire('Enviado', 'Tu pedido llegó al admin.', 'success');
+            Swal.fire('¡Recibido!', 'Pedido enviado al panel.', 'success');
         }
 
-        // PANEL ADMIN
+        // PANEL ADMIN Y ACCESO OCULTO
         document.getElementById('axonTitle').onclick = () => {
             clickCount++;
             if(clickCount >= 5) {
                 clickCount = 0;
-                Swal.fire({ title: 'LLAVE MAESTRA', input: 'password', background: '#161b22', color: '#fff' }).then(r => { 
-                    if(r.value === "1234") { renderAdmin(); nav('screenAdmin'); }
+                Swal.fire({ 
+                    title: 'LLAVE MAESTRA', 
+                    input: 'password', 
+                    background: '#161b22', color: '#fff',
+                    customClass: { popup: 'swal-custom-bg' }
+                }).then(r => { 
+                    if(r.value === "1234") { 
+                        renderAdmin(); 
+                        nav('screenAdmin'); 
+                    }
                 });
             }
         };
@@ -345,23 +363,6 @@
             body.innerHTML = `<tr>
                 <td>${document.getElementById('miNombre').innerText}</td>
                 <td>${userCountry}</td>
-                <td>Sesión Actual</td>
+                <td>Sesión Activa</td>
                 <td>$${((coinsMisiones)/1000).toFixed(2)}</td>
-                <td><button onclick="alert('Pago Procesado')" style="font-size:9px;">PAGAR</button></td>
-            </tr>`;
-
-            document.getElementById('countryListStats').innerHTML = `${userCountry}: 1 usuario`;
-
-            const reqs = JSON.parse(localStorage.getItem('music_reqs') || "[]");
-            musicBox.innerHTML = reqs.map(r => `<div><b>${r.user}:</b> ${r.song}</div>`).join('');
-        }
-
-        async function guardarDatos() {
-            const data = {
-                usuario_id: miIDUnico,
-                nombre: document.getElementById('miNombre').innerText,
-                puntos_misiones: coinsMisiones,
-                puntos_referidos: coinsReferidos,
-                pais: userCountry
-            };
-            localStorage.setItem('axon_user_data', JSON.stringify(
+                <td><button onclick="alert('Procesando pago...')" style="font-size:9px; background:var(--primary); color:black; border:none; b
