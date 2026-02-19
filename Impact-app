@@ -1,0 +1,17 @@
+impact-app/
+│
+├── backend/
+│   ├── package.json
+│   ├── index.js
+│   ├── raffle.js
+│   ├── economy.js
+│   └── .env
+│
+├── frontend/
+│   ├── index.html
+│   ├── app.js
+│   ├── i18n.js
+│   └── style.css
+│
+└── supabase/
+    └── schema.sql
