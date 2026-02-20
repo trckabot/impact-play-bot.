@@ -17,57 +17,62 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.APP_URL;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
 if (!BOT_TOKEN) {
   console.error("❌ BOT_TOKEN no está definido");
+  process.exit(1);
 }
 
 if (!APP_URL) {
   console.error("❌ APP_URL no está definido");
+  process.exit(1);
+}
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error("❌ Variables de Supabase no definidas");
+  process.exit(1);
 }
 
 /* =========================
    TELEGRAM BOT
 ========================= */
 
-let bot;
+const bot = new TelegramBot(BOT_TOKEN, { webHook: true });
 
-if (BOT_TOKEN) {
-bot = new TelegramBot(BOT_TOKEN, { webHook: true });
+const webhookPath = `/bot${BOT_TOKEN}`;
+const webhookURL = `${APP_URL}${webhookPath}`;
 
-  app.post(`/bot${BOT_TOKEN}`, (req, res) => {
-    bot.processUpdate(req.body);
-    res.sendStatus(200);
-  });
+app.post(webhookPath, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
 
-  bot.onText(/\/start/, (msg) => {
-    bot.sendMessage(
-      msg.chat.id,
-      "🚀 Bienvenido a Impact Play!\n\nPulsa el botón para empezar:",
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "🔥 Abrir App",
-                web_app: { url: APP_URL }, // 🔥 YA NO GOOGLE
-              },
-            ],
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(
+    msg.chat.id,
+    "🚀 Bienvenido a Impact Play!\n\nPulsa el botón para empezar:",
+    {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: "🔥 Abrir App",
+              web_app: { url: APP_URL },
+            },
           ],
-        },
-      }
-    );
-  });
-}
+        ],
+      },
+    }
+  );
+});
 
 /* =========================
    SUPABASE
 ========================= */
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* =========================
    HEALTH CHECK
@@ -200,15 +205,12 @@ cron.schedule("0 0 1 * *", async () => {
 ========================= */
 
 app.listen(PORT, async () => {
-  console.log("Backend corriendo en puerto " + PORT);
+  console.log(`🔥 Backend corriendo en puerto ${PORT}`);
 
-  if (BOT_TOKEN && APP_URL) {
-    try {
-      const webhookUrl = `${APP_URL}/bot${BOT_TOKEN}`;
-      await bot.setWebHook(webhookUrl);
-      console.log("Webhook configurado:", webhookUrl);
-    } catch (err) {
-      console.log("No se pudo configurar webhook:", err.message);
-    }
+  try {
+    await bot.setWebHook(webhookURL);
+    console.log("✅ Webhook configurado:", webhookURL);
+  } catch (err) {
+    console.error("❌ No se pudo configurar webhook:", err.message);
   }
 });
