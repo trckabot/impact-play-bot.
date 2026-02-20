@@ -4,7 +4,10 @@
   "description": "Telegram bot backend",
   "main": "index.js",
   "scripts": {
-"start": "node index.js"
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -15,4 +18,3 @@
     "node-telegram-bot-api": "^0.64.0"
   }
 }
-
