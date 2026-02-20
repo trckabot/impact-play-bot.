@@ -33,7 +33,7 @@ if (!APP_URL) {
 let bot;
 
 if (BOT_TOKEN) {
-  bot = new TelegramBot(BOT_TOKEN);
+bot = new TelegramBot(BOT_TOKEN, { webHook: true });
 
   app.post(`/bot${BOT_TOKEN}`, (req, res) => {
     bot.processUpdate(req.body);
