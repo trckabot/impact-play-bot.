@@ -94,3 +94,19 @@ cron.schedule("0 0 1 * *", async ()=>{
 });
 
 app.listen(3000, ()=>console.log("Backend running"));
+/* HEALTH CHECK */
+app.get("/", (req, res) => {
+  res.send("Impact backend funcionando 🚀");
+});
+
+/* SORTEO MENSUAL */
+cron.schedule("0 0 1 * *", async () => {
+  await runMonthlyRaffle(supabase);
+});
+
+/* START SERVER */
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Backend running on port " + PORT);
+});
