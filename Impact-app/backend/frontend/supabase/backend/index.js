@@ -9,23 +9,29 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/* SUPABASE */
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_KEY
 );
 
+/* HEALTH CHECK */
+app.get("/", (req, res) => {
+  res.send("Impact backend funcionando 🚀");
+});
+
 /* LOGIN TELEGRAM */
-app.post("/auth", async (req,res)=>{
+app.post("/auth", async (req, res) => {
   const { telegram_id, username } = req.body;
 
-  let { data:user } = await supabase
+  let { data: user } = await supabase
     .from("users")
     .select("*")
     .eq("telegram_id", telegram_id)
     .single();
 
-  if(!user){
-    const referral_code = "IM"+Math.random().toString(36).substring(2,8);
+  if (!user) {
+    const referral_code = "IM" + Math.random().toString(36).substring(2, 8);
 
     const { data } = await supabase
       .from("users")
@@ -40,7 +46,7 @@ app.post("/auth", async (req,res)=>{
 });
 
 /* OBTENER MISIONES */
-app.get("/missions", async (req,res)=>{
+app.get("/missions", async (req, res) => {
   const { data } = await supabase
     .from("missions")
     .select("*")
@@ -50,19 +56,19 @@ app.get("/missions", async (req,res)=>{
 });
 
 /* COMPLETAR MISIÓN */
-app.post("/complete", async (req,res)=>{
+app.post("/complete", async (req, res) => {
   const { user_id, mission_id } = req.body;
 
-  await supabase.rpc("complete_mission",{
-    uid:user_id,
-    mid:mission_id
+  await supabase.rpc("complete_mission", {
+    uid: user_id,
+    mid: mission_id,
   });
 
-  res.json({success:true});
+  res.json({ success: true });
 });
 
 /* DONAR */
-app.post("/donate", async (req,res)=>{
+app.post("/donate", async (req, res) => {
   const { user_id, amount } = req.body;
 
   await supabase
@@ -74,29 +80,18 @@ app.post("/donate", async (req,res)=>{
     })
     .eq("id", user_id);
 
-  res.json({success:true});
+  res.json({ success: true });
 });
 
 /* RANKING */
-app.get("/ranking", async (req,res)=>{
+app.get("/ranking", async (req, res) => {
   const { data } = await supabase
     .from("users")
     .select("username,missions_completed,total_donated,level")
-    .order("missions_completed",{ascending:false})
+    .order("missions_completed", { ascending: false })
     .limit(50);
 
   res.json(data);
-});
-
-/* SORTEO MENSUAL (1 vez al mes) */
-cron.schedule("0 0 1 * *", async ()=>{
-  await runMonthlyRaffle(supabase);
-});
-
-app.listen(3000, ()=>console.log("Backend running"));
-/* HEALTH CHECK */
-app.get("/", (req, res) => {
-  res.send("Impact backend funcionando 🚀");
 });
 
 /* SORTEO MENSUAL */
@@ -104,7 +99,7 @@ cron.schedule("0 0 1 * *", async () => {
   await runMonthlyRaffle(supabase);
 });
 
-/* START SERVER */
+/* START SERVER (SOLO UNA VEZ) */
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
