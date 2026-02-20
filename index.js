@@ -69,6 +69,18 @@ bot.onText(/\/start/, (msg) => {
 });
 
 /* =========================
+   CONFIGURAR WEBHOOK (MOVIDO FUERA DEL LISTEN)
+========================= */
+
+bot.setWebHook(webhookURL)
+  .then(() => {
+    console.log("✅ Webhook configurado:", webhookURL);
+  })
+  .catch((err) => {
+    console.error("❌ Error configurando webhook:", err.message);
+  });
+
+/* =========================
    SUPABASE
 ========================= */
 
@@ -204,13 +216,6 @@ cron.schedule("0 0 1 * *", async () => {
    START SERVER
 ========================= */
 
-app.listen(PORT, "0.0.0.0", async () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🔥 Backend corriendo en puerto ${PORT}`);
-
-  try {
-    await bot.setWebHook(webhookURL);
-    console.log("✅ Webhook configurado:", webhookURL);
-  } catch (err) {
-    console.error("❌ No se pudo configurar webhook:", err.message);
-  }
 });
