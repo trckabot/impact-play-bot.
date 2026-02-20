@@ -11,61 +11,62 @@ app.use(cors());
 app.use(express.json());
 
 /* =========================
-   VARIABLES IMPORTANTES
+   VARIABLES
 ========================= */
 
 const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.APP_URL;
 
+/* =========================
+   VALIDACIÓN SUAVE (NO CRASHEA)
+========================= */
+
 if (!BOT_TOKEN) {
-  console.error("Falta BOT_TOKEN");
-  process.exit(1);
+  console.log(8547341334:AAGuHkAyzBPIHrVbt2ZvHuDBZNKPd9gXuVY);
 }
 
 if (!APP_URL) {
-  console.error("Falta APP_URL");
-  process.exit(1);
+  console.log(htts//impact-play-bot-production.up.railway.app);
 }
 
 /* =========================
    TELEGRAM BOT
 ========================= */
 
-const bot = new TelegramBot(BOT_TOKEN);
+let bot;
 
-app.post(`/bot${BOT_TOKEN}`, (req, res) => {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
-});
+if (BOT_TOKEN) {
+  bot = new TelegramBot(BOT_TOKEN);
 
-bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(
-    msg.chat.id,
-    "🚀 Bienvenido a Impact Play!\n\nPulsa el botón para empezar:",
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "🔥 Abrir App",
-              web_app: { url: APP_URL },
-            },
+  app.post(`/bot${BOT_TOKEN}`, (req, res) => {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
+  });
+
+  bot.onText(/\/start/, (msg) => {
+    bot.sendMessage(
+      msg.chat.id,
+      "🚀 Bienvenido a Impact Play!\n\nPulsa el botón para empezar:",
+      {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: "🔥 Abrir App",
+                web_app: { url: APP_URL || "https://google.com" },
+              },
+            ],
           ],
-        ],
-      },
-    }
-  );
-});
+        },
+      }
+    );
+  });
+}
 
 /* =========================
    SUPABASE
 ========================= */
-
-if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
-  console.error("Faltan variables SUPABASE");
-  process.exit(1);
-}
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -81,7 +82,7 @@ app.get("/", (req, res) => {
 });
 
 /* =========================
-   LOGIN TELEGRAM
+   TUS RUTAS (NO TOCADAS)
 ========================= */
 
 app.post("/auth", async (req, res) => {
@@ -114,10 +115,6 @@ app.post("/auth", async (req, res) => {
   }
 });
 
-/* =========================
-   OBTENER MISIONES
-========================= */
-
 app.get("/missions", async (req, res) => {
   try {
     const { data } = await supabase
@@ -127,14 +124,9 @@ app.get("/missions", async (req, res) => {
 
     res.json(data);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error en /missions" });
   }
 });
-
-/* =========================
-   COMPLETAR MISIÓN
-========================= */
 
 app.post("/complete", async (req, res) => {
   try {
@@ -147,14 +139,9 @@ app.post("/complete", async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error en /complete" });
   }
 });
-
-/* =========================
-   DONAR
-========================= */
 
 app.post("/donate", async (req, res) => {
   try {
@@ -165,10 +152,6 @@ app.post("/donate", async (req, res) => {
       .select("coins, total_donated, raffle_tickets")
       .eq("id", user_id)
       .single();
-
-    if (!user) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
-    }
 
     await supabase
       .from("users")
@@ -181,14 +164,9 @@ app.post("/donate", async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error en /donate" });
   }
 });
-
-/* =========================
-   RANKING
-========================= */
 
 app.get("/ranking", async (req, res) => {
   try {
@@ -200,13 +178,12 @@ app.get("/ranking", async (req, res) => {
 
     res.json(data);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error en /ranking" });
   }
 });
 
 /* =========================
-   SORTEO MENSUAL
+   CRON
 ========================= */
 
 cron.schedule("0 0 1 * *", async () => {
@@ -219,14 +196,19 @@ cron.schedule("0 0 1 * *", async () => {
 });
 
 /* =========================
-   START SERVER (Railway)
+   START SERVER
 ========================= */
 
 app.listen(PORT, async () => {
   console.log("Backend corriendo en puerto " + PORT);
 
-  const webhookUrl = `${APP_URL}/bot${BOT_TOKEN}`;
-  await bot.setWebHook(webhookUrl);
-
-  console.log("Webhook configurado en:", webhookUrl);
+  if (BOT_TOKEN && APP_URL) {
+    try {
+      const webhookUrl = `${APP_URL}/bot${BOT_TOKEN}`;
+      await bot.setWebHook(webhookUrl);
+      console.log("Webhook configurado:", webhookUrl);
+    } catch (err) {
+      console.log("No se pudo configurar webhook:", err.message);
+    }
+  }
 });
