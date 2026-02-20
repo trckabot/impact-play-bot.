@@ -19,18 +19,6 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.APP_URL;
 
 /* =========================
-   VALIDACIÓN SUAVE (NO CRASHEA)
-========================= */
-
-if (!BOT_TOKEN) {
-  console.log(8547341334:AAGuHkAyzBPIHrVbt2ZvHuDBZNKPd9gXuVY);
-}
-
-if (!APP_URL) {
-  console.log(htts//impact-play-bot-production.up.railway.app);
-}
-
-/* =========================
    TELEGRAM BOT
 ========================= */
 
@@ -82,7 +70,7 @@ app.get("/", (req, res) => {
 });
 
 /* =========================
-   TUS RUTAS (NO TOCADAS)
+   RUTAS
 ========================= */
 
 app.post("/auth", async (req, res) => {
@@ -124,6 +112,7 @@ app.get("/missions", async (req, res) => {
 
     res.json(data);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error en /missions" });
   }
 });
@@ -139,6 +128,7 @@ app.post("/complete", async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error en /complete" });
   }
 });
@@ -164,6 +154,7 @@ app.post("/donate", async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error en /donate" });
   }
 });
@@ -178,6 +169,7 @@ app.get("/ranking", async (req, res) => {
 
     res.json(data);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error en /ranking" });
   }
 });
