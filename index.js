@@ -18,6 +18,14 @@ const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.APP_URL;
 
+if (!BOT_TOKEN) {
+  console.error("❌ BOT_TOKEN no está definido");
+}
+
+if (!APP_URL) {
+  console.error("❌ APP_URL no está definido");
+}
+
 /* =========================
    TELEGRAM BOT
 ========================= */
@@ -42,7 +50,7 @@ if (BOT_TOKEN) {
             [
               {
                 text: "🔥 Abrir App",
-                web_app: { url: APP_URL || "https://google.com" },
+                web_app: { url: APP_URL }, // 🔥 YA NO GOOGLE
               },
             ],
           ],
