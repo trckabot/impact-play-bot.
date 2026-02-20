@@ -14,7 +14,7 @@ app.use(express.json());
    VARIABLES
 ========================= */
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.APP_URL;
 const SUPABASE_URL = process.env.SUPABASE_URL;
