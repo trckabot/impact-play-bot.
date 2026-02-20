@@ -14,7 +14,7 @@ app.use(express.json());
    VARIABLES
 ========================= */
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.APP_URL;
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -204,7 +204,7 @@ cron.schedule("0 0 1 * *", async () => {
    START SERVER
 ========================= */
 
-app.listen(PORT, async () => {
+app.listen(PORT, "0.0.0.0", async () => {
   console.log(`🔥 Backend corriendo en puerto ${PORT}`);
 
   try {
