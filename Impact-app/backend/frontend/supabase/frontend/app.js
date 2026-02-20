@@ -1,4 +1,4 @@
-const BACKEND="robot de juego de impacto-producción.up.railway.app ";
+const BACKEND = "https://robot-de-juego-de-impacto-production.up.railway.app";
 
 const tg = window.Telegram.WebApp;
 tg.expand();
